@@ -1,0 +1,40 @@
+bux:
+charge
+good vibes
+defender
+hp drain
+sp drain
+pity sp
+item+
+sp saver
+resurrect
+sp regen
+ante up
+defend+
+
+useless bux:
+refund (tix card)
+bodyguard (co-op only)
+sp finder (out of battle)
+deep focus (no nrg)
+sacrifice (co-op only)
+lucky start (trash)
+anchor (co-op only)
+daze (useless because free dupe)
+
+non-bux cards:
+cure
+minimize
+happy hp
+linebounce
+daze
+power stab
+
+
+useless non-bux:
+hp+ (just respec)
+safe guard (just dodge)
+thorns (troter immune)
+fireball (troter immune)
+free ice (troter immune)
+snowball (troter immune)
