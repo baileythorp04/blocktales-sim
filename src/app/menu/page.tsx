@@ -1,6 +1,6 @@
 "use client";
 import GridCell from "@/components/GridCell";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
 import { useCards, Card } from "@/hooks/useCards";
 import Link from "next/link";
@@ -10,13 +10,14 @@ import Image from "next/image";
 const MAX_BUX = 24
 
 export default function Menu() {
-  const [remainingBux, setReamainingBux] = useState(MAX_BUX);
+  const [usedBux, setUsedBux] = useState(0);
+  const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
   const { cardList } = useCards();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
-  const [leng, setLeng] = useState<string>("empty")
 
   function toggleSelectCard(cardId: number) {
+    debugger;
     if (selectedCards.some(cId => cId == cardId)) {
       setSelectedCards(selectedCards.filter(cId => cId != cardId));
 
@@ -26,7 +27,24 @@ export default function Menu() {
       //selectedCards.push(card)
       //setSelectedCards(selectedCards)
     }
+    
   }
+
+  useEffect(() => setRemainingStats(), [selectedCards])
+
+  function setRemainingStats() {
+    let bpTotal = 0
+    let buxTotal = 0
+    selectedCards.forEach(cardId => {
+      let card = cardList.find(card => card.id == cardId)
+      if (card != undefined) {
+        bpTotal += card.bp
+        buxTotal += card.bux
+      }
+    });
+    setUsedBux(buxTotal)
+    setUsedBp(bpTotal)
+}
 
   return (
     <div className="grid grid-cols-3 justify-center items-center mx-8">
@@ -65,10 +83,28 @@ export default function Menu() {
           </div>
           ))}
         </div>
+        <div className="flex flex-row-reverse p-2 gap-2 w-[80%]">
+          <div className="flex flex-row-reverse gap-2 items-center text-2xl">
+              <Image
+                src="/bp.png"
+                alt="bp"
+                width={40}
+                height={40}
+              />
+              <div className={`${usedBp > bp && "text-red-600"}`}>{usedBp}/{bp}</div>
+              <Image
+                src="/bux.png"
+                alt="bux"
+                width={40}
+                height={40}
+              />
+              <div className={usedBux > MAX_BUX ? "text-red-600" : ""}>{usedBux}/{MAX_BUX}</div>
+            </div>
+        </div>
       </div>
       
       <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <h1 className="text-3xl font-bold mb-4">{leng}</h1>
+        <h1 className="text-3xl font-bold mb-4">Stats</h1>
         <div className="text-xl font-mono">Remaining Levels: {remainingLevels}/{MAX_LEVEL}</div>
 
         <div

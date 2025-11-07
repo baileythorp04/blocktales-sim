@@ -1,1 +1,3 @@
+card selection works but would be cool to have pointers of Card objects in the list itself, so it doesn't have to do cardList.find to get an attribute
+
 have a check when trying to go to combat for if bux or BP has been exceeded
