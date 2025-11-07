@@ -2,7 +2,7 @@
 import GridCell from "@/components/GridCell";
 import { useState } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
-import { useCards } from "@/hooks/useCards";
+import { useCards, Card } from "@/hooks/useCards";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -13,16 +13,30 @@ export default function Menu() {
   const [remainingBux, setReamainingBux] = useState(MAX_BUX);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
   const { cardList } = useCards();
+  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [leng, setLeng] = useState<string>("empty")
+
+  function toggleSelectCard(cardId: number) {
+    if (selectedCards.some(cId => cId == cardId)) {
+      setSelectedCards(selectedCards.filter(cId => cId != cardId));
+
+    } else {
+      setSelectedCards(selectedCards.concat(cardId))
+      //not sure if this also works
+      //selectedCards.push(card)
+      //setSelectedCards(selectedCards)
+    }
+  }
 
   return (
     <div className="grid grid-cols-3 justify-center items-center mx-8">
       <div className="flex flex-col items-center justify-center">
 
         <h1 className="text-3xl font-bold mb-4">Cards</h1>
-        <div className="overflow-auto h-100 w-full flex flex-col items-center p-2 border border-gray-300 text-xl">
+        <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
           {cardList.map((card) => (
-          <div key={card.id} className="w-full grid grid-cols-2 border-b p-2">
+          <div key={card.id} onClick={() => {toggleSelectCard(card.id)}} className={`w-full grid grid-cols-2 border-b p-2 ${selectedCards.includes(card.id) && "bg-amber-100"}`}>
             <div className="flex flex-row gap-2 items-center">
               <Image
                 src={"/cards/" + card.icon}
@@ -54,7 +68,7 @@ export default function Menu() {
       </div>
       
       <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <h1 className="text-3xl font-bold mb-4">Stats</h1>
+        <h1 className="text-3xl font-bold mb-4">{leng}</h1>
         <div className="text-xl font-mono">Remaining Levels: {remainingLevels}/{MAX_LEVEL}</div>
 
         <div

@@ -23,7 +23,9 @@ export class Card {
 
 export function useCards() {
 
+  //this whole list is being reloaded every time cardList is updated (or read? in menu.tsx). Should really be database of some kind
   let cardList: Card[] = [];
+  idCounter = 0
 
   cardList.push(new Card("ante_up.png", "Ante Up", 5, 4));
   cardList.push(new Card("charge.png", "Charge", 1, 1));
