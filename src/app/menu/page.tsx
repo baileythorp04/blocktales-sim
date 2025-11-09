@@ -19,12 +19,8 @@ export default function Menu() {
   function toggleSelectCard(cardId: number) {
     if (selectedCards.some(cId => cId == cardId)) {
       setSelectedCards(selectedCards.filter(cId => cId != cardId));
-
     } else {
       setSelectedCards(selectedCards.concat(cardId))
-      //not sure if this also works
-      //selectedCards.push(card)
-      //setSelectedCards(selectedCards)
     }
     
   }
@@ -53,7 +49,7 @@ export default function Menu() {
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
           {cardList.map((card) => (
-          <div key={card.id} onClick={() => {toggleSelectCard(card.id)}} className={`w-full grid grid-cols-2 border-b p-2 ${selectedCards.includes(card.id) && "bg-amber-100"}`}>
+          <div key={card.id} onClick={() => {toggleSelectCard(card.id)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card.id) && "bg-amber-100"}`}>
             <div className="flex flex-row gap-2 items-center">
               <Image
                 src={"/cards/" + card.icon}
@@ -150,7 +146,10 @@ export default function Menu() {
           <GridCell onClick={() => changeStat(Stat.SP, true)}>SP-</GridCell>
           <GridCell onClick={() => changeStat(Stat.BP, true)}>BP-</GridCell>
         </div>
-        <Link href="/combat" className="mt-8 text-blue-500 underline">Go to Combat</Link>
+        {usedBux <= MAX_BUX && usedBp <= bp 
+          ? <Link href="/combat" className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Go to Combat</Link>
+          : <div className={`mt-8 p-4 border bg-gray-100 text-gray-300 cursor-default`}>Go to Combat</div>
+        }
       </div>
       <div className="border border-gray-300">
         choose items
