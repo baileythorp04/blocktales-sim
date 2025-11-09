@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 
-const MAX_BUX = 24
+const MAX_BUX = 17
 
 export default function Menu() {
   const [usedBux, setUsedBux] = useState(0);
@@ -17,7 +17,6 @@ export default function Menu() {
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
 
   function toggleSelectCard(cardId: number) {
-    debugger;
     if (selectedCards.some(cId => cId == cardId)) {
       setSelectedCards(selectedCards.filter(cId => cId != cardId));
 
@@ -91,7 +90,7 @@ export default function Menu() {
                 width={40}
                 height={40}
               />
-              <div className={`${usedBp > bp && "text-red-600"}`}>{usedBp}/{bp}</div>
+              <div className={usedBp > bp ? "text-red-600" : ""}>{usedBp}/{bp}</div>
               <Image
                 src="/bux.png"
                 alt="bux"
