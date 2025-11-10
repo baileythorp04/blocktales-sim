@@ -12,12 +12,14 @@ export default function Menu() {
   let es = [new Enemy(8)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
 
-  function doPlayerTurn(): void {
+  function action(): void {
     //inputs: target, dmg, status, etc. default set to none.
     // takedamage function
       
       let ng = game.clone()
-      ng.player.attack(game.enemies[0]) //this reduce's enemy.hp by 1
+
+      ng.player.sword(game.enemies[0]) 
+
       setGame(ng)
     }
 
@@ -62,7 +64,7 @@ export default function Menu() {
           <h1 className="font-bold mb-4">player hp: {game.player.hp}</h1>
           <h1 className="font-bold mb-4">player sp: {game.player.sp}</h1>
           <h1 className="font-bold mb-4">enemy hp: {game.enemies[0].hp}</h1>
-          <div onClick={() => doPlayerTurn()}>Attack</div>
+          <div className="cursor-pointer" onClick={() => action()}>Attack</div>
       </div>
     </div>
       

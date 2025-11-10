@@ -1,14 +1,16 @@
 
-enum StatusType{
-  END_OF_TURN,
-  ALTER_STAT,
-}
 
-class StatusEffect {
-  statusType: StatusType
+export class StatusEffect { 
+  //should probably: have entity a list of active statuses which are removed when reaching 0 duration
 
-  public constructor(statusType: StatusType){
-    this.statusType = statusType
+  name: string;
+  duration: number;
+  intensity: number;
+
+  public constructor(name: string, duration: number, intensity: number){
+    this.name = name;
+    this.duration = duration;
+    this.intensity = intensity;
   }
 }
 
@@ -19,12 +21,34 @@ class StatusEffect {
 // ######            ######
 
 
-class Entity {
+export class Entity {
   hp: number;
   maxHp: number;
+  defense: number;
 
-  public constructor(hp: number){
+  public constructor(hp: number, defense: number){
     this.hp = this.maxHp = hp;
+    this.defense = defense
+  }
+
+  public dealDamage(target: Entity, dmg: number ) {
+    //TODO: account for damage buffs and debuffs
+    target.takeDamage(dmg)
+  }
+
+  public takeDamage(dmg: number){
+    //TODO: account for whether its full/half/none def piercing
+    //TODO: account for half damage status
+    //TODO: make sure rounding works properly
+    dmg = dmg - this.getDefense()
+    this.hp -= dmg
+
+
+  }
+
+  public getDefense(){
+    //TODO : account for defense status when statuses is implemented
+    return this.defense;
   }
 
   //status: Status;
@@ -34,23 +58,25 @@ class Entity {
 export class Player extends Entity{
   sp: number;
   maxSp: number;
-  public constructor(hp: number, sp: number){
-    super(hp)
-    this.sp = this.maxSp = sp
+  public constructor(hp: number, sp: number, defense: number = 0){
+    super(hp, defense);
+    this.sp = this.maxSp = sp;
   }
 
-  public attack(e : Entity) {
-    e.hp = e.hp - 1
-    return e
+  public sword(e : Entity) {
+    let dmg = 2
+    this.dealDamage(e, dmg)
 
   }
 }
 
 export class Enemy extends Entity{
 
-  public constructor(hp: number){
-    super(hp)
+  public constructor(hp: number, defense: number = 0){
+    super(hp, defense)
   }
+
+  
 }
 
 
@@ -63,8 +89,8 @@ export class Game {
   enemies : Enemy[]
 
   public constructor(player: Player, enemies : Enemy[]){
-    this.player = player
-    this.enemies = enemies
+    this.player = player;
+    this.enemies = enemies;
   }
 
   public clone() {

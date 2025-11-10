@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Entity, StatusEffect } from "@/classes/gameClasses"
 
 let idCounter = 0;
 
@@ -19,6 +20,17 @@ export class Card {
     // this.effect = effect; (function?)
     // can figure out how to implement effects when the combat system is started
   }
+
+  //this only applies to selectable turn cards
+  public doEffect(target: Entity, dmg?: number, status?: StatusEffect) {
+    if (dmg !== undefined){ //TODO: better way to check if undefined
+      target.takeDamage(dmg)
+    }
+    if (status !== undefined){ 
+      //target.applyStatus(status)
+    }
+  }
+
 }
 
 export function useCards() {
