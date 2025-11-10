@@ -3,13 +3,14 @@
 import { type } from "os";
 import { useState } from "react";
 import { Game, Player, Enemy } from "@/classes/gameClasses";
+import Entity from "@/components/entity";
 import Image from "next/image";
 
 export default function Menu() {
 
   //const { game, doPlayerTurn } = useGame()
   let p = new Player(10, 5)
-  let es = [new Enemy(8)]
+  let es = [new Enemy(8), new Enemy(9)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
 
   function action(): void {
@@ -27,36 +28,13 @@ export default function Menu() {
     <div className="container border mx-auto">
       <div className="grid grid-cols-5 border border-red-500">
 
-        {/* This player/enemy section needs to be made into a component */}
-        <div className="flex flex-col items-center">
-          <div>statuses</div>
-          <Image
-            src="/player.png"
-            alt="player"
-            width={160}
-            height={160}
-          />
+        <Entity name="player" isPlayer={true} hp={game.player.hp} sp={game.player.sp} />
+        {game.enemies.map(enemy =>
+          <Entity key={enemy.id} name="enemy1" isPlayer={false} hp={enemy.hp} />
+        )}
 
-          <div>name</div>
-          <div>hp/sp</div>
-        </div>
+        {/* map each active turn card to a button. each card does it effect using the game/player */}
 
-        <div className="flex flex-col items-center">
-          <div>statuses</div>
-          <Image
-            src="/enemy.png"
-            alt="player"
-            width={160}
-            height={160}
-          />
-
-          <div>name</div>
-          <div>hp/sp</div>
-        </div>
-        
-        <div className="">asd</div>
-        <div className="">asd</div>
-        <div className="">asd</div>
 
       </div>
       <div className="flex flex-col items-center justify-center p-8">

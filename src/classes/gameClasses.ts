@@ -20,13 +20,16 @@ export class StatusEffect {
 // ###### CORE STUFF ######
 // ######            ######
 
+let entityId = 0
 
 export class Entity {
+  id: number;
   hp: number;
   maxHp: number;
   defense: number;
 
   public constructor(hp: number, defense: number){
+    this.id = entityId++;
     this.hp = this.maxHp = hp;
     this.defense = defense
   }
