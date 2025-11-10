@@ -2,7 +2,7 @@
 import GridCell from "@/components/GridCell";
 import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
-import { useCards, Card } from "@/hooks/useCards";
+import { BUYABLE_CARDS, Card } from "@/static/Cards";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -13,7 +13,6 @@ export default function Menu() {
   const [usedBux, setUsedBux] = useState(0);
   const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
-  const { cardList } = useCards();
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
 
   function toggleSelectCard(cardId: number) {
@@ -31,7 +30,7 @@ export default function Menu() {
     let bpTotal = 0
     let buxTotal = 0
     selectedCards.forEach(cardId => {
-      let card = cardList.find(card => card.id == cardId)
+      let card = BUYABLE_CARDS.find(card => card.id == cardId)
       if (card != undefined) {
         bpTotal += card.bp
         buxTotal += card.bux
@@ -48,7 +47,7 @@ export default function Menu() {
         <h1 className="text-3xl font-bold mb-4">Cards</h1>
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
-          {cardList.map((card) => (
+          {BUYABLE_CARDS.map((card) => (
           <div key={card.id} onClick={() => {toggleSelectCard(card.id)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card.id) && "bg-amber-100"}`}>
             <div className="flex flex-row gap-2 items-center">
               <Image

@@ -2,7 +2,7 @@
 
 import { type } from "os";
 import { useState } from "react";
-import { Game, Player, Enemy } from "@/classes/gameClasses";
+import { Game, Player, Enemy } from "@/static/gameClasses";
 import Entity from "@/components/entity";
 import Image from "next/image";
 
