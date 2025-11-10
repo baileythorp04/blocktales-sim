@@ -5,8 +5,11 @@ import { useState } from "react";
 import { Game, Player, Enemy } from "@/static/gameClasses";
 import Entity from "@/components/entity";
 import Image from "next/image";
+import { useCardSelection } from "@/context/CardSelectionContext";
 
-export default function Menu() {
+export default function Combat() {
+  const { selectedCards, setSelectedCards } = useCardSelection();
+  
 
   //const { game, doPlayerTurn } = useGame()
   let p = new Player(10, 5)
@@ -15,14 +18,13 @@ export default function Menu() {
 
   function action(): void {
     //inputs: target, dmg, status, etc. default set to none.
-    // takedamage function
       
-      let ng = game.clone()
+    let ng = game.clone()
 
-      ng.player.sword(game.enemies[0]) 
+    ng.player.sword(game.enemies[0]) 
 
-      setGame(ng)
-    }
+    setGame(ng)
+  }
 
   return (
     <div className="container border mx-auto">
@@ -38,12 +40,21 @@ export default function Menu() {
 
       </div>
       <div className="flex flex-col items-center justify-center p-8">
-          <h1 className="text-3xl font-bold mb-4">Combat</h1>
-          <h1 className="font-bold mb-4">player hp: {game.player.hp}</h1>
-          <h1 className="font-bold mb-4">player sp: {game.player.sp}</h1>
-          <h1 className="font-bold mb-4">enemy hp: {game.enemies[0].hp}</h1>
-          <div className="cursor-pointer" onClick={() => action()}>Attack</div>
+          <div className="cursor-pointer text-3xl" onClick={() => action()}>Attack</div>
       </div>
+      {selectedCards.map((card) => (
+        <div key={card.id} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer`}>
+          <div className="flex flex-row gap-2 items-center">
+            <Image
+              src={"/cards/" + card.icon}
+              alt={card.name + " icon"}
+              width={50}
+              height={50}
+            />
+            <div>{card.name}</div>
+          </div>
+        </div>
+        ))}
     </div>
       
   );

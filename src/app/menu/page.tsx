@@ -3,6 +3,7 @@ import GridCell from "@/components/GridCell";
 import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
 import { BUYABLE_CARDS, Card } from "@/static/Cards";
+import { useCardSelection } from "@/context/CardSelectionContext"
 import Link from "next/link";
 import Image from "next/image";
 
@@ -13,13 +14,13 @@ export default function Menu() {
   const [usedBux, setUsedBux] = useState(0);
   const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
-  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const { selectedCards, setSelectedCards } = useCardSelection();
 
-  function toggleSelectCard(cardId: number) {
-    if (selectedCards.some(cId => cId == cardId)) {
-      setSelectedCards(selectedCards.filter(cId => cId != cardId));
+  function toggleSelectCard(card: Card) {
+    if (selectedCards.some(c => c === card)) {
+      setSelectedCards(selectedCards.filter(c => c != card));
     } else {
-      setSelectedCards(selectedCards.concat(cardId))
+      setSelectedCards(selectedCards.concat(card))
     }
     
   }
@@ -29,12 +30,9 @@ export default function Menu() {
   function setRemainingStats() {
     let bpTotal = 0
     let buxTotal = 0
-    selectedCards.forEach(cardId => {
-      let card = BUYABLE_CARDS.find(card => card.id == cardId)
-      if (card != undefined) {
-        bpTotal += card.bp
-        buxTotal += card.bux
-      }
+    selectedCards.forEach(card => {
+      bpTotal += card.bp
+      buxTotal += card.bux
     });
     setUsedBux(buxTotal)
     setUsedBp(bpTotal)
@@ -48,7 +46,7 @@ export default function Menu() {
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
           {BUYABLE_CARDS.map((card) => (
-          <div key={card.id} onClick={() => {toggleSelectCard(card.id)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card.id) && "bg-amber-100"}`}>
+          <div key={card.id} onClick={() => {toggleSelectCard(card)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card) && "bg-amber-100"}`}>
             <div className="flex flex-row gap-2 items-center">
               <Image
                 src={"/cards/" + card.icon}
