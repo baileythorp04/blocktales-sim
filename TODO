@@ -1,1 +1,4 @@
 throw you back to battle prep on combat refresh
+    (stuff breaks when you rerender combat)
+
+new idea for how actve cards could work: make them start-of-combat effects which adds a move to the list 

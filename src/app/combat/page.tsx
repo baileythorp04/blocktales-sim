@@ -11,7 +11,7 @@ import { useCardSelection } from "@/context/CardSelectionContext";
 export default function Combat() {
   const { selectedCards, setSelectedCards } = useCardSelection();
   
-  useEffect(() => {setSelectedCards(selectedCards.concat(DEFAULT_CARDS))}, [])
+  useEffect(() => {setSelectedCards(DEFAULT_CARDS.concat(selectedCards))}, [])
 
   //const { game, doPlayerTurn } = useGame()
   let p = new Player(10, 5)

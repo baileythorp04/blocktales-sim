@@ -99,5 +99,9 @@ export class Game {
   public clone() {
     return new Game(this.player, this.enemies)
   }
+
+  public startCombat() {
+    //do all start-of-combat cards
+  }
   
 }
