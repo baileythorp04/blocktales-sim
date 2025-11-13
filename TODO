@@ -8,3 +8,5 @@ how to deal with the special case of leech happening at two times (start of comb
     all cards get 4 functions, one for each time, with default function doing nothing. all cards' function is called at a given time.
 
     way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
+
+implement counters in the cards and access them in the function somehow

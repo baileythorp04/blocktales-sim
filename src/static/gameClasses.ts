@@ -74,12 +74,6 @@ export class Player extends Entity{
     this.sp = this.maxSp = sp;
   }
 
-  public sword(e : Entity) {
-    let dmg = 2
-    this.dealDamage(e, dmg)
-
-  }
-
   public addSp(n: number){
     this.hp = Math.min(this.sp+n, this.maxSp)
   }

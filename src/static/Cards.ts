@@ -20,7 +20,7 @@ export class Card {
   type: CardType;
   effect: (player: Player, card?: Card) => void;
 
-  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player) => void) {
+  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player) => void, a?: number, b?: number, c?: number) {
     this.id = idCounter++;
     this.icon = icon;
     this.name = name;
@@ -88,6 +88,7 @@ export const BUYABLE_CARDS: Card[] = [
   new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player) => {
     //make sure this happens before the death check in game.startOfTurn()
     //TODO: will implement a 'has-self-revived' counter when I do the four-functions card implementation later
+    //  (actually, if Im just gonna have it input functions similar to as-is, that wont solve the counter problem)
     if (player.hp >= 0){
       player.hp = 5;
     }
@@ -119,12 +120,4 @@ export const BUYABLE_CARDS: Card[] = [
   //cardList.sort((a, b) => a.bux > b.bux ? -1 : 1);
 ];
 
-export const DEFAULT_CARDS: Card[] = [
 
-//   new Card("defend.png", "Defend", 0, 0),
-//   new Card("pass.png", "Pass", 0, 0),
-//   new Card("ball.png", "Ball", 0, 0),
-//   new Card("sword.png", "Sword", 0, 0),
-//   new Card("dynamite.png", "Dynamite", 0, 0),
-
-];

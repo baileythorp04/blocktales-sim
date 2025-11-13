@@ -3,7 +3,7 @@
 import { type } from "os";
 import { useState, useEffect } from "react";
 import { Game, Player, Enemy } from "@/static/gameClasses";
-import { DEFAULT_CARDS } from "@/static/Cards";
+import { DEFAULT_ACTIONS } from "@/static/Actions";
 import Entity from "@/components/entity";
 import Image from "next/image";
 import { useCardSelection } from "@/context/CardSelectionContext";
@@ -11,8 +11,6 @@ import { useCardSelection } from "@/context/CardSelectionContext";
 export default function Combat() {
   const { selectedCards, setSelectedCards } = useCardSelection();
   
-  useEffect(() => {setSelectedCards(DEFAULT_CARDS.concat(selectedCards))}, [])
-
   //const { game, doPlayerTurn } = useGame()
   let p = new Player(10, 5)
   let es = [new Enemy(8), new Enemy(9)]
@@ -23,7 +21,7 @@ export default function Combat() {
       
     let ng = game.clone()
 
-    ng.player.sword(game.enemies[0]) 
+    //do chosen action
 
     setGame(ng)
   }
