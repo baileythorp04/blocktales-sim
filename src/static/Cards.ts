@@ -29,26 +29,7 @@ export class Card {
 
     this.type = type,
     this.effect = effect;
-
-    //available targets
-    //card type (when does it activate?)
-    //effect(player, enemy | enemy[], ) => void (for active usable cards)
-    //  do enemy.takedamage() or player.dealdamage(enemy)?
-    // the second one, so damage mods can take effect in player.dealdamage.
-
-    //make each card extend Card and override Effect
   }
-
-  //this only applies to selectable turn cards
-  public doEffect(target: Player, dmg?: number, status?: StatusEffect) {
-    if (dmg !== undefined){ //TODO: better way to check if undefined
-      target.takeDamage(dmg)
-    }
-    if (status !== undefined){ 
-      //target.applyStatus(status)
-    }
-  }
-
 }
 
 export const BUYABLE_CARDS: Card[] = [

@@ -1,22 +1,20 @@
 import { Player, Enemy, StatusEffect } from "./gameClasses"
+
+let idCounter = 0;
+
 export class Action{
+  id: number;
   icon: string;
   name: string;
   spCost: number;
   doEffect: (player: Player, enemy: Enemy ) => void;
 
   public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, enemy: Enemy) => void ){
+    this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.spCost = spCost;
     this.doEffect = doEffect;
-}
-
-  public cast(player: Player, enemy: Enemy ){
-    if (player.sp >= this.spCost) { //there should be a check earlier in UI anyway{
-      player.sp -= this.spCost;
-      this.doEffect(player, enemy)
-    }
   }
 
 }

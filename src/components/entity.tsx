@@ -5,10 +5,12 @@ type EntityProps = {
   name: string,
   isPlayer: boolean,
   hp: number
+  maxHp?: number
   sp?: number
+  maxSp?: number
 };
 
-export default function Entity({ name, isPlayer, hp, sp }: EntityProps) {
+export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp }: EntityProps) {
   return (
     <div className="flex flex-col items-center">
     <div>statuses</div>
@@ -28,8 +30,8 @@ export default function Entity({ name, isPlayer, hp, sp }: EntityProps) {
     <div>{name}</div>
     {isPlayer
     ? <div>
-        <div>hp: {hp}</div>
-        <div>sp: {sp}</div>
+        <div>hp: {hp}/{maxHp}</div>
+        <div>sp: {sp}/{maxSp}</div>
       </div>
     : <div>hp: {hp}</div>}
 </div>

@@ -1,3 +1,4 @@
+import { Action } from "./Actions";
 
 
 export class StatusEffect { 
@@ -75,7 +76,21 @@ export class Player extends Entity{
   }
 
   public addSp(n: number){
-    this.hp = Math.min(this.sp+n, this.maxSp)
+    this.sp = Math.min(this.sp+n, this.maxSp)
+  }
+
+  public canCast(action: Action){
+    return action.spCost <= this.sp;
+  }
+
+  public cast(action: Action, enemy: Enemy ){
+    if (this.canCast(action)) { 
+      this.sp -= action.spCost;
+      action.doEffect(this, enemy)
+      return "success"
+    } else {
+      return "missing sp"
+    }
   }
 }
 
