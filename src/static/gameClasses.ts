@@ -26,12 +26,14 @@ export class Entity {
   id: number;
   hp: number;
   maxHp: number;
+  attackBoost: number;
   defense: number;
 
   public constructor(hp: number, defense: number){
     this.id = entityId++;
     this.hp = this.maxHp = hp;
-    this.defense = defense
+    this.attackBoost = 0;
+    this.defense = defense;
   }
 
   public dealDamage(target: Entity, dmg: number ) {
@@ -54,6 +56,12 @@ export class Entity {
     return this.defense;
   }
 
+  public addHp(n: number){
+    this.hp = Math.min(this.hp+n, this.maxHp)
+  }
+
+  
+
   //status: Status;
   //function applyStatus: () => void;
 }
@@ -61,8 +69,8 @@ export class Entity {
 export class Player extends Entity{
   sp: number;
   maxSp: number;
-  public constructor(hp: number, sp: number, defense: number = 0){
-    super(hp, defense);
+  public constructor(hp: number, sp: number){
+    super(hp, 0);
     this.sp = this.maxSp = sp;
   }
 
@@ -70,6 +78,10 @@ export class Player extends Entity{
     let dmg = 2
     this.dealDamage(e, dmg)
 
+  }
+
+  public addSp(n: number){
+    this.hp = Math.min(this.sp+n, this.maxSp)
   }
 }
 
