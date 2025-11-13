@@ -1,8 +1,6 @@
 throw you back to battle prep on combat refresh
     (stuff breaks when you rerender combat)
 
-new idea for how actve cards could work: make them start-of-combat effects which adds a move to the list 
-
 how to deal with the special case of leech happening at two times (start of combat, on attack):
     instead of 4 different types and then lists of cards for each activation time:
     all cards get 4 functions, one for each time, with default function doing nothing. all cards' function is called at a given time.
@@ -10,3 +8,6 @@ how to deal with the special case of leech happening at two times (start of comb
     way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
 
 implement counters in the cards and access them in the function somehow
+
+change enemy:Enemy to target:Entity for where it makes sense
+error if targetting player with attack or enemy with heal

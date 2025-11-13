@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Player, StatusEffect } from "./gameClasses"
+import { Enemy, Player, StatusEffect } from "./gameClasses"
+import {Action} from "./Actions"
 
 let idCounter = 0;
 
-enum CardType {
+export enum CardType {
   ACTIVE,
   START_OF_COMBAT,
   ON_ATTACK, //ante up, hp leech
@@ -79,7 +80,10 @@ export const BUYABLE_CARDS: Card[] = [
     player.addHp(1);
   }), 
   new Card("linebounce.png", "Linebounce", 0, 1, CardType.ACTIVE, (player: Player) => {
-    //add action
+    let action = new Action("linebounce.png", "Linebounce", 1, (player: Player, enemy: Enemy) => { //TODO could fix up some repeated code here after counter is sorted out
+      //TODO code in multi-targetting later
+    })
+    player.actions = player.actions.concat(action);
   }), 
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
     //add action

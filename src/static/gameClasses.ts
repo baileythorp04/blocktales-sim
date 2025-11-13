@@ -70,9 +70,12 @@ export class Entity {
 export class Player extends Entity{
   sp: number;
   maxSp: number;
+  actions: Action[];
+
   public constructor(hp: number, sp: number){
     super(hp, 0);
     this.sp = this.maxSp = sp;
+    this.actions = [];
   }
 
   public addSp(n: number){
