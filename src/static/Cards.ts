@@ -94,7 +94,11 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
-      player.addHp(5)
+      if (player.hp < player.maxHp){
+        player.addHp(5)
+      } else {
+        player.addSp(player.spOnPass)
+      }
     })
     player.actions = player.actions.concat(action);
   }),
@@ -142,10 +146,10 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("pity_sp.png", "Pity SP", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
-      player.hp -= 10
       player.addSp(5)
-      //TODO require hp to be above 10. add a 'too expensive' function somewhere that also applies to sp-cost actions?
-    })
+    },
+    10 //hpCost
+  )
     player.actions = player.actions.concat(action);
   }), 
 

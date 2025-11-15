@@ -1,4 +1,6 @@
-import { Action } from "./Actions";
+import { Action, DEFAULT_ACTIONS } from "./Actions";
+import { Card, CardType } from "./Cards";
+
 
 
 export class StatusEffect { 
@@ -92,17 +94,18 @@ export class Player extends Entity{
     this.sp = Math.min(this.sp+n, this.maxSp)
   }
 
-  public canCast(action: Action){
-    return action.spCost <= this.sp;
-  }
+
 
   public cast(action: Action, enemy: Enemy ){
-    if (this.canCast(action)) { 
+    if (action.spCost > this.sp) {
+      return "missing sp"
+    } else if (action.hpCost > this.hp) {
+      return "missing hp"
+    } else { 
       this.sp -= action.spCost;
+      this.hp -= action.hpCost;
       action.doEffect(this, enemy)
       return "success"
-    } else {
-      return "missing sp"
     }
   }
 }
@@ -134,8 +137,26 @@ export class Game {
     return new Game(this.player, this.enemies)
   }
 
-  public startCombat() {
-    //do all start-of-combat cards
+  public startCombat(selectedCards: Card[]) {
+    // ### adding player actions ###
+      this.player.actions = DEFAULT_ACTIONS
+      selectedCards.forEach((card: Card) => {
+        if (card.type == CardType.ACTIVE){
+          card.doEffect(this.player)
+        }
+      })
+
+    // ### start-of-combat card effects ###
+    selectedCards.forEach((card: Card) => {
+      if (card.type == CardType.START_OF_COMBAT){
+        card.doEffect(this.player)
+      }
+    })
+
+    // ### other start-of-combat effects ###
+    this.player.attackBoost = Math.max(this.player.attackBoost, -1)
+
+
   }
   
 }

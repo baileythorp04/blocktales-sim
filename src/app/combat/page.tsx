@@ -3,7 +3,7 @@
 import { type } from "os";
 import { useState, useEffect } from "react";
 import { Game, Player, Enemy } from "@/static/gameClasses";
-import { Action, DEFAULT_ACTIONS } from "@/static/Actions";
+import { Action } from "@/static/Actions";
 import Entity from "@/components/entity";
 import Image from "next/image";
 import { useCardSelection } from "@/context/CardSelectionContext";
@@ -21,28 +21,16 @@ export default function Combat() {
   let es = [new Enemy(8), new Enemy(9)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
+  const [ hpError, setHpError ] = useState<boolean>(false)
 
   //TODO: turn this into a 'start game' button
   useEffect(() => {
     if (!combatStarted){
       let g = game.clone()
 
-      // ### adding player actions ###
-      g.player.actions = DEFAULT_ACTIONS
-      selectedCards.forEach((card: Card) => {
-        if (card.type == CardType.ACTIVE){
-          card.doEffect(g.player)
-        }
-      })
-
-      // ### start-of-combat effects ###
-      selectedCards.forEach((card: Card) => {
-        if (card.type == CardType.START_OF_COMBAT){
-          card.doEffect(g.player)
-        }
-      })
-      setGame(g)
+      g.startCombat(selectedCards)
       
+      setGame(g)
       setCombatStarted(true)
     }
 
@@ -52,11 +40,14 @@ export default function Combat() {
     let g = game.clone()
 
     // ### player action ###
+    setSpError(false)
+    setHpError(false)
     let result = g.player.cast(action, g.enemies[0])
     if (result == "missing sp") {
       setSpError(true)
+    } else if (result == "missing hp") {
+      setHpError(true)
     } else if (result == "success") {
-      setSpError(false)
 
       /// ((( second-player-turn logic )))
 
@@ -96,6 +87,7 @@ export default function Combat() {
                 height={80}
                 />
               {action.spCost > 0 && <div className="row-span-1 flex justify-center">{action.spCost} SP</div>}
+              {action.hpCost > 0 && <div className="row-span-1 flex justify-center">{action.hpCost} HP</div>}
             </div>
           </div>
         ))}
@@ -103,6 +95,9 @@ export default function Combat() {
 
       { spError && <div className="text-3xl">
         Not Enough SP
+      </div> }
+      { hpError && <div className="text-3xl">
+        Not Enough HP
       </div> }
     </div>
       
