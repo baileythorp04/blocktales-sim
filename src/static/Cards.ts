@@ -18,18 +18,27 @@ export class Card {
   bux: number;
   bp: number;
 
-  type: CardType;
-  effect: (player: Player, card?: Card) => void;
+  counter: number;
 
-  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player) => void, a?: number, b?: number, c?: number) {
+  type: CardType;
+  effect: (player: Player, card: Card) => void;
+
+  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player, card: Card) => void) {
     this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.bux = bux;
     this.bp = bp;
 
+    this.counter = 0;
+
     this.type = type,
     this.effect = effect;
+
+  }
+
+  public doEffect(player: Player){
+    this.effect(player, this)
   }
 }
 
@@ -86,18 +95,22 @@ export const BUYABLE_CARDS: Card[] = [
     player.actions = player.actions.concat(action);
   }),
 
-  new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player) => {
-    //make sure this happens before the death check in game.startOfTurn()
-    //TODO: will implement a 'has-self-revived' counter when I do the four-functions card implementation later
-    //  (actually, if Im just gonna have it input functions similar to as-is, that wont solve the counter problem. still need to pass card in as an arg.)
+  new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
+    //TODO make sure this happens before the death check in game.startOfTurn()
     if (player.hp >= 0){
-      player.hp = 5;
+      if (thisCard.counter == 0){
+        player.hp = 5;
+        thisCard.counter++;
+      } 
     }
   }),
 
-  new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player) => {
-    //TODO: will implement a odd-turn counter when I do the four-functions card implementation later
-    player.addHp(1);
+  new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
+    thisCard.counter++;
+    if (thisCard.counter == 2) {
+      player.addHp(1);
+      thisCard.counter = 0
+    }
   }), 
 
   new Card("linebounce.png", "Linebounce", 0, 1, CardType.ACTIVE, (player: Player) => {

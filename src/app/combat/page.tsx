@@ -29,7 +29,7 @@ export default function Combat() {
     g.player.actions = DEFAULT_ACTIONS
     selectedCards.forEach((card: Card) => {
       if (card.type == CardType.ACTIVE){
-        card.effect(g.player)
+        card.doEffect(g.player)
       }
     })
 
@@ -53,7 +53,11 @@ export default function Combat() {
       /// ### enemy action ####
 
       /// ### start-of-turn effects ####
-
+      selectedCards.forEach((card: Card) => {
+      if (card.type == CardType.START_OF_TURN){
+        card.doEffect(g.player)
+      }
+    })
 
 
       setGame(g)
