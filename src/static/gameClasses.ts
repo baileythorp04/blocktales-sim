@@ -72,10 +72,20 @@ export class Player extends Entity{
   maxSp: number;
   actions: Action[];
 
+  spOnHit: number = 0;
+  hpOnHit: number = 0;
+  spOnPass: number = 1;
+
   public constructor(hp: number, sp: number){
     super(hp, 0);
     this.sp = this.maxSp = sp;
     this.actions = [];
+  }
+
+  public dealDamage(target: Entity, dmg: number ) { 
+    super.dealDamage(target, dmg)
+    this.addHp(this.hpOnHit) //TODO hp/sp drain should only work if attack deals >0 damage (but thats hard to implement) and shouldn't apply to multihits. 
+    this.addSp(this.spOnHit)  
   }
 
   public addSp(n: number){

@@ -25,7 +25,7 @@ export const DEFAULT_ACTIONS: Action[] = [
 
 //  new Action("defend.png", "Defend", 0, 0), //TODO: program double turns later
   new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
-    player.addSp(1);
+    player.addSp(player.spOnPass);
   }),
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
     player.dealDamage(target,1)

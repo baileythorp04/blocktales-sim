@@ -1,13 +1,12 @@
 throw you back to battle prep on combat refresh
     (stuff breaks when you rerender combat)
 
-how to deal with the special case of leech happening at two times (start of combat, on attack):
-    instead of 4 different types and then lists of cards for each activation time:
-    all cards get 4 functions, one for each time, with default function doing nothing. all cards' function is called at a given time.
-
-    way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
-
-!!!implement counters in the cards and access them in the function somehow
-
+way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
 
 ?????? add 'allowed targets' to action (player, enemy, multiple, auto) error if targetting player with attack or enemy with heal
+
+add list of chosen passive cards to combat UI
+
+add a reusable function for iterating through all cards of a given type
+
+fix strict mode (probably) useeffect triggering all start of combat effects twice

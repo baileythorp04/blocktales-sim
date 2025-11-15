@@ -15,27 +15,37 @@ import { Card, CardType } from "@/static/Cards";
 
 export default function Combat() {
   const { selectedCards } = useCardSelection();
+  const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv
   
-  let p = new Player(10, 5)
+  let p = new Player(25, 10)
   let es = [new Enemy(8), new Enemy(9)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
 
   //TODO: turn this into a 'start game' button
   useEffect(() => {
-    let g = game.clone()
+    if (!combatStarted){
+      let g = game.clone()
 
-    // ### adding player actions ###
-    g.player.actions = DEFAULT_ACTIONS
-    selectedCards.forEach((card: Card) => {
-      if (card.type == CardType.ACTIVE){
-        card.doEffect(g.player)
-      }
-    })
+      // ### adding player actions ###
+      g.player.actions = DEFAULT_ACTIONS
+      selectedCards.forEach((card: Card) => {
+        if (card.type == CardType.ACTIVE){
+          card.doEffect(g.player)
+        }
+      })
 
-    // ### start-of-combat effects ###
+      // ### start-of-combat effects ###
+      selectedCards.forEach((card: Card) => {
+        if (card.type == CardType.START_OF_COMBAT){
+          card.doEffect(g.player)
+        }
+      })
+      setGame(g)
+      
+      setCombatStarted(true)
+    }
 
-    setGame(g)
   }, [])
 
   function handleActionClick(action: Action): void {

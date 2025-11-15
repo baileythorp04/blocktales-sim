@@ -7,7 +7,6 @@ let idCounter = 0;
 export enum CardType {
   ACTIVE,
   START_OF_COMBAT,
-  ON_ATTACK, //ante up, hp leech
   START_OF_TURN,
 }
 
@@ -53,25 +52,30 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   new Card("sp_saver.png", "SP Saver", 4, 3, CardType.START_OF_COMBAT, (player: Player) => {
-    //reduce cost of all player.actions
+    player.actions.forEach((action)=> {
+      if (action.spCost > 0) {
+        action.spCost = Math.max(action.spCost - 1, 1)
+      }
+    })
   }), 
 
   new Card("sp_regen+.png", "SP Regen+", 4, 2, CardType.START_OF_COMBAT, (player: Player) => {
-    //alter the pass and defend actions
+    player.spOnPass++;
   }),
 
   new Card("item+.png", "Item+", 3, 3, CardType.START_OF_COMBAT, (player: Player) => {
-    // idk
+    // TODO implement items
   }), 
 
-  new Card("sp_drain.png", "SP Drain", 2, 1, CardType.ON_ATTACK, (player: Player) => {
-    //havent figured out how to do the -1 atk yet
-    player.addSp(1)
+  new Card("sp_drain.png", "SP Drain", 2, 1, CardType.START_OF_COMBAT, (player: Player) => {
+    player.spOnHit++;
+    player.attackBoost--;
   }), 
 
-  new Card("hp_drain.png", "HP drain", 2, 1, CardType.ON_ATTACK, (player: Player) => {
-    //havent figured out how to do the -1 atk yet
-    player.addHp(1)
+  new Card("hp_drain.png", "HP drain", 2, 1, CardType.START_OF_COMBAT, (player: Player) => {
+    player.hpOnHit++;
+    player.attackBoost--;
+
   }), 
 
   new Card("good_vibes.png", "Good Vibes", 1, 2, CardType.ACTIVE, (player: Player) => {
@@ -113,8 +117,8 @@ export const BUYABLE_CARDS: Card[] = [
     }
   }), 
 
-  new Card("linebounce.png", "Linebounce", 0, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("linebounce.png", "Linebounce", 2, (player: Player, target: Enemy) => {
+  new Card("linebounce.png", "Linebounce (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
+    let action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {
       //TODO code in multi-targetting later (or dont)
     })
     player.actions = player.actions.concat(action);
@@ -128,8 +132,8 @@ export const BUYABLE_CARDS: Card[] = [
     player.actions = player.actions.concat(action);
   }), 
 
-  new Card("daze.png", "Daze", 0, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("daze.png", "Daze", 2, (player: Player, target: Enemy) => {
+  new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
+    let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
       //TODO code in multi-targetting later (or dont)
 
     })
