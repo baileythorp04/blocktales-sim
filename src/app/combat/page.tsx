@@ -23,26 +23,26 @@ export default function Combat() {
 
   //TODO: turn this into a 'start game' button
   useEffect(() => {
-    let ng = game.clone()
+    let g = game.clone()
 
     // ### adding player actions ###
-    ng.player.actions = DEFAULT_ACTIONS
+    g.player.actions = DEFAULT_ACTIONS
     selectedCards.forEach((card: Card) => {
       if (card.type == CardType.ACTIVE){
-        card.effect(ng.player)
+        card.effect(g.player)
       }
     })
 
     // ### start-of-combat effects ###
 
-    setGame(ng)
+    setGame(g)
   }, [])
 
   function handleActionClick(action: Action): void {
-    let ng = game.clone()
+    let g = game.clone()
 
     // ### player action ###
-    let result = ng.player.cast(action, ng.enemies[0])
+    let result = g.player.cast(action, g.enemies[0])
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "success") {
@@ -56,7 +56,7 @@ export default function Combat() {
 
 
 
-      setGame(ng)
+      setGame(g)
     }
 
   }

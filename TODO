@@ -7,7 +7,7 @@ how to deal with the special case of leech happening at two times (start of comb
 
     way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
 
-implement counters in the cards and access them in the function somehow
+!!!implement counters in the cards and access them in the function somehow
 
-change enemy:Enemy to target:Entity for where it makes sense
-error if targetting player with attack or enemy with heal
+
+?????? add 'allowed targets' to action (player, enemy, multiple, auto) error if targetting player with attack or enemy with heal
