@@ -3,21 +3,6 @@ import { Card, CardType } from "./Cards";
 
 
 
-export class StatusEffect { 
-  //should probably: have entity a list of active statuses which are removed when reaching 0 duration
-
-  name: string;
-  duration: number;
-  intensity: number;
-
-  public constructor(name: string, duration: number, intensity: number){
-    this.name = name;
-    this.duration = duration;
-    this.intensity = intensity;
-  }
-}
-
-
 
 // ######            ######
 // ###### CORE STUFF ######

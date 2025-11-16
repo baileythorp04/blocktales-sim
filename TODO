@@ -1,12 +1,26 @@
+# code fixes
+
 throw you back to battle prep on combat refresh
     (stuff breaks when you rerender combat)
 
 way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
 
-?????? add 'allowed targets' to action (player, enemy, multiple, auto) error if targetting player with attack or enemy with heal
+add a reusable function for iterating through all cards of a given type
+
+
+# game fixes
 
 add list of chosen passive cards to combat UI
 
-add a reusable function for iterating through all cards of a given type
-
 fix strict mode (probably) useeffect triggering all start of combat effects twice
+
+test how Defence Up status works with sword's pierce (does 1dmg sword pierce it or not?)
+if needed for softener, implement defup/defdown countering
+
+# game features
+
+items
+status effects
+enemy targetting
+enemy actions
+trotter stances

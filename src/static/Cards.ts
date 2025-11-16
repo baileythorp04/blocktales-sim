@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Enemy, Player, StatusEffect } from "./gameClasses"
+import { Enemy, Player} from "./gameClasses"
 import {Action} from "./Actions"
 
 let idCounter = 0;
@@ -84,13 +84,6 @@ export const BUYABLE_CARDS: Card[] = [
     })
     player.actions = player.actions.concat(action);
   }), 
-
-  new Card("charge.png", "Charge", 1, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("charge.png", "Charge", 3, (player: Player, target: Enemy) => {
-      //TODO apply status effect. or dont.
-    })
-    player.actions = player.actions.concat(action);
-  }),
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
