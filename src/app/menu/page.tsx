@@ -3,18 +3,21 @@ import GridCell from "@/components/GridCell";
 import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
 import { BUYABLE_CARDS, Card } from "@/static/Cards";
-import { useCardSelection } from "@/context/CardSelectionContext"
+import { usePlayerBuild } from "@/context/PlayerBuildContext"
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 const MAX_BUX = 17
 
 export default function Menu() {
+  const router = useRouter();
   const [usedBux, setUsedBux] = useState(0);
   const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
-  const { selectedCards, setSelectedCards } = useCardSelection();
+  const [selectedCards, setSelectedCards] = useState<Card[]>([]);
+  const { playerBuild, setPlayerBuild } = usePlayerBuild();
 
   function toggleSelectCard(card: Card) {
     if (selectedCards.some(c => c === card)) {
@@ -36,7 +39,16 @@ export default function Menu() {
     });
     setUsedBux(buxTotal)
     setUsedBp(bpTotal)
-}
+  }
+
+  function handleCombatLink() {
+    setPlayerBuild({
+      hp:hp,
+      sp:sp,
+      selectedCards:selectedCards,
+    })
+    router.push("/combat");
+  }
 
   return (
     <div className="grid grid-cols-3 justify-center items-center mx-8">
@@ -144,7 +156,7 @@ export default function Menu() {
           <GridCell onClick={() => changeStat(Stat.BP, true)}>BP-</GridCell>
         </div>
         {usedBux <= MAX_BUX && usedBp <= bp 
-          ? <Link href="/combat" className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Go to Combat</Link>
+          ? <div onClick={() => handleCombatLink()} className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Go to Combat</div>
           : <div className={`mt-8 p-4 border bg-gray-100 text-gray-300 cursor-default`}>Go to Combat</div>
         }
       </div>

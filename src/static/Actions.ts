@@ -1,4 +1,4 @@
-import { Player, Enemy, StatusEffect } from "./gameClasses"
+import { Player, Enemy } from "./gameClasses"
 
 let idCounter = 0;
 

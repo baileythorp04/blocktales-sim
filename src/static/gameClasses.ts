@@ -1,5 +1,6 @@
 import { Action, DEFAULT_ACTIONS } from "./Actions";
 import { Card, CardType } from "./Cards";
+import { PlayerBuild } from "./PlayerBuild";
 
 
 
@@ -58,15 +59,25 @@ export class Player extends Entity{
   sp: number;
   maxSp: number;
   actions: Action[];
+  cards: Card[];
 
   spOnHit: number = 0;
   hpOnHit: number = 0;
   spOnPass: number = 1;
 
-  public constructor(hp: number, sp: number){
-    super(hp, 0);
-    this.sp = this.maxSp = sp;
-    this.actions = [];
+  public constructor(build: PlayerBuild){
+    super(build.hp, 0);
+    this.sp = this.maxSp = build.sp;
+    this.cards = build.selectedCards;
+
+
+    // ### adding player actions ###
+    this.actions = DEFAULT_ACTIONS
+    this.cards.forEach((card: Card) => {
+      if (card.type == CardType.ACTIVE){
+        card.doEffect(this)
+      }
+    })
   }
 
   public dealDamage(target: Entity, dmg: number ) { 
@@ -122,17 +133,10 @@ export class Game {
     return new Game(this.player, this.enemies)
   }
 
-  public startCombat(selectedCards: Card[]) {
-    // ### adding player actions ###
-      this.player.actions = DEFAULT_ACTIONS
-      selectedCards.forEach((card: Card) => {
-        if (card.type == CardType.ACTIVE){
-          card.doEffect(this.player)
-        }
-      })
+  public startCombat() {
 
     // ### start-of-combat card effects ###
-    selectedCards.forEach((card: Card) => {
+    this.player.cards.forEach((card: Card) => {
       if (card.type == CardType.START_OF_COMBAT){
         card.doEffect(this.player)
       }

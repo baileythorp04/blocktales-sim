@@ -8,7 +8,7 @@ export enum StatusType {
   ARMOR_UP,
 }
 
-const statusDebuffMap: Map<StatusType, boolean> = new Map([
+const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
   [StatusType.FIRE, true],
   [StatusType.DAMAGE_DOWN, true],
   [StatusType.SMALL, true],
@@ -29,16 +29,22 @@ const statusDebuffMap: Map<StatusType, boolean> = new Map([
 export class Statuses {
   statuses: StatusEffect[] = []
 
-  public applyStatus(type: StatusType, duration: number, intensity: number){
-    let existingStatus = this.statuses.find((s)=> {s.type == type})
-    
-    if (existingStatus == undefined){
-      let newStatus = new StatusEffect(type, duration, intensity)
-      this.statuses.concat(newStatus)
+  public applyStatus(type: StatusType, duration: number, intensity: number, debuffImmune: boolean = false){
+    if (debuffImmune && statusIsDebuffMap.get(type)){
+      //feel fine immunity
     } else {
-      existingStatus.duration = Math.max(existingStatus.duration, duration)
-      existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
+      
+      let existingStatus = this.statuses.find((s)=> {s.type == type})
+  
+      if (existingStatus == undefined){
+        let newStatus = new StatusEffect(type, duration, intensity)
+        this.statuses.concat(newStatus)
+      } else {
+        existingStatus.duration = Math.max(existingStatus.duration, duration)
+        existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
+      }
     }
+
   }
 
   public getStatusIntensity(type: StatusType){
@@ -65,6 +71,9 @@ export class Statuses {
     this.statuses = this.statuses.filter((s) => {!(s == status || s.type == status)})
   }
 
+  public removeAllDebuffs() {
+    this.statuses = this.statuses.filter((s) => {s.debuff != true})
+  }
 }
 
 
@@ -80,7 +89,7 @@ export class StatusEffect {
     this.duration = duration;
     this.intensity = intensity;
 
-    this.debuff = statusDebuffMap.get(type) || false;
+    this.debuff = statusIsDebuffMap.get(type) || false;
   }
 }
 

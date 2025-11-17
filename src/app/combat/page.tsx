@@ -6,7 +6,7 @@ import { Game, Player, Enemy } from "@/static/gameClasses";
 import { Action } from "@/static/Actions";
 import Entity from "@/components/entity";
 import Image from "next/image";
-import { useCardSelection } from "@/context/CardSelectionContext";
+import { usePlayerBuild } from "@/context/PlayerBuildContext";
 import { Card, CardType } from "@/static/Cards";
 
 //IMMEDIATE TODO:
@@ -14,10 +14,10 @@ import { Card, CardType } from "@/static/Cards";
 //convert and add selected cards to action list
 
 export default function Combat() {
-  const { selectedCards } = useCardSelection();
+  const { playerBuild } = usePlayerBuild();
   const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv
   
-  let p = new Player(25, 10)
+  let p = new Player(playerBuild)
   let es = [new Enemy(8), new Enemy(9)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
@@ -28,7 +28,7 @@ export default function Combat() {
     if (!combatStarted){
       let g = game.clone()
 
-      g.startCombat(selectedCards)
+      g.startCombat()
       
       setGame(g)
       setCombatStarted(true)
@@ -54,7 +54,7 @@ export default function Combat() {
       /// ### enemy action ####
 
       /// ### start-of-turn effects ####
-      selectedCards.forEach((card: Card) => {
+      g.player.cards.forEach((card: Card) => {
       if (card.type == CardType.START_OF_TURN){
         card.doEffect(g.player)
       }

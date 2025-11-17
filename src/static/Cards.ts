@@ -132,6 +132,7 @@ export const BUYABLE_CARDS: Card[] = [
   new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
       //TODO code in multi-targetting later (or dont)
+      //TODO code in daze status effect
 
     })
     player.actions = player.actions.concat(action);
