@@ -32,8 +32,16 @@ export class Entity {
 
   public takeDamage(dmg: number){
     //TODO: account for whether its full/half/none def piercing
-    //TODO: account for half damage status
+    //TODO: account for half damage and sleep status
     //TODO: make sure rounding works properly
+
+    //get default defense
+    //apply half-pierce if true
+    //add status defense
+    //apply full pierce if true
+
+    //sleep and half-damage?????
+
     dmg = dmg - this.getDefense()
     this.hp -= dmg
 

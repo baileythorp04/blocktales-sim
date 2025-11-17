@@ -18,10 +18,11 @@ export default function Combat() {
   const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv
   
   let p = new Player(playerBuild)
-  let es = [new Enemy(8), new Enemy(9)]
+  let es = [new Enemy(8), new Enemy(9), new Enemy(10), new Enemy(11)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
+  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(game.enemies[0])
 
   //TODO: turn this into a 'start game' button
   useEffect(() => {
@@ -36,13 +37,17 @@ export default function Combat() {
 
   }, [])
 
+  function handleEnemyClick(enemy: Enemy) {
+    setSelectedEnemy(enemy)
+  }
+
   function handleActionClick(action: Action): void {
     let g = game.clone()
 
     // ### player action ###
     setSpError(false)
     setHpError(false)
-    let result = g.player.cast(action, g.enemies[0])
+    let result = g.player.cast(action, selectedEnemy)
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "missing hp") {
@@ -60,10 +65,8 @@ export default function Combat() {
       }
     })
 
-
       setGame(g)
     }
-
   }
 
   return (
@@ -71,7 +74,9 @@ export default function Combat() {
       <div className="grid grid-cols-5 border border-red-500">
         <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp}/>
         {game.enemies.map(enemy =>
-          <Entity key={enemy.id} name="enemy" isPlayer={false} hp={enemy.hp} />
+        <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
+          <Entity name="enemy" isPlayer={false} hp={enemy.hp}/>
+        </div>
         )}
       </div>
 

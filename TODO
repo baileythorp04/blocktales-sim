@@ -14,13 +14,12 @@ add list of chosen passive cards to combat UI
 
 fix strict mode (probably) useeffect triggering all start of combat effects twice
 
-test how Defence Up status works with sword's pierce (does 1dmg sword pierce it or not?)
+remember: def-up status cant be pierced by sword's half pierce
 if needed for softener, implement defup/defdown countering
 
 # game features
 
-items
+enemy actions (action list,  show next actions(s))
 status effects (show in UI, apply statuses, make statuses do anything)
-enemy targetting
-enemy actions
 trotter stances
+items
