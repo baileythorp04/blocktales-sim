@@ -2,7 +2,8 @@
 
 import { type } from "os";
 import { useState, useEffect } from "react";
-import { Game, Player, Enemy, trotter } from "@/static/gameClasses";
+import { Game, Player } from "@/static/gameClasses";
+import { Enemy, trotter, dummy } from "@/static/Enemy"
 import { Action } from "@/static/Actions";
 import Entity from "@/components/entity";
 import Image from "next/image";
@@ -18,7 +19,8 @@ export default function Combat() {
   const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv (doesnt actually work)
   
   let p = new Player(playerBuild)
-  let es = [trotter(), new Enemy(9), new Enemy(10), new Enemy(11)]
+  let es = [trotter(), dummy(), dummy(), dummy()]
+  //let es = [trotter(), trotter(), trotter(), trotter()]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
@@ -78,7 +80,7 @@ export default function Combat() {
         <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp}/>
         {game.enemies.map(enemy =>
         <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
-          <Entity name="enemy" isPlayer={false} hp={enemy.hp}/>
+          <Entity name="enemy" isPlayer={false} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)}/>
         </div>
         )}
       </div>

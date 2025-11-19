@@ -1,5 +1,6 @@
 import { Action, DEFAULT_ACTIONS } from "./Actions";
 import { Card, CardType } from "./Cards";
+import { Enemy } from "./Enemy";
 import { PlayerBuild } from "./PlayerBuild";
 
 
@@ -114,35 +115,6 @@ export class Player extends Entity{
   }
 }
 
-export class Enemy extends Entity{
-  attacks: ((target : Entity, self : Enemy) => void)[]
-  //TODO give attacks a name somehow
-
-  public constructor(hp: number, attacks: ((target : Entity, self : Enemy) => void)[] = [()=>{}], defense: number = 0){
-    super(hp, defense)
-    this.attacks = attacks;
-  }
-
-  public doAttack(target: Entity){
-
-    const attack = this.attacks.shift()
-    if (!attack){
-      console.error("Attack does not exist")
-      return
-    }
-    attack(target, this)
-    this.attacks.push(attack)
-  }
-
-}
-
-export function trotter(){
-  return new Enemy(40, [
-    (target : Entity, self : Enemy) => {self.dealDamage(target, 1)},
-    (target : Entity, self : Enemy) => {self.dealDamage(target, 3)},
-    (target : Entity, self : Enemy) => {self.addHp(5)}
-  ])
-}
 
 export class Game {
   player : Player

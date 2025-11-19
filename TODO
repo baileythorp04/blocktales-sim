@@ -19,7 +19,7 @@ if needed for softener, implement defup/defdown countering
 
 # game features
 
-enemy actions (action list,  show next actions(s))
+log (show user+enemy actions each turn, separated by turn)
 status effects (show in UI, apply statuses, make statuses do anything)
 trotter stances
 items

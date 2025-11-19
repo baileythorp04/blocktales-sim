@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Enemy, Player} from "./gameClasses"
+import {Player} from "./gameClasses"
+import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
 
 let idCounter = 0;

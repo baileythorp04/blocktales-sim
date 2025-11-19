@@ -1,4 +1,5 @@
-import { Player, Enemy } from "./gameClasses"
+import { Player } from "./gameClasses"
+import { Enemy } from "./Enemy"
 
 let idCounter = 0;
 
