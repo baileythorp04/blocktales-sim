@@ -2,7 +2,7 @@
 
 import { type } from "os";
 import { useState, useEffect } from "react";
-import { Game, Player, Enemy } from "@/static/gameClasses";
+import { Game, Player, Enemy, trotter } from "@/static/gameClasses";
 import { Action } from "@/static/Actions";
 import Entity from "@/components/entity";
 import Image from "next/image";
@@ -15,10 +15,10 @@ import { Card, CardType } from "@/static/Cards";
 
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
-  const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv
+  const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv (doesnt actually work)
   
   let p = new Player(playerBuild)
-  let es = [new Enemy(8), new Enemy(9), new Enemy(10), new Enemy(11)]
+  let es = [trotter(), new Enemy(9), new Enemy(10), new Enemy(11)]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
@@ -57,6 +57,9 @@ export default function Combat() {
       /// ((( second-player-turn logic )))
 
       /// ### enemy action ####
+      g.enemies.forEach((enemy) => {
+        enemy.doAttack(g.player)
+      })
 
       /// ### start-of-turn effects ####
       g.player.cards.forEach((card: Card) => {

@@ -2,7 +2,6 @@ export enum StatusType {
   FIRE,
   DAMAGE_DOWN,
   SMALL,
-  ARMOR_PIERCE,
   FEEL_FINE,
   GOOD_VIBES_SLEEP,
   ARMOR_UP,
@@ -12,7 +11,6 @@ const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
   [StatusType.FIRE, true],
   [StatusType.DAMAGE_DOWN, true],
   [StatusType.SMALL, true],
-  [StatusType.ARMOR_PIERCE, false],
   [StatusType.FEEL_FINE, false],
   [StatusType.GOOD_VIBES_SLEEP, true],
   [StatusType.ARMOR_UP, false],
@@ -20,16 +18,17 @@ const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
 //fire: DoT
 //dmg down: attack modifier (modified getAttackBoost())
 //small: attack modifier (modified getAttackBoost())
-//armor pierce: attack modifier
 //feel fine: passive
 //good vibes sleep: passive/start of turn
 //armor up: on attacked (modified getDefense())
+
+//no reason to do armor pierce because it doesn't affect inferno
 
 
 export class Statuses {
   statuses: StatusEffect[] = []
 
-  public applyStatus(type: StatusType, duration: number, intensity: number, debuffImmune: boolean = false){
+  public applyStatus(type: StatusType, duration: number, intensity: number, debuffImmune: boolean = false){ //TODO move this to be Entity.applyStatus()  where debuffImmune doesnt have to be passed
     if (debuffImmune && statusIsDebuffMap.get(type)){
       //feel fine immunity
     } else {
