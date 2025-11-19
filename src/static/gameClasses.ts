@@ -27,21 +27,23 @@ export class Entity {
   }
 
   public dealDamage(target: Entity, dmg: number ) {
-    //TODO: account for damage buffs and debuffs
+    //TODO: implement comments:
+    //apply attackboost
+    //apply attack buff/debuff from status
+    //minimum of 1 dmg.
     target.takeDamage(dmg)
   }
 
   public takeDamage(dmg: number){
-    //TODO: account for whether its full/half/none def piercing
-    //TODO: account for half damage and sleep status
-    //TODO: make sure rounding works properly
 
-    //get default defense
-    //apply half-pierce if true
-    //add status defense
-    //apply full pierce if true
+    //TODO: implement these comments:
+    //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
+    //reduce dmg by defense status if not full piercing
 
-    //sleep and half-damage?????
+    //apply defend 20% reduction (floor) (gets pierced)
+    //apply half-def 50% reduction (ceil)(gets piereced (but not by inferno))
+    //apply garlic 20% reduction (ceil) (not pierced)
+    //apply sleep 50% reduction (ceil) (not pierced)
 
     dmg = dmg - this.getDefense()
     this.hp -= dmg

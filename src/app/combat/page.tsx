@@ -10,10 +10,6 @@ import Image from "next/image";
 import { usePlayerBuild } from "@/context/PlayerBuildContext";
 import { Card, CardType } from "@/static/Cards";
 
-//IMMEDIATE TODO:
-//can select enemy
-//convert and add selected cards to action list
-
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
   const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv (doesnt actually work)

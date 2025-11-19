@@ -66,6 +66,11 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("item+.png", "Item+", 3, 3, CardType.START_OF_COMBAT, (player: Player) => {
     // TODO implement items
+  }),
+
+  new Card("defender.png", "Defender", 2, 3, CardType.START_OF_COMBAT, (player: Player) => {
+    player.defense++;
+    player.attackBoost--;
   }), 
 
   new Card("sp_drain.png", "SP Drain", 2, 1, CardType.START_OF_COMBAT, (player: Player) => {

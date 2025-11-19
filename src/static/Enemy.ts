@@ -23,8 +23,8 @@ export class Enemy extends Entity{
     attack.action(target, this)
     this.attacks.push(attack)
 
-    //TODO handle new attacks changing at half health (swap out EnemyAttack object somehow?)
-    //TODO handle skipping atttacks (action gets return value)
+    //TODO handle new attacks changing at half health (swap out EnemyAttack object somehow?) (summon is inserted in after inferno)
+    //TODO: summoning when full has no effect (doesn't skip)
   }
 
   public getAttackName(n: number){

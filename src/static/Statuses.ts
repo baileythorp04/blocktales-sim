@@ -1,3 +1,6 @@
+//NOTE: all statuses tick at the start of the player's turn (before they choose an action)
+// fire does deal damage a final time when it expires
+
 export enum StatusType {
   FIRE,
   DAMAGE_DOWN,
@@ -6,6 +9,7 @@ export enum StatusType {
   GOOD_VIBES_SLEEP,
   ARMOR_UP,
 }
+//TODO: will have to implement defence pierce status (which doenst apply to inferno) and damage for the other attacks if i want to do a sleep build
 
 const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
   [StatusType.FIRE, true],
