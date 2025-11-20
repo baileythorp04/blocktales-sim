@@ -2,6 +2,7 @@ import { Action, DEFAULT_ACTIONS } from "./Actions";
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { PlayerBuild } from "./PlayerBuild";
+import { statusDebuffMap, StatusEffect, Statuses, StatusType } from "./Statuses";
 
 
 
@@ -16,13 +17,13 @@ export class Entity {
   id: number;
   hp: number;
   maxHp: number;
-  attackBoost: number;
+  attackBoost: number = 0;
   defense: number;
+  statuses: Statuses = new Statuses();
 
   public constructor(hp: number, defense: number){
     this.id = entityId++;
     this.hp = this.maxHp = hp;
-    this.attackBoost = 0;
     this.defense = defense;
   }
 
@@ -52,13 +53,40 @@ export class Entity {
   }
 
   public getDefense(){
-    //TODO : account for defense status when statuses is implemented
     return this.defense;
   }
 
   public addHp(n: number){
     this.hp = Math.min(this.hp+n, this.maxHp)
   }
+
+  public startOfTurnEffects() {
+    if (this.hasStatus(StatusType.FIRE)){
+      this.hp -= 1;
+    }
+    this.statuses.decrementTimers()
+  }
+
+
+  public getStatusIntensity(type: StatusType){
+    return this.statuses.getStatusIntensity(type)
+  }
+
+  public hasStatus(type: StatusType){
+    let hasStatus = this.statuses.getStatusIntensity(type) > 0
+    return hasStatus
+  }
+
+  public tryApplyStatus(type: StatusType, duration: number, intensity: number){ 
+    if (this.hasStatus(StatusType.FEEL_FINE)){
+      if (statusDebuffMap.get(type)){
+        return
+      }
+    }
+    this.statuses.applyStatus(type, duration, intensity)
+  
+  }
+
 
   
 
@@ -101,8 +129,6 @@ export class Player extends Entity{
     this.sp = Math.min(this.sp+n, this.maxSp)
   }
 
-
-
   public cast(action: Action, enemy: Enemy ){
     if (action.spCost > this.sp) {
       return "missing sp"
@@ -114,6 +140,17 @@ export class Player extends Entity{
       action.doEffect(this, enemy)
       return "success"
     }
+  }
+
+  public override startOfTurnEffects() {
+    super.startOfTurnEffects()
+
+    //do start-of-turn card effects
+    this.cards.forEach((card: Card) => {
+      if (card.type == CardType.START_OF_TURN){
+        card.doEffect(this)
+      }
+    })
   }
 }
 

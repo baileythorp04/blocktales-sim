@@ -5,16 +5,18 @@ export enum StatusType {
   FIRE,
   DAMAGE_DOWN,
   SMALL,
+  ARMOR_PIERCING,
   FEEL_FINE,
   GOOD_VIBES_SLEEP,
   ARMOR_UP,
 }
 //TODO: will have to implement defence pierce status (which doenst apply to inferno) and damage for the other attacks if i want to do a sleep build
 
-const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
+export const statusDebuffMap: Map<StatusType, boolean> = new Map([
   [StatusType.FIRE, true],
   [StatusType.DAMAGE_DOWN, true],
   [StatusType.SMALL, true],
+  [StatusType.ARMOR_PIERCING, false],
   [StatusType.FEEL_FINE, false],
   [StatusType.GOOD_VIBES_SLEEP, true],
   [StatusType.ARMOR_UP, false],
@@ -22,47 +24,40 @@ const statusIsDebuffMap: Map<StatusType, boolean> = new Map([
 //fire: DoT
 //dmg down: attack modifier (modified getAttackBoost())
 //small: attack modifier (modified getAttackBoost())
+//armor piercing: pass to takeDamage
 //feel fine: passive
 //good vibes sleep: passive/start of turn
-//armor up: on attacked (modified getDefense())
+//armor up: on attacked
 
-//no reason to do armor pierce because it doesn't affect inferno
 
 
 export class Statuses {
-  statuses: StatusEffect[] = []
+  statusList: StatusEffect[] = []
 
-  public applyStatus(type: StatusType, duration: number, intensity: number, debuffImmune: boolean = false){ //TODO move this to be Entity.applyStatus()  where debuffImmune doesnt have to be passed
-    if (debuffImmune && statusIsDebuffMap.get(type)){
-      //feel fine immunity
+  public applyStatus(type: StatusType, duration: number, intensity: number){ 
+    let existingStatus = this.statusList.find((s)=> {s.type == type})
+
+    if (existingStatus == undefined){
+      let newStatus = new StatusEffect(type, duration, intensity)
+      this.statusList.concat(newStatus)
     } else {
-      
-      let existingStatus = this.statuses.find((s)=> {s.type == type})
-  
-      if (existingStatus == undefined){
-        let newStatus = new StatusEffect(type, duration, intensity)
-        this.statuses.concat(newStatus)
-      } else {
-        existingStatus.duration = Math.max(existingStatus.duration, duration)
-        existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
-      }
+      existingStatus.duration = Math.max(existingStatus.duration, duration)
+      existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
     }
-
   }
 
   public getStatusIntensity(type: StatusType){
-    let status = this.statuses.find((s)=> {s.type == type})
+    let status = this.statusList.find((s)=> {s.type == type})
 
     if (status == undefined){
       return 0
     } else {
       return status.intensity
     }
-
   }
 
   public decrementTimers() {
-    this.statuses.forEach((s) => {
+    this.statusList.forEach((s) => {
       s.duration--;
       if (s.duration == 0){
         this.removeStatus(s)
@@ -71,11 +66,11 @@ export class Statuses {
   }
 
   public removeStatus(status: StatusEffect | StatusType) {
-    this.statuses = this.statuses.filter((s) => {!(s == status || s.type == status)})
+    this.statusList = this.statusList.filter((s) => {!(s == status || s.type == status)})
   }
 
   public removeAllDebuffs() {
-    this.statuses = this.statuses.filter((s) => {s.debuff != true})
+    this.statusList = this.statusList.filter((s) => {s.debuff != true})
   }
 }
 
@@ -92,7 +87,7 @@ export class StatusEffect {
     this.duration = duration;
     this.intensity = intensity;
 
-    this.debuff = statusIsDebuffMap.get(type) || false;
+    this.debuff = statusDebuffMap.get(type) || false;
   }
 }
 

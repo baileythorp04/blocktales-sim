@@ -19,6 +19,8 @@ if needed for softener, implement defup/defdown countering
 
 # game features
 
+replace all times entity.hp is altered directly with a non-attack function, so it can be logged (make hp private)
+
 test and record the attack pattern of trotter. before and after 50%hp, with and without active summon
 
 log (show user+enemy actions each turn, separated by turn)
@@ -32,45 +34,5 @@ items
 defend 20% reduction works
 defend always rounds down?
 minimize -2 does not work
-
-whether dmg is rounded between the 50% and 20% or not doesn't change the outcome
-
-10 -> 5 -> 2.5 => 3 
-9 -> 4.5 -> 2.25 => 2
-3 damage!!! rounding does happen. (however, need to confirm 2.25 rounds down not up)
-14 -> 13 -> 4
-
-13 -> 6.5 -> 3.25 -> 4
-OR
-13 -> 6.5 -> 7 -> 3.5 -> 4
-
-
-
-
-10 - 1 def = 9dmg
-9 * 0.5 = 4.5dmg
-
-5 * 0.8 = 4 dmg
-OR
-4.5 * 0.8 = 3.6 => 3dmg
-
-
-9 * 0.8 = 7.2dmg
-
-7 * 0.5 = 3.5dmg => 4dmg
-OR
-7.2 * 0.5 = 3.6dmg => 4dmg
-
-
-1def + defend = 7dmg
-1def + defend + minimize = 7dmg
-1def + sleep = 5dmg
-
-1def + half + defend = 4dmg
-10 -> 9 -> 7.2 -> 7 -> 3.5 -> 4
-
-
-14 -> half, defend -> 5
-14 -> 13 -> 10.4 -> 10 -> 5
 
 for strategy it seems like 1 def isnt doing much. should have 0 or 1. firebrand deals same to def+half and sleep+half with 1 def or not

@@ -60,11 +60,9 @@ export default function Combat() {
       })
 
       /// ### start-of-turn effects ####
-      g.player.cards.forEach((card: Card) => {
-      if (card.type == CardType.START_OF_TURN){
-        card.doEffect(g.player)
-      }
-    })
+      g.player.startOfTurnEffects()
+      g.enemies.forEach((e) => {e.startOfTurnEffects()})
+      
 
       setGame(g)
     }
