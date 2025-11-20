@@ -5,7 +5,12 @@ import { PlayerBuild } from "./PlayerBuild";
 import { statusDebuffMap, StatusEffect, Statuses, StatusType } from "./Statuses";
 
 
-
+//TODO put this enum somewhere more fitting
+export enum PierceLevel {
+  NONE,
+  HALF,
+  FULL,
+} 
 
 // ######            ######
 // ###### CORE STUFF ######
@@ -27,33 +32,37 @@ export class Entity {
     this.defense = defense;
   }
 
-  public dealDamage(target: Entity, dmg: number ) {
-    //TODO: implement comments:
-    //apply attackboost
-    //apply attack buff/debuff from status
-    //minimum of 1 dmg.
-    target.takeDamage(dmg)
+  public dealDamage(target: Entity, dmg: number, piercing: PierceLevel = PierceLevel.NONE) {
+    dmg =- this.getStatusIntensity(StatusType.DAMAGE_DOWN)
+    dmg =+ this.attackBoost
+    //TODO small only applies if not firebrand
+    //if (undodgeable == false ){
+      if (this.hasStatus(StatusType.SMALL)) { dmg =- 2 } 
+    //}
+    dmg = Math.max(dmg, 1)
+
+
+    //TODO: piercing = full if has piercing status and is not firebrand
+    target.takeDamage(dmg, piercing)
   }
 
-  public takeDamage(dmg: number){
+  public takeDamage(dmg: number, piercing: PierceLevel){
 
-    //TODO: implement these comments:
     //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
-    //reduce dmg by defense status if not full piercing
+    if (piercing == PierceLevel.NONE) { dmg =- this.defense }
+    else if (piercing == PierceLevel.HALF) { dmg =- Math.floor(this.defense * 0.5) }
+    else if (piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
 
-    //apply defend 20% reduction (floor) (gets pierced)
-    //apply half-def 50% reduction (ceil)(gets piereced (but not by inferno))
-    //apply garlic 20% reduction (ceil) (not pierced)
-    //apply sleep 50% reduction (ceil) (not pierced)
+    if (piercing != PierceLevel.FULL) {
+      dmg =- this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
+      if (this.hasStatus(StatusType.DEFENDING)) { dmg = Math.floor(dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
+      if (this.hasStatus(StatusType.HALF_DAMAGE)) { dmg = Math.ceil(dmg * 0.5) } //apply half-def 50% reduction (ceil) (gets piereced)
+    }
 
-    dmg = dmg - this.getDefense()
+    if (this.hasStatus(StatusType.GARLIC)) { dmg = Math.ceil(dmg * 0.8) } //apply garlic 20% reduction (ceil) (not pierced)
+    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { dmg = Math.ceil(dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
+
     this.hp -= dmg
-
-
-  }
-
-  public getDefense(){
-    return this.defense;
   }
 
   public addHp(n: number){
@@ -77,7 +86,7 @@ export class Entity {
     return hasStatus
   }
 
-  public tryApplyStatus(type: StatusType, duration: number, intensity: number){ 
+  public tryApplyStatus(type: StatusType, duration: number, intensity: number = 1){ 
     if (this.hasStatus(StatusType.FEEL_FINE)){
       if (statusDebuffMap.get(type)){
         return

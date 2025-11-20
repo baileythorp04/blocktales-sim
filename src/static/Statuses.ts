@@ -9,6 +9,9 @@ export enum StatusType {
   FEEL_FINE,
   GOOD_VIBES_SLEEP,
   ARMOR_UP,
+  HALF_DAMAGE,
+  GARLIC,
+  DEFENDING,
 }
 //TODO: will have to implement defence pierce status (which doenst apply to inferno) and damage for the other attacks if i want to do a sleep build
 
@@ -17,17 +20,13 @@ export const statusDebuffMap: Map<StatusType, boolean> = new Map([
   [StatusType.DAMAGE_DOWN, true],
   [StatusType.SMALL, true],
   [StatusType.ARMOR_PIERCING, false],
-  [StatusType.FEEL_FINE, false],
+  [StatusType.FEEL_FINE, false], //NOT YET IMPLEMENTED REMOVAL OF DEBUFFS UPON APPLICATION
   [StatusType.GOOD_VIBES_SLEEP, true],
   [StatusType.ARMOR_UP, false],
+  [StatusType.HALF_DAMAGE, false],
+  [StatusType.GARLIC, false],
+  [StatusType.DEFENDING, false],
 ])
-//fire: DoT
-//dmg down: attack modifier (modified getAttackBoost())
-//small: attack modifier (modified getAttackBoost())
-//armor piercing: pass to takeDamage
-//feel fine: passive
-//good vibes sleep: passive/start of turn
-//armor up: on attacked
 
 
 
