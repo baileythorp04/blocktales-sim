@@ -19,6 +19,8 @@ if needed for softener, implement defup/defdown countering
 
 # game features
 
+change Entity to input entity object instead of all those vars (but somehow handle optional player-only vars?)
+
 replace all times entity.hp is altered directly with a non-attack function, so it can be logged (make hp private)
 
 test and record the attack pattern of trotter. before and after 50%hp, with and without active summon

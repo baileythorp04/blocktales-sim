@@ -42,7 +42,7 @@ export class Entity {
     dmg = Math.max(dmg, 1)
 
 
-    //TODO: piercing = full if has piercing status and is not firebrand
+    //TODO: piercing = full if has piercing status and is not firebrand (pass dmg as an Attack object/type?)
     target.takeDamage(dmg, piercing)
   }
 

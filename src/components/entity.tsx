@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Status from "./Status";
 
 type EntityProps = {
   name: string,
@@ -15,29 +16,35 @@ type EntityProps = {
 export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp, attack1, attack2 }: EntityProps) {
   return (
     <div className="flex flex-col items-center">
-    <div>statuses</div>
-    {isPlayer 
-    ? <Image
-      src="/player.png"
-      alt="player"
-      width={160}
-      height={160} />
-    :<Image
-      src="/enemy.png"
-      alt="enemy"
-      width={160}
-      height={160} />
-    }
+      {/* TODO: have this work when statuses are mapped. ideally use ordering instead of rotating */}
+      <div className="grid grid-cols-2 grid-rows-3 rotate-180"> 
+        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
+        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
+        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
+      </div>
+      {isPlayer 
+      ? <Image
+        src="/player.png"
+        alt="player"
+        width={160}
+        height={160} />
+      :<Image
+        src="/enemy.png"
+        alt="enemy"
+        width={160}
+        height={160} />
+      }
 
-    <div>{name}</div>
-    <div>hp: {hp}/{maxHp}</div>
-    {isPlayer
-    ? <div>sp: {sp}/{maxSp}</div>
-    : <div>
-        <div>next attacks: </div>
-        <div>{attack1}</div>
-        <div>{attack2}</div>
-      </div>}
-</div>
+      <div>{name}</div>
+      <div>hp: {hp}/{maxHp}</div>
+      {isPlayer
+      ? <div>sp: {sp}/{maxSp}</div>
+      : <div>
+          <div>next attacks: </div>
+          <div>{attack1}</div>
+          <div>{attack2}</div>
+        </div>
+      }
+    </div>
   );
 }
