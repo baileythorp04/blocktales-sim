@@ -49,7 +49,7 @@ export const BUYABLE_CARDS: Card[] = [
   }),
 
   new Card("defend+.png", "Defend+", 5, 4, CardType.START_OF_COMBAT, (player: Player) => {
-    player.defense =+ 1;
+    player.defense += 1;
   }), 
 
   new Card("sp_saver.png", "SP Saver", 4, 3, CardType.START_OF_COMBAT, (player: Player) => {

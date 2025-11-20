@@ -16,11 +16,11 @@ type EntityProps = {
 export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp, attack1, attack2 }: EntityProps) {
   return (
     <div className="flex flex-col items-center">
-      {/* TODO: have this work when statuses are mapped. ideally use ordering instead of rotating */}
-      <div className="grid grid-cols-2 grid-rows-3 rotate-180"> 
-        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
-        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
-        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="rotate-180"/>
+      {/* TODO: have this work when statuses are mapped. ideally it fills bottom to top without using rotating */}
+      <div className="grid grid-cols-2 grid-rows-3 mb-2"> 
+        <Status icon="fire.png" color="#ff7700" intensity={1} duration={3} className="order-1"/>
+        <Status icon="fire.png" color="#ff7700" intensity={2} duration={3} className="order-2"/>
+        <Status icon="fire.png" color="#ff7700" intensity={3} duration={3} className="order-2"/>
       </div>
       {isPlayer 
       ? <Image

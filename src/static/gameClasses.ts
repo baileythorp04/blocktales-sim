@@ -33,11 +33,11 @@ export class Entity {
   }
 
   public dealDamage(target: Entity, dmg: number, piercing: PierceLevel = PierceLevel.NONE) {
-    dmg =- this.getStatusIntensity(StatusType.DAMAGE_DOWN)
-    dmg =+ this.attackBoost
+    dmg -= this.getStatusIntensity(StatusType.DAMAGE_DOWN)
+    dmg += this.attackBoost
     //TODO small only applies if not firebrand
     //if (undodgeable == false ){
-      if (this.hasStatus(StatusType.SMALL)) { dmg =- 2 } 
+      if (this.hasStatus(StatusType.SMALL)) { dmg -= 2 } 
     //}
     dmg = Math.max(dmg, 1)
 
@@ -47,14 +47,13 @@ export class Entity {
   }
 
   public takeDamage(dmg: number, piercing: PierceLevel){
-
     //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
-    if (piercing == PierceLevel.NONE) { dmg =- this.defense }
-    else if (piercing == PierceLevel.HALF) { dmg =- Math.floor(this.defense * 0.5) }
+    if (piercing == PierceLevel.NONE) { dmg -= this.defense }
+    else if (piercing == PierceLevel.HALF) { dmg -= Math.floor(this.defense * 0.5) }
     else if (piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
 
     if (piercing != PierceLevel.FULL) {
-      dmg =- this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
+      dmg -= this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
       if (this.hasStatus(StatusType.DEFENDING)) { dmg = Math.floor(dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
       if (this.hasStatus(StatusType.HALF_DAMAGE)) { dmg = Math.ceil(dmg * 0.5) } //apply half-def 50% reduction (ceil) (gets piereced)
     }
@@ -62,7 +61,12 @@ export class Entity {
     if (this.hasStatus(StatusType.GARLIC)) { dmg = Math.ceil(dmg * 0.8) } //apply garlic 20% reduction (ceil) (not pierced)
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { dmg = Math.ceil(dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
 
-    this.hp -= dmg
+    //TODO replace this with loseHp() function for logging and decoupling
+    if (dmg > 0){
+      this.hp -= dmg
+    } else {
+      //deflected
+    }
   }
 
   public addHp(n: number){
