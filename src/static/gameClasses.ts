@@ -130,6 +130,16 @@ export class Player extends Entity{
         card.doEffect(this)
       }
     })
+    
+    // ### start-of-combat card effects ###
+    this.cards.forEach((card: Card) => {
+      if (card.type == CardType.START_OF_COMBAT){
+        card.doEffect(this)
+      }
+    })
+
+    // ### other start-of-combat effects ###
+    this.attackBoost = Math.max(this.attackBoost, -1)
   }
 
   public dealDamage(target: Entity, dmg: number ) { 
@@ -179,21 +189,6 @@ export class Game {
 
   public clone() {
     return new Game(this.player, this.enemies)
-  }
-
-  public startCombat() {
-
-    // ### start-of-combat card effects ###
-    this.player.cards.forEach((card: Card) => {
-      if (card.type == CardType.START_OF_COMBAT){
-        card.doEffect(this.player)
-      }
-    })
-
-    // ### other start-of-combat effects ###
-    this.player.attackBoost = Math.max(this.player.attackBoost, -1)
-
-
   }
   
 }

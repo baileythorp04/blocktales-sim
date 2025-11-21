@@ -12,28 +12,14 @@ import { Card, CardType } from "@/static/Cards";
 
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
-  const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv (doesnt actually work)
   
+  //TODO this creates a new player, enemies, and game on every render. How to fix it? moving player/enemy creation to game constructor doesn't help 
   let p = new Player(playerBuild)
   let es = [trotter(), dummy(), dummy(), dummy()]
-  //let es = [trotter(), trotter(), trotter(), trotter()]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
   const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(game.enemies[0])
-
-  //TODO: turn this into a 'start game' button
-  useEffect(() => {
-    if (!combatStarted){
-      let g = game.clone()
-
-      g.startCombat()
-      
-      setGame(g)
-      setCombatStarted(true)
-    }
-
-  }, [])
 
   function handleEnemyClick(enemy: Enemy) {
     setSelectedEnemy(enemy)
