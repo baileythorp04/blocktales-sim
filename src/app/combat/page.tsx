@@ -5,10 +5,11 @@ import { useState, useEffect } from "react";
 import { Game, Player } from "@/static/gameClasses";
 import { Enemy, trotter, dummy } from "@/static/Enemy"
 import { Action } from "@/static/Actions";
-import Entity from "@/components/entity";
 import Image from "next/image";
 import { usePlayerBuild } from "@/context/PlayerBuildContext";
 import { Card, CardType } from "@/static/Cards";
+import CombatPlayer from "@/components/CombatPlayer";
+import CombatEnemy from "@/components/CombatEnemy";
 
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
@@ -57,10 +58,10 @@ export default function Combat() {
   return (
     <div className="container border mx-auto">
       <div className="grid grid-cols-5 border border-red-500">
-        <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusList={game.player.statuses.statusList}/>
+        <CombatPlayer name="player" hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
         {game.enemies.map(enemy =>
         <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
-          <Entity name="enemy" isPlayer={false} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)}/>
+          <CombatEnemy name="enemy" hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)} statusHolder={enemy.statuses}/>
         </div>
         )}
       </div>

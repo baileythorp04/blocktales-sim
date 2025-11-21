@@ -2,7 +2,7 @@ import { Action, DEFAULT_ACTIONS } from "./Actions";
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { PlayerBuild } from "./PlayerBuild";
-import { statusDebuffMap, StatusEffect, Statuses, StatusType } from "./Statuses";
+import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
 
 //TODO put this enum somewhere more fitting
@@ -24,7 +24,7 @@ export class Entity {
   maxHp: number;
   attackBoost: number = 0;
   defense: number;
-  statuses: Statuses = new Statuses();
+  statuses: StatusHolder = new StatusHolder();
 
   public constructor(hp: number, defense: number){
     this.id = entityId++;
@@ -92,7 +92,7 @@ export class Entity {
 
   public tryApplyStatus(type: StatusType, duration: number, intensity: number = 1){ 
     if (this.hasStatus(StatusType.FEEL_FINE)){
-      if (statusDebuffMap.get(type)){
+      if (statusIsDebuff(type)){
         return
       }
     }

@@ -12,11 +12,6 @@ add a reusable function for iterating through all cards of a given type
 
 add list of chosen passive cards to combat UI
 
-fix strict mode (probably) useeffect triggering all start of combat effects twice
-
-remember: def-up status cant be pierced by sword's half pierce
-if needed for softener, implement defup/defdown countering
-
 # game features
 
 add icons to status types. show them in UI and make sure they are added correctly
@@ -30,7 +25,7 @@ test and record the attack pattern of trotter. before and after 50%hp, with and 
 account for 2+ first strike dmg
 
 log (show user+enemy actions each turn, separated by turn)
-status effects (show in UI, apply statuses, make statuses do anything)
+status effects (show in UI properly)
 trotter stances
 items
 

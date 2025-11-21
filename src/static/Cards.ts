@@ -2,6 +2,7 @@ import { useState } from "react";
 import {Player} from "./gameClasses"
 import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
+import { StatusType } from "./StatusHolder";
 
 let idCounter = 0;
 
@@ -130,7 +131,7 @@ export const BUYABLE_CARDS: Card[] = [
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
       player.dealDamage(target, 2)
-      //TODO apply status effect to target
+      target.tryApplyStatus(StatusType.SMALL, 3)
     })
     player.actions = player.actions.concat(action);
   }), 

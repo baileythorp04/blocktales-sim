@@ -1,6 +1,6 @@
 import { Player } from "./gameClasses"
 import { Enemy } from "./Enemy"
-import { StatusType } from "./Statuses";
+import { StatusType } from "./StatusHolder";
 
 let idCounter = 0;
 
@@ -29,7 +29,7 @@ export const DEFAULT_ACTIONS: Action[] = [
 
   //TODO: program double turns later
   new Action("defend.png", "Defend", 0, (player: Player, target: Enemy ) => {
-    player.tryApplyStatus(StatusType.DEFENDING, 1)
+    player.tryApplyStatus(StatusType.DEFENDING, 4)
     player.addSp(player.spOnPass);
   }), 
   new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
