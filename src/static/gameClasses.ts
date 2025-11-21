@@ -27,6 +27,7 @@ export class Entity {
   statuses: Statuses = new Statuses();
 
   public constructor(hp: number, defense: number){
+    debugger;
     this.id = entityId++;
     this.hp = this.maxHp = hp;
     this.defense = defense;
@@ -130,6 +131,16 @@ export class Player extends Entity{
         card.doEffect(this)
       }
     })
+
+    // ### start-of-combat card effects ###
+    this.cards.forEach((card: Card) => {
+      if (card.type == CardType.START_OF_COMBAT){
+        card.doEffect(this)
+      }
+    })
+    
+    // ### other start-of-combat effects ###
+    this.attackBoost = Math.max(this.attackBoost, -1)
   }
 
   public dealDamage(target: Entity, dmg: number ) { 
@@ -169,31 +180,28 @@ export class Player extends Entity{
 
 
 export class Game {
+  lastTurnState: Game | undefined
   player : Player
   enemies : Enemy[]
 
-  public constructor(player: Player, enemies : Enemy[]){
+  public constructor(player: Player, enemies: Enemy[], lastTurnState?: Game){
     this.player = player;
     this.enemies = enemies;
+    this.lastTurnState = lastTurnState;
+  }
+
+  public getEnemyById(id : number){
+    let enemy = this.enemies.find((e) => e.id = id)
+    if (enemy == undefined) {
+      console.error("invalid enemy selected")
+      return this.enemies[0]
+    } else {
+      return enemy
+    }
   }
 
   public clone() {
-    return new Game(this.player, this.enemies)
-  }
-
-  public startCombat() {
-
-    // ### start-of-combat card effects ###
-    this.player.cards.forEach((card: Card) => {
-      if (card.type == CardType.START_OF_COMBAT){
-        card.doEffect(this.player)
-      }
-    })
-
-    // ### other start-of-combat effects ###
-    this.player.attackBoost = Math.max(this.player.attackBoost, -1)
-
-
+    return new Game(this.player, this.enemies, this.lastTurnState)
   }
   
 }

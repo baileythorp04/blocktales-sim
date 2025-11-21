@@ -1,6 +1,6 @@
 "use client";
-
 import { type } from "os";
+import { cloneDeep } from 'lodash';
 import { useState, useEffect } from "react";
 import { Game, Player } from "@/static/gameClasses";
 import { Enemy, trotter, dummy } from "@/static/Enemy"
@@ -10,42 +10,52 @@ import Image from "next/image";
 import { usePlayerBuild } from "@/context/PlayerBuildContext";
 import { Card, CardType } from "@/static/Cards";
 
+let combatStarted = false
+let initialGameState : Game;
+
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
-  const [ combatStarted, setCombatStarted ] = useState<boolean>(false) //This is just to prevent start of combat useEffect happening twice in devenv (doesnt actually work)
   
   let p = new Player(playerBuild)
   let es = [trotter(), dummy(), dummy(), dummy()]
-  //let es = [trotter(), trotter(), trotter(), trotter()]
   const [ game, setGame ]  = useState<Game>(new Game(p, es))
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
-  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(game.enemies[0])
+  const [ selectedEnemyId, setSelectedEnemyId ] = useState<number>(game.enemies[0].id)
 
-  //TODO: turn this into a 'start game' button
   useEffect(() => {
-    if (!combatStarted){
-      let g = game.clone()
-
-      g.startCombat()
-      
-      setGame(g)
-      setCombatStarted(true)
-    }
-
+    if (combatStarted) return
+    combatStarted = true
+    initialGameState = cloneDeep(game)
   }, [])
 
+  function handleUndo() {
+    if (game.lastTurnState){
+      setGame(game.lastTurnState)
+    }
+  }
+
+  function handleRestart() {
+    if (initialGameState){
+      let g = initialGameState.clone()
+      g.lastTurnState = cloneDeep(game)
+      setGame(g)
+    }
+  }
+
   function handleEnemyClick(enemy: Enemy) {
-    setSelectedEnemy(enemy)
+    setSelectedEnemyId(enemy.id)
   }
 
   function handleActionClick(action: Action): void {
-    let g = game.clone()
+    let g = game.clone() //TODO HUH? why does a shallow clone even work here? why is being a different object important here, just for react rendering purposes?
+    g.lastTurnState = cloneDeep(game)
 
     // ### player action ###
     setSpError(false)
     setHpError(false)
-    let result = g.player.cast(action, selectedEnemy)
+   
+    let result = g.player.cast(action, g.getEnemyById(selectedEnemyId))
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "missing hp") {
@@ -73,7 +83,7 @@ export default function Combat() {
       <div className="grid grid-cols-5 border border-red-500">
         <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp}/>
         {game.enemies.map(enemy =>
-        <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
+        <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy.id == selectedEnemyId && "bg-amber-100"}`}>
           <Entity name="enemy" isPlayer={false} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)}/>
         </div>
         )}
@@ -96,6 +106,12 @@ export default function Combat() {
           </div>
         ))}
       </div>
+
+      {game.lastTurnState != undefined
+          ? <div onClick={() => handleUndo()} className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Undo</div>
+          : <div className={`mt-8 p-4 border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
+        }
+      <div onClick={() => handleRestart()} className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Restart</div>
 
       { spError && <div className="text-3xl">
         Not Enough SP

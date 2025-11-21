@@ -92,6 +92,7 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
+    debugger;
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
       if (player.hp < player.maxHp){
         player.addHp(5)

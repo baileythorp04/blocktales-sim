@@ -5,6 +5,7 @@ type EnemyAttack = {
   action: ((target : Entity, self : Enemy) => void)
 }
 
+
 export class Enemy extends Entity{
   attacks: EnemyAttack[]
 
