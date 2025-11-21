@@ -57,7 +57,7 @@ export default function Combat() {
   return (
     <div className="container border mx-auto">
       <div className="grid grid-cols-5 border border-red-500">
-        <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp}/>
+        <Entity name="player" isPlayer={true} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusList={game.player.statuses.statusList}/>
         {game.enemies.map(enemy =>
         <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
           <Entity name="enemy" isPlayer={false} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)}/>

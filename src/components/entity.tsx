@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Status from "./Status";
+import { StatusEffect, Statuses } from "@/static/Statuses";
 
 type EntityProps = {
   name: string,
@@ -11,9 +12,10 @@ type EntityProps = {
   maxSp?: number,
   attack1?: string,
   attack2?: string,
+  statusList?: StatusEffect[],
 };
 
-export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp, attack1, attack2 }: EntityProps) {
+export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp, attack1, attack2, statusList }: EntityProps) {
   return (
     <div className="flex flex-col items-center">
       {/* TODO: have this work when statuses are mapped. ideally it fills bottom to top without using rotating */}
@@ -22,6 +24,7 @@ export default function Entity({ name, isPlayer, hp, maxHp, sp, maxSp, attack1, 
         <Status icon="fire.png" color="#ff7700" intensity={2} duration={3} className="order-2"/>
         <Status icon="fire.png" color="#ff7700" intensity={3} duration={3} className="order-2"/>
       </div>
+       {statusList && <div>{statusList.length} stats</div>}
       {isPlayer 
       ? <Image
         src="/player.png"

@@ -34,11 +34,11 @@ export class Statuses {
   statusList: StatusEffect[] = []
 
   public applyStatus(type: StatusType, duration: number, intensity: number){ 
-    let existingStatus = this.statusList.find((s)=> {s.type == type})
+    let existingStatus = this.statusList.find((s)=> s.type == type)
 
     if (existingStatus == undefined){
       let newStatus = new StatusEffect(type, duration, intensity)
-      this.statusList.concat(newStatus)
+      this.statusList.push(newStatus)
     } else {
       existingStatus.duration = Math.max(existingStatus.duration, duration)
       existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
@@ -46,8 +46,7 @@ export class Statuses {
   }
 
   public getStatusIntensity(type: StatusType){
-    let status = this.statusList.find((s)=> {s.type == type})
-
+    let status = this.statusList.find((s) => s.type == type)
     if (status == undefined){
       return 0
     } else {
