@@ -1,4 +1,4 @@
-import { Player } from "./gameClasses"
+import { PierceLevel, Player } from "./gameClasses"
 import { Enemy } from "./Enemy"
 import { StatusType } from "./StatusHolder";
 
@@ -29,21 +29,21 @@ export const DEFAULT_ACTIONS: Action[] = [
 
   //TODO: program double turns later
   new Action("defend.png", "Defend", 0, (player: Player, target: Enemy ) => {
-    player.tryApplyStatus(StatusType.DEFENDING, 4)
+    player.tryApplyStatus(StatusType.DEFENDING, 1)
     player.addSp(player.spOnPass);
   }), 
   new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
     player.addSp(player.spOnPass);
   }),
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
-    player.dealDamage(target,1)
+    player.dealDamage(target, 1)
     target.hp -= 1; //ball's guranteed, unmodifiable second hit
   }),
   new Action("sword.png", "Sword", 0, (player: Player, target: Enemy ) => {
-    player.dealDamage(target,2) // TODO: account for half armor piercing (see also e.takeDamage())
+    player.dealDamage(target, 2, PierceLevel.HALF) // TODO: account for half armor piercing (see also e.takeDamage())
   }),
   new Action("dynamite.png", "Dynamite", 5, (player: Player, target: Enemy ) => {
-    player.dealDamage(target,5) // TODO: account for armor piercing (see also e.takeDamage())
+    player.dealDamage(target, 5, PierceLevel.FULL) // TODO: account for armor piercing (see also e.takeDamage())
   }),
 
 ];

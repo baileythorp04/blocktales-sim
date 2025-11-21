@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Player} from "./gameClasses"
+import {PierceLevel, Player} from "./gameClasses"
 import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
 import { StatusType } from "./StatusHolder";
@@ -87,7 +87,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("good_vibes.png", "Good Vibes", 1, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("good_vibes.png", "Good Vibes", 3, (player: Player, target: Enemy) => {
-      //TODO apply status effect. or dont.
+      player.tryApplyStatus(StatusType.GOOD_VIBES_SLEEP, 3)
     })
     player.actions = player.actions.concat(action);
   }), 
@@ -156,7 +156,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("power_stab.png", "Power Stab", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy) => {
-      player.dealDamage(target,3) // TODO: account for half armor piercing (see also e.takeDamage())
+      player.dealDamage(target, 3, PierceLevel.HALF) 
     })
     player.actions = player.actions.concat(action);
   }), 

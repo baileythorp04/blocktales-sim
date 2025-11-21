@@ -43,7 +43,8 @@ export class Entity {
 
 
     //TODO: piercing = full if has piercing status and is not firebrand (pass dmg as an Attack object/type?)
-    target.takeDamage(dmg, piercing)
+    let dmgDealt = target.takeDamage(dmg, piercing)
+    return dmgDealt
   }
 
   public takeDamage(dmg: number, piercing: PierceLevel){
@@ -67,6 +68,7 @@ export class Entity {
     } else {
       //deflected
     }
+    return dmg
   }
 
   public addHp(n: number){
@@ -142,10 +144,16 @@ export class Player extends Entity{
     this.attackBoost = Math.max(this.attackBoost, -1)
   }
 
-  public dealDamage(target: Entity, dmg: number ) { 
-    super.dealDamage(target, dmg)
-    this.addHp(this.hpOnHit) //TODO hp/sp drain should only work if attack deals >0 damage (but thats hard to implement) and shouldn't apply to multihits. 
-    this.addSp(this.spOnHit)  
+  public dealDamage(target: Entity, dmg: number, piercing: PierceLevel = PierceLevel.NONE ) { 
+    let dmgDealt = super.dealDamage(target, dmg, piercing)
+
+    if (dmgDealt > 0){
+      this.addHp(this.hpOnHit) //TODO hp/sp drain shouldn't apply to multihits. 
+      this.addSp(this.spOnHit)  
+    }
+
+    return dmgDealt
+    
   }
 
   public addSp(n: number){
@@ -167,6 +175,11 @@ export class Player extends Entity{
 
   public override startOfTurnEffects() {
     super.startOfTurnEffects()
+
+    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
+      this.addHp(2)
+      this.addSp(2)
+    }
 
     //do start-of-turn card effects
     this.cards.forEach((card: Card) => {

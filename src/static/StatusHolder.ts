@@ -74,11 +74,11 @@ export class StatusHolder {
   }
 
   public removeStatus(status: StatusEffect | StatusType) {
-    this.statusList = this.statusList.filter((s) => {!(s == status || s.type == status)})
+    this.statusList = this.statusList.filter((s) => !(s == status || s.type == status))
   }
 
   public removeAllDebuffs() {
-    this.statusList = this.statusList.filter((s) => {s.debuff != true})
+    this.statusList = this.statusList.filter((s) => s.debuff != true)
   }
 }
 
