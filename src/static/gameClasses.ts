@@ -21,6 +21,7 @@ let entityId = 0
 export class Entity {
   id: number;
   hp: number;
+  isDead: boolean = false;
   maxHp: number;
   attackBoost: number = 0;
   defense: number;
@@ -64,11 +65,23 @@ export class Entity {
 
     //TODO replace this with loseHp() function for logging and decoupling
     if (dmg > 0){
-      this.hp -= dmg
+      this.loseHp(dmg)
     } else {
       //deflected
     }
     return dmg
+  }
+
+  public loseHp(n: number){
+      this.hp -= n
+      this.deathCheck()
+      //TODO log here
+  }
+
+  public deathCheck() {
+    if (this.hp <= 0) {
+      this.isDead = true
+    }
   }
 
   public addHp(n: number){
@@ -77,7 +90,7 @@ export class Entity {
 
   public startOfTurnEffects() {
     if (this.hasStatus(StatusType.FIRE)){
-      this.hp -= 1;
+      this.loseHp(1);
     }
     this.statuses.decrementTimers()
   }
@@ -102,11 +115,6 @@ export class Entity {
   
   }
 
-
-  
-
-  //status: Status;
-  //function applyStatus: () => void;
 }
 
 export class Player extends Entity{
@@ -165,6 +173,26 @@ export class Player extends Entity{
     this.sp = Math.min(this.sp+n, this.maxSp)
   }
 
+  public override deathCheck() {
+    if (this.hp <= 0) {
+      debugger
+
+      let resCard = this.cards.find(c => c.name == "Resurrect")
+      if (resCard != undefined){
+        if (resCard.counter == 0 && this.sp >= 3){ //TODO make this spcost of 3 be reduced by spsaver. have ressurect card create an action which is cast here?
+          resCard.counter++
+          this.sp -= 3
+          this.hp = 5
+          return
+        }
+      }
+
+      //TODO first-aid kit res
+
+      this.isDead = true
+    }
+  }
+
   public cast(action: Action, enemy: Enemy ){
     if (action.spCost > this.sp) {
       return "missing sp"
@@ -188,7 +216,6 @@ export class Player extends Entity{
       this.addHp(2)
       this.addSp(2)
       
-      //replace actions with nothing
       this.actions = this.sleepActions
     }
 
@@ -210,6 +237,7 @@ export class Player extends Entity{
 export class Game {
   player : Player
   enemies : Enemy[]
+  gameOver : boolean = false
 
   public constructor(player: Player, enemies : Enemy[]){
     this.player = player;

@@ -38,7 +38,7 @@ export const DEFAULT_ACTIONS: Action[] = [
   }),
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
     player.dealDamage(target, 1)
-    target.hp -= 1; //ball's guranteed, unmodifiable second hit
+    target.loseHp(1); //ball's guranteed, unmodifiable second hit
   }),
   new Action("sword.png", "Sword", 0, (player: Player, target: Enemy ) => {
     player.dealDamage(target, 2, PierceLevel.HALF) // TODO: account for half armor piercing (see also e.takeDamage())

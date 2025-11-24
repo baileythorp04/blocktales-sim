@@ -14,13 +14,12 @@ add list of chosen passive cards to combat UI
 
 # game features
 
-replace all times entity.hp is altered directly with a non-attack function, so it can be logged (make hp private)
+for restart/undo, try passing player/enemy factory functions instead of the player itself so you dont have to clone
+
 test and record the attack pattern of trotter. before and after 50%hp, with and without active summon
 account for 2+ first strike dmg
 
 make feelfine remove debuffs upon application
-fix cure still taking sp when at full health
-do player/enemy death/res check when being attacked
 
 log (show user+enemy actions each turn, separated by turn)
 trotter stances

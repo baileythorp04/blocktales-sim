@@ -104,15 +104,7 @@ export const BUYABLE_CARDS: Card[] = [
   }),
 
   new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
-    //TODO make sure this happens before the death check in game.startOfTurn()
-    if (player.hp >= 0){
-      if (thisCard.counter == 0){
-        if (player.sp >= 3) { //TODO make this sp price be affected by sp saver
-          player.hp = 5;
-          thisCard.counter++;
-        }
-      } 
-    }
+    //TODO maybe fix the resurrect jank problem by doing something useful here?
   }),
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {

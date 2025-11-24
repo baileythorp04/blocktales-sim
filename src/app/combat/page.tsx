@@ -22,7 +22,7 @@ export default function Combat() {
   })
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
-  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(() => game.enemies[0])
+  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(() => game.enemies[0]) //TODO change this to ID for undo/restart (and change enemy list generation to always use the same IDs)
 
   function handleEnemyClick(enemy: Enemy) {
     setSelectedEnemy(enemy)
@@ -51,8 +51,13 @@ export default function Combat() {
       /// ### start-of-turn effects ####
       g.player.startOfTurnEffects()
       g.enemies.forEach((e) => {e.startOfTurnEffects()})
-      
 
+      // ### entity isDead check ###
+      if (g.player.isDead) {
+        g.gameOver = true
+      }
+      g.enemies = g.enemies.filter(e => e.isDead == false) //TODO fix selected enemy staying on the dead, removed enemy
+      
       setGame(g)
     }
   }
@@ -91,6 +96,9 @@ export default function Combat() {
       </div> }
       { hpError && <div className="text-3xl">
         Not Enough HP
+      </div> }
+      { game.gameOver && <div className="text-3xl">
+        GAME OVER
       </div> }
     </div>
       
