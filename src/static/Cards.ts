@@ -97,7 +97,7 @@ export const BUYABLE_CARDS: Card[] = [
       if (player.hp < player.maxHp){
         player.addHp(5)
       } else {
-        player.addSp(player.spOnPass)
+        return "refund"
       }
     })
     player.actions = player.actions.concat(action);
@@ -107,8 +107,10 @@ export const BUYABLE_CARDS: Card[] = [
     //TODO make sure this happens before the death check in game.startOfTurn()
     if (player.hp >= 0){
       if (thisCard.counter == 0){
-        player.hp = 5;
-        thisCard.counter++;
+        if (player.sp >= 3) { //TODO make this sp price be affected by sp saver
+          player.hp = 5;
+          thisCard.counter++;
+        }
       } 
     }
   }),

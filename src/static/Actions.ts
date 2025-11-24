@@ -10,15 +10,16 @@ export class Action{
   name: string;
   spCost: number;
   hpCost: number;
-  doEffect: (player: Player, target: Enemy ) => void;
+  doEffect: (player: Player, target: Enemy ) => void | string;
 
-  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy) => void, hpCost: number = 0 ){
+  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy) => void | string, hpCost: number = 0 ){
     this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.spCost = spCost;
     this.hpCost = hpCost;
     this.doEffect = doEffect;
+    
   }
 
 }

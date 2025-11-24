@@ -112,6 +112,8 @@ export class Entity {
 export class Player extends Entity{
   sp: number;
   maxSp: number;
+  normalActions: Action[];
+  sleepActions: Action[];
   actions: Action[];
   cards: Card[];
 
@@ -124,6 +126,7 @@ export class Player extends Entity{
     this.sp = this.maxSp = build.sp;
     this.cards = build.selectedCards;
 
+    this.sleepActions = [new Action("sleep.png", "Sleep", 0, () => {})];
 
     // ### adding player actions ###
     this.actions = DEFAULT_ACTIONS
@@ -132,6 +135,8 @@ export class Player extends Entity{
         card.doEffect(this)
       }
     })
+    this.normalActions = this.actions
+
     
     // ### start-of-combat card effects ###
     this.cards.forEach((card: Card) => {
@@ -168,19 +173,30 @@ export class Player extends Entity{
     } else { 
       this.sp -= action.spCost;
       this.hp -= action.hpCost;
-      action.doEffect(this, enemy)
+      let result = action.doEffect(this, enemy)
+      if (result == "refund"){
+        this.sp += action.spCost;
+        this.addSp(this.spOnPass)
+      }
       return "success"
     }
   }
 
   public override startOfTurnEffects() {
-    super.startOfTurnEffects()
-
+    
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
       this.addHp(2)
       this.addSp(2)
+      
+      //replace actions with nothing
+      this.actions = this.sleepActions
     }
 
+    super.startOfTurnEffects()
+
+    if (!this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
+      this.actions = this.normalActions
+    }
     //do start-of-turn card effects
     this.cards.forEach((card: Card) => {
       if (card.type == CardType.START_OF_TURN){

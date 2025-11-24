@@ -11,16 +11,18 @@ import { Card, CardType } from "@/static/Cards";
 import CombatPlayer from "@/components/CombatPlayer";
 import CombatEnemy from "@/components/CombatEnemy";
 
+
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
   
-  //TODO this creates a new player, enemies, and game on every render. How to fix it? moving player/enemy creation to game constructor doesn't help 
-  let p = new Player(playerBuild)
-  let es = [trotter(), dummy(), dummy(), dummy()]
-  const [ game, setGame ]  = useState<Game>(new Game(p, es))
+  const [ game, setGame ] = useState<Game>(() => {
+    const es = [trotter(), dummy(), dummy(), dummy()]
+    const player = new Player(playerBuild)
+    return new Game(player, es)
+  })
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
-  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(game.enemies[0])
+  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(() => game.enemies[0])
 
   function handleEnemyClick(enemy: Enemy) {
     setSelectedEnemy(enemy)
