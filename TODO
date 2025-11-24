@@ -14,12 +14,12 @@ add list of chosen passive cards to combat UI
 
 # game features
 
+have all player/enemy actions/attacks be in Attack format and have provided piercing and type
+
 for restart/undo, try passing player/enemy factory functions instead of the player itself so you dont have to clone
 
 test and record the attack pattern of trotter. before and after 50%hp, with and without active summon
 account for 2+ first strike dmg
-
-make feelfine remove debuffs upon application
 
 log (show user+enemy actions each turn, separated by turn)
 trotter stances

@@ -45,7 +45,7 @@ export default function Combat() {
 
       /// ### enemy action ####
       g.enemies.forEach((enemy) => {
-        enemy.doAttack(g.player)
+        enemy.doAction(g.player)
       })
 
       /// ### start-of-turn effects ####
@@ -68,7 +68,7 @@ export default function Combat() {
         <CombatPlayer name="player" hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
         {game.enemies.map(enemy =>
         <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
-          <CombatEnemy name="enemy" hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getAttackName(1)} attack2={enemy.getAttackName(2)} statusHolder={enemy.statuses}/>
+          <CombatEnemy name="enemy" hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(1)} attack2={enemy.getActionName(2)} statusHolder={enemy.statuses}/>
         </div>
         )}
       </div>

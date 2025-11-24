@@ -1,16 +1,9 @@
 import { Action, DEFAULT_ACTIONS } from "./Actions";
+import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { PlayerBuild } from "./PlayerBuild";
 import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
-
-
-//TODO put this enum somewhere more fitting
-export enum PierceLevel {
-  NONE,
-  HALF,
-  FULL,
-} 
 
 // ######            ######
 // ###### CORE STUFF ######
@@ -33,43 +26,41 @@ export class Entity {
     this.defense = defense;
   }
 
-  public dealDamage(target: Entity, dmg: number, piercing: PierceLevel = PierceLevel.NONE) {
-    dmg -= this.getStatusIntensity(StatusType.DAMAGE_DOWN)
-    dmg += this.attackBoost
-    //TODO small only applies if not firebrand
-    //if (undodgeable == false ){
-      if (this.hasStatus(StatusType.SMALL)) { dmg -= 2 } 
-    //}
-    dmg = Math.max(dmg, 1)
+  public dealDamage(target: Entity, atk : Attack) {
+    atk.dmg -= this.getStatusIntensity(StatusType.DAMAGE_DOWN)
+    atk.dmg += this.attackBoost
+    if (atk.undodgeable == false ){
+      if (this.hasStatus(StatusType.SMALL)) { atk.dmg -= 2 } 
+      if (this.hasStatus(StatusType.ARMOR_PIERCING)) { atk.piercing = PierceLevel.FULL}
+    }
+    atk.dmg = Math.max(atk.dmg, 1)
 
-
-    //TODO: piercing = full if has piercing status and is not firebrand (pass dmg as an Attack object/type?)
-    let dmgDealt = target.takeDamage(dmg, piercing)
+    let dmgDealt = target.takeDamage(atk)
     return dmgDealt
   }
 
-  public takeDamage(dmg: number, piercing: PierceLevel){
+  public takeDamage(atk : Attack){
     //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
-    if (piercing == PierceLevel.NONE) { dmg -= this.defense }
-    else if (piercing == PierceLevel.HALF) { dmg -= Math.floor(this.defense * 0.5) }
-    else if (piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
-
-    if (piercing != PierceLevel.FULL) {
-      dmg -= this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
-      if (this.hasStatus(StatusType.DEFENDING)) { dmg = Math.floor(dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
-      if (this.hasStatus(StatusType.HALF_DAMAGE)) { dmg = Math.ceil(dmg * 0.5) } //apply half-def 50% reduction (ceil) (gets piereced)
+    if (atk.piercing == PierceLevel.NONE) { atk.dmg -= this.defense }
+    else if (atk.piercing == PierceLevel.HALF) { atk.dmg -= Math.floor(this.defense * 0.5) }
+    else if (atk.piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
+    debugger
+    if (atk.piercing != PierceLevel.FULL) {
+      atk.dmg -= this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
+      if (this.hasStatus(StatusType.DEFENDING)) { atk.dmg = Math.floor(atk.dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
+      if (this.hasStatus(StatusType.HALF_DAMAGE)) { atk.dmg = Math.ceil(atk.dmg * 0.5) } //apply half-def 50% reduction (ceil) (gets piereced)
     }
 
-    if (this.hasStatus(StatusType.GARLIC)) { dmg = Math.ceil(dmg * 0.8) } //apply garlic 20% reduction (ceil) (not pierced)
-    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { dmg = Math.ceil(dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
+    if (this.hasStatus(StatusType.GARLIC)) { atk.dmg = Math.ceil(atk.dmg * 0.8) } //apply garlic 20% reduction (ceil) (not pierced)
+    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { atk.dmg = Math.ceil(atk.dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
 
     //TODO replace this with loseHp() function for logging and decoupling
-    if (dmg > 0){
-      this.loseHp(dmg)
+    if (atk.dmg > 0){
+      this.loseHp(atk.dmg)
     } else {
       //deflected
     }
-    return dmg
+    return atk.dmg
   }
 
   public loseHp(n: number){
@@ -111,6 +102,13 @@ export class Entity {
         return
       }
     }
+
+    //on-application effects 
+    if (type == StatusType.FEEL_FINE){
+      this.statuses.removeAllDebuffs()
+    }
+    
+
     this.statuses.applyStatus(type, duration, intensity)
   
   }
@@ -157,8 +155,8 @@ export class Player extends Entity{
     this.attackBoost = Math.max(this.attackBoost, -1)
   }
 
-  public dealDamage(target: Entity, dmg: number, piercing: PierceLevel = PierceLevel.NONE ) { 
-    let dmgDealt = super.dealDamage(target, dmg, piercing)
+  public dealDamage(target: Entity, atk: Attack ) { 
+    let dmgDealt = super.dealDamage(target, atk)
 
     if (dmgDealt > 0){
       this.addHp(this.hpOnHit) //TODO hp/sp drain shouldn't apply to multihits. 

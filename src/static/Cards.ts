@@ -1,8 +1,9 @@
 import { useState } from "react";
-import {PierceLevel, Player} from "./gameClasses"
+import {Player} from "./gameClasses"
 import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
 import { StatusType } from "./StatusHolder";
+import { PierceLevel, AttackType, Attack, createAttack } from "./Attack";
 
 let idCounter = 0;
 
@@ -124,8 +125,9 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
-      player.dealDamage(target, 2)
-      target.tryApplyStatus(StatusType.SMALL, 3)
+      let atk: Attack = createAttack({dmg:2, type:AttackType.RANGED})
+      player.dealDamage(target, atk)
+      target.tryApplyStatus(StatusType.SMALL, 3) //TODO status only applies if damage is dealt (not deflected)
     })
     player.actions = player.actions.concat(action);
   }), 
@@ -150,7 +152,8 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("power_stab.png", "Power Stab", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy) => {
-      player.dealDamage(target, 3, PierceLevel.HALF) 
+      let atk: Attack = createAttack({dmg:3, type:AttackType.MELEE, piercing:PierceLevel.HALF})
+      player.dealDamage(target, atk)
     })
     player.actions = player.actions.concat(action);
   }), 

@@ -1,37 +1,39 @@
+import { Attack, AttackType, createAttack } from "./Attack";
 import { Entity } from "./gameClasses";
+import { StatusType } from "./StatusHolder";
 
-type EnemyAttack = {
+type enemyAction = {
   name: string,
   action: ((target : Entity, self : Enemy) => void)
 }
 
 export class Enemy extends Entity{
-  attacks: EnemyAttack[]
+  actions: enemyAction[]
 
-  public constructor(hp: number, attacks: EnemyAttack[], defense: number = 0){
+  public constructor(hp: number, actions: enemyAction[], defense: number = 0){
     super(hp, defense)
-    this.attacks = attacks;
+    this.actions = actions;
   }
 
-  public doAttack(target: Entity){
+  public doAction(target: Entity){
 
-    const attack = this.attacks.shift()
-    if (!attack){
-      console.error("Attack does not exist")
+    const action = this.actions.shift()
+    if (!action){
+      console.error("Action does not exist")
       return
     }
-    attack.action(target, this)
-    this.attacks.push(attack)
+    action.action(target, this)
+    this.actions.push(action)
 
-    //TODO handle new attacks changing at half health (swap out EnemyAttack object somehow?) (summon is inserted in after inferno)
+    //TODO handle new actions changing at half health (swap out enemyAction object somehow?) (summon is inserted in after inferno)
     //TODO: summoning when full has no effect (doesn't skip)
   }
 
-  public getAttackName(n: number){
-    //console.error("has "+this.attacks.length+" attacks")
-    n = (n-1) % this.attacks.length
-    let attack = this.attacks[n]
-    return attack.name
+  public getActionName(n: number){
+    //console.error("has "+this.actions.length+" actions")
+    n = (n-1) % this.actions.length
+    let action = this.actions[n]
+    return action.name
   }
 
 }
@@ -42,10 +44,55 @@ export function dummy(){
   ])
 }
 
+export function noob(){
+  return new Enemy(20, [
+    {name:"1 dmg action", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:1})
+      self.dealDamage(target, atk)
+    }},
+    {name:"3 dmg action", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:3})
+      self.dealDamage(target, atk)
+    }},
+    {name:"5 hp heal", action:(target : Entity, self : Enemy) => {
+      self.addHp(5)
+    }}
+  ])
+}
+
 export function trotter(){
+  //TODO put these in the correct order
   return new Enemy(40, [
-    {name:"1 dmg attack", action:(target : Entity, self : Enemy) => {self.dealDamage(target, 1)}},
-    {name:"3 dmg attack", action:(target : Entity, self : Enemy) => {self.dealDamage(target, 3)}},
-    {name:"5 hp heal", action:(target : Entity, self : Enemy) => {self.addHp(5)}}
+    {name:"barrel", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:10})
+      self.dealDamage(target, atk)
+    }},
+    {name:"single coin", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:14})
+      self.dealDamage(target, atk)
+    }},
+    {name:"triple coin", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:7})
+      self.dealDamage(target, atk)
+
+      let atk2: Attack = createAttack({dmg:7})
+      self.dealDamage(target, atk2)
+      
+      let atk3: Attack = createAttack({dmg:7})
+      self.dealDamage(target, atk3)
+    }},
+    {name:"prepare", action:(target : Entity, self : Enemy) => {
+    self.tryApplyStatus(StatusType.ARMOR_UP, 3, 1)
+
+    }},
+    {name:"firebrand", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:10, undodgeable:true})
+      self.dealDamage(target, atk)
+      target.tryApplyStatus(StatusType.FIRE, 5)
+      target.tryApplyStatus(StatusType.DAMAGE_DOWN, 5, 2)
+    }},
+    {name:"summon", action:(target : Entity, self : Enemy) => {
+      //????
+    }},
   ])
 }
