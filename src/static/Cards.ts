@@ -126,8 +126,10 @@ export const BUYABLE_CARDS: Card[] = [
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
       let atk: Attack = createAttack({dmg:2, type:AttackType.RANGED})
-      player.dealDamage(target, atk)
-      target.tryApplyStatus(StatusType.SMALL, 3) //TODO status only applies if damage is dealt (not deflected)
+      let dmgDealt = player.dealDamage(target, atk)
+      if (dmgDealt > 0){
+        target.tryApplyStatus(StatusType.SMALL, 3) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
+      }
     })
     player.actions = player.actions.concat(action);
   }), 
@@ -135,7 +137,7 @@ export const BUYABLE_CARDS: Card[] = [
   new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
       //TODO code in multi-targetting later (or dont)
-      //TODO code in daze status effect
+      //TODO code in daze status effect (and immunity chance)
 
     })
     player.actions = player.actions.concat(action);

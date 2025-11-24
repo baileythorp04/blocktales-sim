@@ -65,7 +65,10 @@ export function trotter(){
   return new Enemy(40, [
     {name:"barrel", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:10})
-      self.dealDamage(target, atk)
+      let dmgDealt = self.dealDamage(target, atk)
+      if (dmgDealt > 0){
+        target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
+      }
     }},
     {name:"single coin", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:14})
@@ -87,9 +90,11 @@ export function trotter(){
     }},
     {name:"firebrand", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:10, undodgeable:true})
-      self.dealDamage(target, atk)
-      target.tryApplyStatus(StatusType.FIRE, 5)
-      target.tryApplyStatus(StatusType.DAMAGE_DOWN, 5, 2)
+      let dmgDealt = self.dealDamage(target, atk)
+      if (dmgDealt > 0){
+        target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
+        target.tryApplyStatus(StatusType.DAMAGE_DOWN, 5, 2)
+      }
     }},
     {name:"summon", action:(target : Entity, self : Enemy) => {
       //????

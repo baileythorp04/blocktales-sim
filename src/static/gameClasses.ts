@@ -97,6 +97,8 @@ export class Entity {
   }
 
   public tryApplyStatus(type: StatusType, duration: number, intensity: number = 1){ 
+    //TODO status immunities here
+
     if (this.hasStatus(StatusType.FEEL_FINE)){
       if (statusIsDebuff(type)){
         return
@@ -155,7 +157,7 @@ export class Player extends Entity{
     this.attackBoost = Math.max(this.attackBoost, -1)
   }
 
-  public dealDamage(target: Entity, atk: Attack ) { 
+  public override dealDamage(target: Entity, atk: Attack ) { 
     let dmgDealt = super.dealDamage(target, atk)
 
     if (dmgDealt > 0){
@@ -164,6 +166,15 @@ export class Player extends Entity{
     }
 
     return dmgDealt
+    
+  }
+
+  public override takeDamage(atk: Attack ) { 
+    //dodging implemented here
+    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || atk.undodgeable == true){
+      return super.takeDamage(atk)
+    }
+    return 0
     
   }
 
