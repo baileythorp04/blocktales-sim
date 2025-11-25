@@ -40,14 +40,16 @@ export class Entity {
   }
 
   public takeDamage(atk : Attack){
+    if (atk.piercing != PierceLevel.FULL) {
+      if (this.hasStatus(StatusType.DEFENDING)) { atk.dmg = Math.floor(atk.dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
+    }
     //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
     if (atk.piercing == PierceLevel.NONE) { atk.dmg -= this.defense }
     else if (atk.piercing == PierceLevel.HALF) { atk.dmg -= Math.floor(this.defense * 0.5) }
     else if (atk.piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
-    debugger
+
     if (atk.piercing != PierceLevel.FULL) {
       atk.dmg -= this.getStatusIntensity(StatusType.ARMOR_UP) //reduce dmg by defense status if not full piercing
-      if (this.hasStatus(StatusType.DEFENDING)) { atk.dmg = Math.floor(atk.dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
       if (this.hasStatus(StatusType.HALF_DAMAGE)) { atk.dmg = Math.ceil(atk.dmg * 0.5) } //apply half-def 50% reduction (ceil) (gets piereced)
     }
 

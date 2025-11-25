@@ -2,15 +2,15 @@ import { Attack, AttackType, createAttack } from "./Attack";
 import { Entity } from "./gameClasses";
 import { StatusType } from "./StatusHolder";
 
-type enemyAction = {
+type EnemyAction = {
   name: string,
   action: ((target : Entity, self : Enemy) => void)
 }
 
 export class Enemy extends Entity{
-  actions: enemyAction[]
+  actions: EnemyAction[]
 
-  public constructor(hp: number, actions: enemyAction[], defense: number = 0){
+  public constructor(hp: number, actions: EnemyAction[], defense: number = 0){
     super(hp, defense)
     this.actions = actions;
   }
@@ -25,7 +25,7 @@ export class Enemy extends Entity{
     action.action(target, this)
     this.actions.push(action)
 
-    //TODO handle new actions changing at half health (swap out enemyAction object somehow?) (summon is inserted in after inferno)
+    //TODO handle new actions changing at half health (swap out EnemyAction object somehow?) (summon is inserted in after inferno)
     //TODO: summoning when full has no effect (doesn't skip)
   }
 
@@ -61,43 +61,53 @@ export function noob(){
 }
 
 export function trotter(){
-  //TODO put these in the correct order
-  return new Enemy(40, [
-    {name:"barrel", action:(target : Entity, self : Enemy) => {
+  
+    let barrelAtk : EnemyAction = {name:"barrel", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:10})
       let dmgDealt = self.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
       }
-    }},
-    {name:"single coin", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:14})
-      self.dealDamage(target, atk)
-    }},
-    {name:"triple coin", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:7})
-      self.dealDamage(target, atk)
+    }}
 
-      let atk2: Attack = createAttack({dmg:7})
-      self.dealDamage(target, atk2)
+    let coinAtk : EnemyAction = {name:"coin", action:(target : Entity, self : Enemy) => {
+      if (Math.random() > 0.5){
+        let atk: Attack = createAttack({dmg:14})
+        self.dealDamage(target, atk)
+        
+      } else {
+        let atk: Attack = createAttack({dmg:5})
+        self.dealDamage(target, atk)
+
+        let atk2: Attack = createAttack({dmg:5})
+        self.dealDamage(target, atk2)
+        
+        let atk3: Attack = createAttack({dmg:5})
+        self.dealDamage(target, atk3)
+      }
       
-      let atk3: Attack = createAttack({dmg:7})
-      self.dealDamage(target, atk3)
-    }},
-    {name:"prepare", action:(target : Entity, self : Enemy) => {
+
+      
+    }}
+
+    let prepAtk : EnemyAction = {name:"prepare", action:(target : Entity, self : Enemy) => {
     self.tryApplyStatus(StatusType.ARMOR_UP, 3, 1)
 
-    }},
-    {name:"firebrand", action:(target : Entity, self : Enemy) => {
+    }}
+
+    let firebrandAtk : EnemyAction = {name:"firebrand", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:10, undodgeable:true})
       let dmgDealt = self.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
         target.tryApplyStatus(StatusType.DAMAGE_DOWN, 5, 2)
       }
-    }},
-    {name:"summon", action:(target : Entity, self : Enemy) => {
+    }}
+
+    let summonAtk : EnemyAction = {name:"summon", action:(target : Entity, self : Enemy) => {
       //????
-    }},
-  ])
+    }}
+
+    let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, prepAtk, barrelAtk, firebrandAtk]
+    return new Enemy(40, atkList)
 }
