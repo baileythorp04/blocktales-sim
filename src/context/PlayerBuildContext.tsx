@@ -12,7 +12,7 @@ type PlayerBuildSelectionType = {
 const PlayerBuildContext = createContext<PlayerBuildSelectionType | undefined>(undefined);
 
 export const SelectionProvider = ({ children }: {children: ReactNode}) => {
-  const [playerBuild, setPlayerBuild] = useState<PlayerBuild>({hp:1, sp:1, selectedCards:[]});
+  const [playerBuild, setPlayerBuild] = useState<PlayerBuild>({hp:100, sp:100, selectedCards:[]});
 
   return (
     <PlayerBuildContext.Provider value={{ playerBuild, setPlayerBuild }}>

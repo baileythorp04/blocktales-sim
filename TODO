@@ -1,12 +1,9 @@
 # code fixes
 
+move a bunch of logic in combat page into Game
+
 throw you back to battle prep on combat refresh
     (stuff breaks when you rerender combat)
-
-way advanced: instead of calling the whole list every time, just have the timed functions be altered at start of combat to the correct effects
-
-add a reusable function for iterating through all cards of a given type
-
 
 # game fixes
 

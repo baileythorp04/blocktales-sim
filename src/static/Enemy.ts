@@ -162,18 +162,7 @@ export function trotter(){
       }
     }}
 
-    let summonAtk : EnemyAction = {name:"summon", action:(target : Entity, self : Enemy) => {
-      //do summon
-      let success =  true
-      if (success){
-        //log success
-      } else {
-        //log failed
-        self.iterateAction()
-      }
-    }}
-
-    let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, prepAtk, barrelAtk, firebrandAtk]
+    let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, barrelAtk, prepAtk, barrelAtk, firebrandAtk]
     return new Trotter(40, "Trotter", atkList, 0, true)
 }
 

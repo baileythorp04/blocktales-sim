@@ -10,7 +10,9 @@ import { usePlayerBuild } from "@/context/PlayerBuildContext";
 import { Card, CardType } from "@/static/Cards";
 import CombatPlayer from "@/components/CombatPlayer";
 import CombatEnemy from "@/components/CombatEnemy";
+import { StatusType } from "@/static/StatusHolder";
 
+let hasAnotherAction = true
 
 export default function Combat() {
   const { playerBuild } = usePlayerBuild();
@@ -30,6 +32,7 @@ export default function Combat() {
 
   function handleActionClick(action: Action): void {
     let g = game.clone()
+    debugger;
 
     // ### player action ###
     setSpError(false)
@@ -40,22 +43,29 @@ export default function Combat() {
     } else if (result == "missing hp") {
       setHpError(true)
     } else if (result == "success") {
-    g.player.endOfActionEffects() //is actually only the player's action
-    g.enemies.forEach(e => e.endOfActionEffects())
-    
+      g.player.endOfActionEffects() //leech heal
+      g.enemies.forEach(e => e.endOfActionEffects()) //change stance
 
       /// ((( second-player-turn logic )))
+      if (g.player.hasStatus(StatusType.DEFENDING)) { hasAnotherAction = false }
+      if (!hasAnotherAction){
+        
+        /// ### enemy action ####
+        g.enemies.forEach((enemy) => {
+          enemy.doNextAction(g.player, g.enemies)
+          if (enemy.haste == true){
+            enemy.doNextAction(g.player, g.enemies)
+          }
+        })
 
-      /// ### enemy action ####
-      g.enemies.forEach((enemy) => {
-        enemy.doNextAction(g.player, g.enemies)
-      })
 
+        /// ### start-of-turn effects ####
+        g.player.startOfTurnEffects()
+        g.enemies.forEach((e) => {e.startOfTurnEffects()})
+      }
+      hasAnotherAction = !hasAnotherAction
+        
 
-
-      /// ### start-of-turn effects ####
-      g.player.startOfTurnEffects()
-      g.enemies.forEach((e) => {e.startOfTurnEffects()})
 
       // ### entity isDead check ###
       if (g.player.isDead) {
@@ -73,13 +83,13 @@ export default function Combat() {
         <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
         {game.enemies.map(enemy =>
         <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
-          <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity}/>
+          <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste}/>
         </div>
         )}
       </div>
 
       <div className="mt-6 grid grid-cols-5 gap-4 items-center w-fit">
-        {game.player.actions.map((action) => (
+        {game.player.getActions(hasAnotherAction).map((action) => (
           <div key={action.id} className={`w-full cursor-pointer`} onClick={() => handleActionClick(action)}>
             <div className="grid grid-rows-4">
               <Image

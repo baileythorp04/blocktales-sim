@@ -30,15 +30,6 @@ export class Action{
 
 export const DEFAULT_ACTIONS: Action[] = [
 
-  //TODO: program double turns later
-  new Action("defend.png", "Defend", 0, (player: Player, target: Enemy ) => {
-    debugger
-    player.tryApplyStatus(StatusType.DEFENDING, 1)
-    player.addSp(player.spOnPass);
-  }), 
-  new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
-    player.addSp(player.spOnPass);
-  }),
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
     let atk: Attack = createAttack({dmg:1, type:AttackType.RANGED})
     player.dealDamage(target, atk)
@@ -57,3 +48,12 @@ export const DEFAULT_ACTIONS: Action[] = [
   }),
 
 ];
+
+export const DEFEND_ACTION: Action = new Action("defend.png", "Defend", 0, (player: Player, target: Enemy ) => {
+    player.tryApplyStatus(StatusType.DEFENDING, 1)
+    player.addSp(player.spOnPass);
+  })
+
+  export const PASS_ACTION: Action = new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
+    player.addSp(player.spOnPass);
+  })

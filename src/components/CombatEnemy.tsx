@@ -12,10 +12,11 @@ type CombatEnemyProps = {
   attack1: string,
   attack2: string,
   statusHolder: StatusHolder,
+  haste: boolean,
   stance?: AttackType,
 }; 
 
-export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusHolder, stance }: CombatEnemyProps) {
+export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusHolder, haste, stance }: CombatEnemyProps) {
   return (
     <div className="flex flex-col items-center w-[160px] m-auto">
       <StatusIconGroup statuses={statusHolder}/>
@@ -44,12 +45,24 @@ export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusH
         <div className="col-start-2 col-span-2 row-start-2 flex justify-center">hp: {hp}/{maxHp}</div>
       </div>
 
-      <div className="mt-2">
-        <div>next attacks: </div>
-        <div>{attack1}</div>
-        <div>{attack2}</div>
-      </div>
-      
+      {haste 
+      ? <div className="mt-2 ">
+          <div className="flex">
+            <Image className=" me-1 h-[20px]"
+              src="/haste.png"
+              alt="haste"
+              width={20}
+              height={20} />
+            <div>attacks:</div>
+          </div>
+          <div>{attack1}</div>
+          <div>{attack2}</div>
+        </div>
+      : <div className="mt-2">
+          <div>next attack: </div>
+          <div>{attack1}</div>
+        </div>
+      }
     </div>
   );
 }

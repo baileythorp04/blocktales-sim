@@ -1,4 +1,4 @@
-import { Action, DEFAULT_ACTIONS } from "./Actions";
+import { Action, DEFAULT_ACTIONS, DEFEND_ACTION, PASS_ACTION } from "./Actions";
 import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
@@ -127,7 +127,7 @@ export class Player extends Entity{
   maxSp: number;
   normalActions: Action[];
   sleepActions: Action[];
-  actions: Action[];
+  private actions: Action[];
   cards: Card[];
 
   dealtDamageThisAction: boolean = false;
@@ -205,6 +205,14 @@ export class Player extends Entity{
       //TODO first-aid kit res
 
       this.isDead = true
+    }
+  }
+
+  public getActions(hasAnotherAction : boolean){
+    if (hasAnotherAction){
+      return [DEFEND_ACTION].concat(this.actions)
+    } else {
+      return [PASS_ACTION].concat(this.actions)
     }
   }
 
