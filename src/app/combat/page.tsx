@@ -37,7 +37,7 @@ export default function Combat() {
     // ### player action ###
     setSpError(false)
     setHpError(false)
-    let result = g.player.doAction(action, selectedEnemy)
+    let result = g.player.doAction(action, selectedEnemy, g.enemies)
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "missing hp") {

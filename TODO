@@ -9,20 +9,27 @@ throw you back to battle prep on combat refresh
 
 add list of chosen passive cards to combat UI
 
+true infinite first stike and feelfine/pierce
+
 # game features
 
 for restart/undo, try passing player/enemy factory functions instead of the player itself so you dont have to clone
-account for 2+ first strike dmg
-make sword only work on front enemy
+
 log (show user+enemy actions each turn, separated by turn)
+
 items
+
 
 make diagram of how an action works, with a line down the middle: card > action > deal damage > take damage > lose hp
 
+# test for:
+does unboosted sword w/ -2 debuff against +1 def up deflect?
+
+does hitting 50% hp immediately after firebrand still summon?
 
 # trotter notes:
 defend 20% reduction works
-defend always rounds down?
+defend always rounds down
 minimize -2 does not work
 
 for strategy it seems like 1 def isnt doing much. should have 0 or 1. firebrand deals same to def+half and sleep+half with 1 def or not

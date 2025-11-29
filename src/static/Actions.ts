@@ -12,9 +12,9 @@ export class Action{
   name: string;
   spCost: number;
   hpCost: number;
-  doEffect: (player: Player, target: Enemy ) => void | string;
+  doEffect: (player: Player, target: Enemy, enemyList: Enemy[]) => void | string;
 
-  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy) => void | string, hpCost: number = 0 ){
+  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy, enemyList: Enemy[]) => void | string, hpCost: number = 0 ){
     this.id = idCounter++;
     this.icon = icon;
     this.name = name;
@@ -33,14 +33,13 @@ export const DEFAULT_ACTIONS: Action[] = [
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
     let atk: Attack = createAttack({dmg:1, type:AttackType.RANGED})
     player.dealDamage(target, atk)
-    debugger
-    let atk2: Attack = createAttack({dmg:1, type:AttackType.RANGED, piercing:PierceLevel.FULL}) //to deal with hyperball's unique case, have a new pierce level which floors damage at 1
-    player.dealDamage(target, atk2)
 
+    let atk2: Attack = createAttack({dmg:1, type:AttackType.RANGED, piercing:PierceLevel.FULL, boostable:false}) //to deal with hyperball's unique case, have a new pierce level which floors damage at 1 and doesn't get buffed
+    player.dealDamage(target, atk2)
   }),
-  new Action("sword.png", "Sword", 0, (player: Player, target: Enemy ) => {
+  new Action("sword.png", "Sword", 0, (player: Player, target: Enemy, enemyList: Enemy[]) => {
     let atk: Attack = createAttack({dmg:2, type:AttackType.MELEE, piercing:PierceLevel.HALF})
-    player.dealDamage(target, atk)
+    player.dealDamage(enemyList[0], atk)
   }),
   new Action("dynamite.png", "Dynamite", 5, (player: Player, target: Enemy ) => {
     let atk: Attack = createAttack({dmg:5, type:AttackType.RANGED, piercing:PierceLevel.FULL})

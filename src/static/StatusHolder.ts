@@ -12,8 +12,8 @@ export enum StatusType {
   HALF_DAMAGE,
   GARLIC,
   DEFENDING,
+  FIRST_STRIKE
 }
-//TODO: will have to implement defence pierce status (which doenst apply to inferno) and damage for the other attacks if i want to do a sleep build
 
 type statusProperties = {
   debuff: boolean,
@@ -27,12 +27,13 @@ export const statusMap: Map<StatusType, statusProperties> = new Map([
   [StatusType.DAMAGE_DOWN, {debuff:true, color:"#ac3232", icon:"damage_down.png", hideIntensity:false}],
   [StatusType.SMALL, {debuff:true, color:"#ac3232", icon:"small.png", hideIntensity:true}],
   [StatusType.ARMOR_PIERCING, {debuff:false, color:"#5b6ee1", icon:"armor_pierce.png", hideIntensity:true}],
-  [StatusType.FEEL_FINE, {debuff:false, color:"#f7da47", icon:"feel_fine.png", hideIntensity:true}], //NOT YET IMPLEMENTED REMOVAL OF DEBUFFS UPON APPLICATION
-  [StatusType.GOOD_VIBES_SLEEP, {debuff:true, color:"#847e87", icon:"sleep.png", hideIntensity:true}], //NOT YET IMPLEMENTED TURN SKIPPING/NO
+  [StatusType.FEEL_FINE, {debuff:false, color:"#f7da47", icon:"feel_fine.png", hideIntensity:true}], 
+  [StatusType.GOOD_VIBES_SLEEP, {debuff:true, color:"#847e87", icon:"sleep.png", hideIntensity:true}], 
   [StatusType.ARMOR_UP, {debuff:false, color:"#5b6ee1", icon:"armor_up.png", hideIntensity:false}],
   [StatusType.HALF_DAMAGE, {debuff:false, color:"#5b6ee1", icon:"half_damage.png", hideIntensity:true}],
   [StatusType.GARLIC, {debuff:false, color:"#6abe30", icon:"garlic.png", hideIntensity:true}],
   [StatusType.DEFENDING, {debuff:false, color:"#00c8ff", icon:"defend.png", hideIntensity:true}],
+  [StatusType.FIRST_STRIKE, {debuff:false, color:"#5b6ee1", icon:"first_strike.png", hideIntensity:false}],
 ])
 
 export function statusIsDebuff(type : StatusType) {

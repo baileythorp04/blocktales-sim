@@ -153,9 +153,9 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   new Card("power_stab.png", "Power Stab", 0, 0, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy) => {
+    let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy, enemyList: Enemy[]) => {
       let atk: Attack = createAttack({dmg:3, type:AttackType.MELEE, piercing:PierceLevel.HALF})
-      player.dealDamage(target, atk)
+      player.dealDamage(enemyList[0], atk)
     })
     player.actions = player.actions.concat(action);
   }), 

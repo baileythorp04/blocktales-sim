@@ -27,8 +27,13 @@ export class Entity {
   }
 
   public dealDamage(target: Entity, atk : Attack) {
+    if (atk.boostable) {
+      atk.dmg += this.getStatusIntensity(StatusType.FIRST_STRIKE)
+      this.statuses.removeStatus(StatusType.FIRST_STRIKE)
+      atk.dmg += this.attackBoost
+    }
     atk.dmg -= this.getStatusIntensity(StatusType.DAMAGE_DOWN)
-    atk.dmg += this.attackBoost
+
     if (atk.undodgeable == false ){
       if (this.hasStatus(StatusType.SMALL)) { atk.dmg -= 2 } 
       if (this.hasStatus(StatusType.ARMOR_PIERCING)) { atk.piercing = PierceLevel.FULL}
@@ -127,7 +132,7 @@ export class Player extends Entity{
   maxSp: number;
   normalActions: Action[];
   sleepActions: Action[];
-  private actions: Action[];
+  actions: Action[];
   cards: Card[];
 
   dealtDamageThisAction: boolean = false;
@@ -162,6 +167,8 @@ export class Player extends Entity{
 
     // ### other start-of-combat effects ###
     this.attackBoost = Math.max(this.attackBoost, -1)
+
+    this.tryApplyStatus(StatusType.FIRST_STRIKE, 999, 2)
   }
 
   public override dealDamage(target: Entity, atk: Attack ) { 
@@ -216,15 +223,15 @@ export class Player extends Entity{
     }
   }
 
-  public doAction(action: Action, enemy: Enemy ){
+  public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
     if (action.spCost > this.sp) {
       return "missing sp"
-    } else if (action.hpCost > this.hp) {
+    } else if (action.hpCost >= this.hp) {
       return "missing hp"
     } else { 
       this.sp -= action.spCost;
       this.hp -= action.hpCost;
-      let result = action.doEffect(this, enemy)
+      let result = action.doEffect(this, enemy, enemyList)
       if (result == "refund"){
         this.sp += action.spCost;
         this.addSp(this.spOnPass)
