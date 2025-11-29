@@ -1,5 +1,4 @@
 bux:
-charge
 good vibes
 defender
 hp drain
@@ -13,6 +12,7 @@ ante up
 defend+
 
 useless bux:
+charge (just attack)
 refund (tix card)
 bodyguard (co-op only)
 sp finder (out of battle)

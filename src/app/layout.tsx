@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SelectionProvider } from "@/context/CardSelectionContext";
+import { SelectionProvider } from "@/context/PlayerBuildContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
