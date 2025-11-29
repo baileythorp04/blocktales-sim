@@ -5,7 +5,6 @@ import { StatusEffect, StatusHolder } from "@/static/StatusHolder";
 import StatusIconGroup from "./StatusIconGroup";
 
 type CombatPlayerProps = {
-  name: string,
   hp: number,
   maxHp: number,
   sp: number,
@@ -13,7 +12,7 @@ type CombatPlayerProps = {
   statusHolder: StatusHolder,
 };
 
-export default function CombatPlayer({ name, hp, maxHp, sp, maxSp, statusHolder }: CombatPlayerProps) {
+export default function CombatPlayer({ hp, maxHp, sp, maxSp, statusHolder }: CombatPlayerProps) {
   return (
     <div className="flex flex-col items-center">
       <StatusIconGroup statuses={statusHolder}/>
@@ -24,8 +23,7 @@ export default function CombatPlayer({ name, hp, maxHp, sp, maxSp, statusHolder 
         width={160}
         height={160} />
       
-      <div>{name}</div>
-      <div>hp: {hp}/{maxHp}</div>
+      <div className="mt-2">hp: {hp}/{maxHp}</div>
       <div>sp: {sp}/{maxSp}</div>
       
     </div>

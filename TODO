@@ -15,12 +15,8 @@ add list of chosen passive cards to combat UI
 # game features
 
 for restart/undo, try passing player/enemy factory functions instead of the player itself so you dont have to clone
-
 account for 2+ first strike dmg
-
 make sword only work on front enemy
-
-make trotter stance work with ball's second hit (make end-of-action systems for stance change and leech)
 log (show user+enemy actions each turn, separated by turn)
 items
 

@@ -4,35 +4,37 @@ import { StatusType } from "./StatusHolder";
 
 type EnemyAction = {
   name: string,
-  action: ((target : Entity, self : Enemy) => void)
+  action: ((target : Entity, self : Enemy, enemyList : Enemy[]) => void)
 }
 
 export class Enemy extends Entity{
+  name: string
+  haste : boolean
+
   actions: EnemyAction[]
+  actionCounter: number = 0
   stanceImmunity : AttackType | undefined = undefined
 
-  public constructor(hp: number, actions: EnemyAction[], defense: number = 0){
+  public constructor(hp: number, name: string, actions: EnemyAction[], defense: number = 0, haste : boolean = false){
     super(hp, defense)
+    this.name = name;
     this.actions = actions;
+    this.haste = haste;
   }
 
-  public doNextAction(target: Entity){
-
-    const action = this.actions.shift()
-    if (!action){
-      console.error("Action does not exist")
-      return
-    }
-    action.action(target, this)
-    this.actions.push(action) //cycles actions
-
-    //TODO handle new actions changing at half health (swap out EnemyAction object somehow?) (summon is inserted in after inferno)
-    //TODO: summoning when full has no effect (doesn't skip)
+  public doNextAction(target: Entity, enemyList: Enemy[]){
+    this.actions[this.actionCounter].action(target, this, enemyList)
+    this.iterateAction()
   }
 
-  public getActionName(n: number){
-    //console.error("has "+this.actions.length+" actions")
-    n = (n-1) % this.actions.length
+  public iterateAction(){
+    //TODO: if summon is added immediately after firebrand, does it trigger immediately? as is, no
+    this.actionCounter++
+    this.actionCounter %= this.actions.length
+  }
+
+  public getActionName(diff: number){
+    let n = (this.actionCounter + diff) % this.actions.length
     let action = this.actions[n]
     return action.name
   }
@@ -63,9 +65,19 @@ class Trotter extends Enemy {
 
     if (!this.halfHealthBuffed){
       if (this.hp <= (this.maxHp/2)){
+        this.halfHealthBuffed = true
         this.tryApplyStatus(StatusType.FEEL_FINE, 1000)
         this.tryApplyStatus(StatusType.ARMOR_PIERCING, 1000)
-        this.halfHealthBuffed = true
+
+        let summonAtk : EnemyAction = {name:"summon", action:(target : Entity, self : Enemy, enemyList : Enemy[]) => {
+          if (enemyList.length >= 4){
+            this.iterateAction()
+          } else {
+            enemyList.push(pirateGhost())
+          }
+        }}
+
+        this.actions.push(summonAtk)
       }
     }
   }
@@ -87,13 +99,13 @@ class Trotter extends Enemy {
 }
 
 export function dummy(){
-  return new Enemy(10, [
+  return new Enemy(10, "Dummy", [
     {name:"nothing", action:(target : Entity, self : Enemy) => {}},
   ])
 }
 
 export function noob(){
-  return new Enemy(20, [
+  return new Enemy(20, "Noob", [
     {name:"1 dmg action", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:1})
       self.dealDamage(target, atk)
@@ -133,9 +145,7 @@ export function trotter(){
         let atk3: Attack = createAttack({dmg:5})
         self.dealDamage(target, atk3)
       }
-      
 
-      
     }}
 
     let prepAtk : EnemyAction = {name:"prepare", action:(target : Entity, self : Enemy) => {
@@ -153,9 +163,46 @@ export function trotter(){
     }}
 
     let summonAtk : EnemyAction = {name:"summon", action:(target : Entity, self : Enemy) => {
-      //????
+      //do summon
+      let success =  true
+      if (success){
+        //log success
+      } else {
+        //log failed
+        self.iterateAction()
+      }
     }}
 
     let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, prepAtk, barrelAtk, firebrandAtk]
-    return new Trotter(40, atkList)
+    return new Trotter(40, "Trotter", atkList, 0, true)
+}
+
+function pirateGhost(){
+  let barrelAtk : EnemyAction = {name:"barrel", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:10})
+      let dmgDealt = self.dealDamage(target, atk)
+      if (dmgDealt > 0){
+        target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
+      }
+    }}
+
+  let coinAtk : EnemyAction = {name:"coin", action:(target : Entity, self : Enemy) => {
+    if (Math.random() > 0.5){
+      let atk: Attack = createAttack({dmg:14})
+      self.dealDamage(target, atk)
+      
+    } else {
+      let atk: Attack = createAttack({dmg:5})
+      self.dealDamage(target, atk)
+
+      let atk2: Attack = createAttack({dmg:5})
+      self.dealDamage(target, atk2)
+      
+      let atk3: Attack = createAttack({dmg:5})
+      self.dealDamage(target, atk3)
+    }
+  }}
+
+  let atkList : EnemyAction[] = [coinAtk, barrelAtk] //should actually be random not alternating, but shouldn't matter much
+  return new Enemy(2, "Ghost", atkList, 10)
 }
