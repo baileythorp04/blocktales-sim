@@ -42,9 +42,10 @@ export const DEFAULT_ACTIONS: Action[] = [
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
     let atk: Attack = createAttack({dmg:1, type:AttackType.RANGED})
     player.dealDamage(target, atk)
+    debugger
+    let atk2: Attack = createAttack({dmg:1, type:AttackType.RANGED, piercing:PierceLevel.FULL}) //to deal with hyperball's unique case, have a new pierce level which floors damage at 1
+    player.dealDamage(target, atk2)
 
-    //ball's guranteed, unmodifiable second hit
-    target.loseHp(1);  //TODO make this not work on trotter's ball stance
   }),
   new Action("sword.png", "Sword", 0, (player: Player, target: Enemy ) => {
     let atk: Attack = createAttack({dmg:2, type:AttackType.MELEE, piercing:PierceLevel.HALF})

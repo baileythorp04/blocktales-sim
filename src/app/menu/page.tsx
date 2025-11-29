@@ -156,7 +156,7 @@ export default function Menu() {
           <GridCell onClick={() => changeStat(Stat.BP, true)}>BP-</GridCell>
         </div>
         {usedBux <= MAX_BUX && usedBp <= bp 
-          ? <div onClick={() => handleCombatLink()} className={`mt-8 p-4 border bg-gray-200 border-gray-400 `}>Go to Combat</div>
+          ? <div onClick={() => handleCombatLink()} className={`mt-8 p-4 border bg-gray-200 border-gray-400 cursor-pointer`}>Go to Combat</div>
           : <div className={`mt-8 p-4 border bg-gray-100 text-gray-300 cursor-default`}>Go to Combat</div>
         }
       </div>
