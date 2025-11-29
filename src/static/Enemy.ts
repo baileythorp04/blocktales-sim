@@ -9,6 +9,7 @@ type EnemyAction = {
 
 export class Enemy extends Entity{
   actions: EnemyAction[]
+  stanceImmunity : AttackType | undefined = undefined
 
   public constructor(hp: number, actions: EnemyAction[], defense: number = 0){
     super(hp, defense)
@@ -36,6 +37,46 @@ export class Enemy extends Entity{
     return action.name
   }
 
+}
+
+class Trotter extends Enemy {
+  stanceImmunity : AttackType = AttackType.RANGED
+  halfHealthBuffed : boolean = false
+
+  public override takeDamage(atk: Attack): number {
+    if (atk.type == this.stanceImmunity){
+      return 0
+    }
+
+    let dmgDealt = super.takeDamage(atk)
+    if (dmgDealt > 0){
+      //TODO make this not happen twice for multihits (only happen at the end of the action)
+      this.swapStance()
+    } 
+
+    return dmgDealt
+  }
+
+  public override loseHp(n: number): void {
+    super.loseHp(n)
+
+    if (!this.halfHealthBuffed){
+      if (this.hp <= (this.maxHp/2)){
+        this.tryApplyStatus(StatusType.FEEL_FINE, 1000)
+        this.tryApplyStatus(StatusType.ARMOR_PIERCING, 1000)
+        this.halfHealthBuffed = true
+      }
+    }
+  }
+
+
+  public swapStance() {
+    if (this.stanceImmunity == AttackType.RANGED){
+      this.stanceImmunity = AttackType.MELEE
+    } else if (this.stanceImmunity == AttackType.MELEE){
+      this.stanceImmunity = AttackType.RANGED
+    }
+  }
 }
 
 export function dummy(){
@@ -109,5 +150,5 @@ export function trotter(){
     }}
 
     let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, prepAtk, barrelAtk, firebrandAtk]
-    return new Enemy(40, atkList)
+    return new Trotter(40, atkList)
 }

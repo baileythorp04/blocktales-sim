@@ -56,7 +56,6 @@ export class Entity {
     if (this.hasStatus(StatusType.GARLIC)) { atk.dmg = Math.ceil(atk.dmg * 0.8) } //apply garlic 20% reduction (ceil) (not pierced)
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { atk.dmg = Math.ceil(atk.dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
 
-    //TODO replace this with loseHp() function for logging and decoupling
     if (atk.dmg > 0){
       this.loseHp(atk.dmg)
     } else {
