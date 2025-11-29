@@ -34,18 +34,21 @@ export default function Combat() {
     // ### player action ###
     setSpError(false)
     setHpError(false)
-    let result = g.player.cast(action, selectedEnemy)
+    let result = g.player.doAction(action, selectedEnemy)
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "missing hp") {
       setHpError(true)
     } else if (result == "success") {
+    g.player.endOfActionEffects() //is actually only the player's action
+    g.enemies.forEach(e => e.endOfActionEffects())
+    
 
       /// ((( second-player-turn logic )))
 
       /// ### enemy action ####
       g.enemies.forEach((enemy) => {
-        enemy.doAction(g.player)
+        enemy.doNextAction(g.player)
       })
 
       /// ### start-of-turn effects ####

@@ -16,7 +16,7 @@ export class Enemy extends Entity{
     this.actions = actions;
   }
 
-  public doAction(target: Entity){
+  public doNextAction(target: Entity){
 
     const action = this.actions.shift()
     if (!action){
@@ -24,7 +24,7 @@ export class Enemy extends Entity{
       return
     }
     action.action(target, this)
-    this.actions.push(action)
+    this.actions.push(action) //cycles actions
 
     //TODO handle new actions changing at half health (swap out EnemyAction object somehow?) (summon is inserted in after inferno)
     //TODO: summoning when full has no effect (doesn't skip)
@@ -43,6 +43,8 @@ class Trotter extends Enemy {
   stanceImmunity : AttackType = AttackType.RANGED
   halfHealthBuffed : boolean = false
 
+  wasAttackedThisAction: boolean = false
+
   public override takeDamage(atk: Attack): number {
     if (atk.type == this.stanceImmunity){
       return 0
@@ -50,8 +52,7 @@ class Trotter extends Enemy {
 
     let dmgDealt = super.takeDamage(atk)
     if (dmgDealt > 0){
-      //TODO make this not happen twice for multihits (only happen at the end of the action)
-      this.swapStance()
+      this.wasAttackedThisAction = true;
     } 
 
     return dmgDealt
@@ -69,6 +70,12 @@ class Trotter extends Enemy {
     }
   }
 
+  public override endOfActionEffects(): void {
+    if (this.wasAttackedThisAction){
+      this.swapStance()
+      this.wasAttackedThisAction = false
+    }
+  }
 
   public swapStance() {
     if (this.stanceImmunity == AttackType.RANGED){

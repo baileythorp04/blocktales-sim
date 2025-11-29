@@ -116,6 +116,10 @@ export class Entity {
   
   }
 
+  public endOfActionEffects(){
+
+  }
+
 }
 
 export class Player extends Entity{
@@ -125,6 +129,8 @@ export class Player extends Entity{
   sleepActions: Action[];
   actions: Action[];
   cards: Card[];
+
+  dealtDamageThisAction: boolean = false;
 
   spOnHit: number = 0;
   hpOnHit: number = 0;
@@ -162,8 +168,7 @@ export class Player extends Entity{
     let dmgDealt = super.dealDamage(target, atk)
 
     if (dmgDealt > 0){
-      this.addHp(this.hpOnHit) //TODO hp/sp drain shouldn't apply to multihits. 
-      this.addSp(this.spOnHit)  
+      this.dealtDamageThisAction = true
     }
 
     return dmgDealt
@@ -203,7 +208,7 @@ export class Player extends Entity{
     }
   }
 
-  public cast(action: Action, enemy: Enemy ){
+  public doAction(action: Action, enemy: Enemy ){
     if (action.spCost > this.sp) {
       return "missing sp"
     } else if (action.hpCost > this.hp) {
@@ -216,7 +221,16 @@ export class Player extends Entity{
         this.sp += action.spCost;
         this.addSp(this.spOnPass)
       }
+      
       return "success"
+    }
+  }
+
+  public override endOfActionEffects(): void {
+    if (this.dealtDamageThisAction){
+      this.addHp(this.hpOnHit)
+      this.addSp(this.spOnHit)  
+      this.dealtDamageThisAction = false;
     }
   }
 
