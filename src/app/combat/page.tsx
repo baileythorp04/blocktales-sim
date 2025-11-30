@@ -106,6 +106,22 @@ export default function Combat() {
         ))}
       </div>
 
+      <div className="p-1 mt-3 border-b-2 w-115">Passive Cards</div>
+
+      <div className="mt-6 grid grid-cols-5 gap-4 items-center w-fit">
+        {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card) => (
+          <div key={card.id} className={`w-full`}>
+            <Image
+              className={`row-span-3 ${!card.enabled && "grayscale"}`}
+              src={"/cards/" + card.icon}
+              alt={card.name + " icon"}
+              width={80}
+              height={80}
+              />
+          </div>
+        ))}
+      </div>
+
       { spError && <div className="text-3xl">
         Not Enough SP
       </div> }

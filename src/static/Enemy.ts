@@ -28,7 +28,6 @@ export class Enemy extends Entity{
   }
 
   public iterateAction(){
-    //TODO: if summon is added immediately after firebrand, does it trigger immediately? as is, no
     this.actionCounter++
     this.actionCounter %= this.actions.length
   }

@@ -197,12 +197,11 @@ export class Player extends Entity{
 
   public override deathCheck() {
     if (this.hp <= 0) {
-      debugger
 
       let resCard = this.cards.find(c => c.name == "Resurrect")
       if (resCard != undefined){
-        if (resCard.counter == 0 && this.sp >= 3){ //TODO make this spcost of 3 be reduced by spsaver. have ressurect card create an action which is cast here?
-          resCard.counter++
+        if (resCard.enabled  && this.sp >= 3){ //TODO make this spcost of 3 be reduced by spsaver. have ressurect card create an action which is cast here?
+          resCard.enabled = false
           this.sp -= 3
           this.hp = 5
           return

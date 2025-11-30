@@ -20,19 +20,19 @@ export class Card {
   bux: number;
   bp: number;
 
-  counter: number;
+  enabled: boolean;
 
   type: CardType;
   effect: (player: Player, card: Card) => void;
 
-  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player, card: Card) => void) {
+  public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player, card: Card) => void, startEnabled: boolean = true) {
     this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.bux = bux;
     this.bp = bp;
 
-    this.counter = 0;
+    this.enabled = startEnabled;
 
     this.type = type,
     this.effect = effect;
@@ -109,12 +109,12 @@ export const BUYABLE_CARDS: Card[] = [
   }),
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
-    thisCard.counter++;
-    if (thisCard.counter == 2) {
+    if (thisCard.enabled) {
       player.addHp(1);
-      thisCard.counter = 0
     }
-  }), 
+    thisCard.enabled = !thisCard.enabled
+  }, false //startEnabled
+  ),
 
   new Card("linebounce.png", "Linebounce (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {

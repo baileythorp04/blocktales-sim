@@ -18,14 +18,13 @@ for restart/undo, try passing player/enemy factory functions instead of the play
 log (show user+enemy actions each turn, separated by turn)
 
 items
+- slateskin
+- ghost burger?
+- medkit
+- healing/sp item
 
 
 make diagram of how an action works, with a line down the middle: card > action > deal damage > take damage > lose hp
-
-# test for:
-does unboosted sword w/ -2 debuff against +1 def up deflect?
-
-does hitting 50% hp immediately after firebrand still summon?
 
 # trotter notes:
 defend 20% reduction works
