@@ -1,4 +1,3 @@
-//TODO put this enum somewhere more fitting
 export enum PierceLevel {
   NONE,
   HALF,

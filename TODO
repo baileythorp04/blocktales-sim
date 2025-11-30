@@ -7,13 +7,9 @@ throw you back to battle prep on combat refresh
 
 # game fixes
 
-add list of chosen passive cards to combat UI
-
 true infinite first stike and feelfine/pierce
 
 # game features
-
-for restart/undo, try passing player/enemy factory functions instead of the player itself so you dont have to clone
 
 log (show user+enemy actions each turn, separated by turn)
 

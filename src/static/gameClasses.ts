@@ -9,10 +9,8 @@ import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 // ###### CORE STUFF ######
 // ######            ######
 
-let entityId = 0
 
 export class Entity {
-  id: number;
   hp: number;
   isDead: boolean = false;
   maxHp: number;
@@ -21,7 +19,6 @@ export class Entity {
   statuses: StatusHolder = new StatusHolder();
 
   public constructor(hp: number, defense: number){
-    this.id = entityId++;
     this.hp = this.maxHp = hp;
     this.defense = defense;
   }
@@ -223,6 +220,7 @@ export class Player extends Entity{
   }
 
   public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
+
     if (action.spCost > this.sp) {
       return "missing sp"
     } else if (action.hpCost >= this.hp) {
@@ -280,6 +278,10 @@ export class Game {
   public constructor(player: Player, enemies : Enemy[]){
     this.player = player;
     this.enemies = enemies;
+  }
+
+  public getEnemyByPosition(pos : number) {
+    return this.enemies[pos]
   }
 
   public clone() {

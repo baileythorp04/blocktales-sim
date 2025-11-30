@@ -11,7 +11,9 @@ import { Card, CardType } from "@/static/Cards";
 import CombatPlayer from "@/components/CombatPlayer";
 import CombatEnemy from "@/components/CombatEnemy";
 import { StatusType } from "@/static/StatusHolder";
+import { cloneDeep } from "lodash"
 
+let gameInstanceStack : Game[] = [] //includes all previous game states, not the current one
 let hasAnotherAction = true
 
 export default function Combat() {
@@ -24,20 +26,20 @@ export default function Combat() {
   })
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
-  const [ selectedEnemy, setSelectedEnemy ] = useState<Enemy>(() => game.enemies[0]) //TODO change this to ID for undo/restart (and change enemy list generation to always use the same IDs)
-
-  function handleEnemyClick(enemy: Enemy) {
-    setSelectedEnemy(enemy)
+  const [ selectedEnemyPosition, setSelectedEnemyPosition ] = useState<number>(0) 
+  function handleEnemyClick(i: number) {
+    setSelectedEnemyPosition(i)
   }
 
   function handleActionClick(action: Action): void {
-    let g = game.clone()
-    debugger;
+    let g = cloneDeep(game)
+
 
     // ### player action ###
     setSpError(false)
     setHpError(false)
-    let result = g.player.doAction(action, selectedEnemy, g.enemies)
+    let enemy = g.getEnemyByPosition(selectedEnemyPosition)
+    let result = g.player.doAction(action, enemy, g.enemies)
     if (result == "missing sp") {
       setSpError(true)
     } else if (result == "missing hp") {
@@ -71,9 +73,28 @@ export default function Combat() {
       if (g.player.isDead) {
         g.gameOver = true
       }
-      g.enemies = g.enemies.filter(e => e.isDead == false) //TODO fix selected enemy staying on the dead, removed enemy
+      g.enemies = g.enemies.filter(e => e.isDead == false)
       
+      gameInstanceStack.push(game)
       setGame(g)
+    }
+  }
+
+  function handleUndo() {
+    let prevState = gameInstanceStack.pop()
+    if (prevState == undefined){
+      console.error("no previous game state to undo to")
+    } else {
+      setGame(prevState)
+    }
+  }
+
+  function handleRestart() {
+    let initState = gameInstanceStack[0]
+    if (initState == undefined){
+      console.error("no previous game state to restart to")
+    } else {
+      setGame(initState)
     }
   }
 
@@ -81,8 +102,8 @@ export default function Combat() {
     <div className="container border mx-auto">
       <div className="grid grid-cols-5 border border-red-500">
         <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
-        {game.enemies.map(enemy =>
-        <div key={enemy.id} onClick={() => handleEnemyClick(enemy)} className={`cursor-pointer ${enemy == selectedEnemy && "bg-amber-100"}`}>
+        {game.enemies.map((enemy, i) =>
+        <div key={i} onClick={() => handleEnemyClick(i)} className={`cursor-pointer ${i == selectedEnemyPosition && "bg-amber-100"}`}>
           <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste}/>
         </div>
         )}
@@ -121,6 +142,15 @@ export default function Combat() {
           </div>
         ))}
       </div>
+      {gameInstanceStack.length > 0
+      ? <div className="flex justify-around my-8 w-115">
+          <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
+          <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
+        </div>
+      : <div className="flex justify-around my-8 w-115">
+          <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
+          <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Restart</div>
+        </div>}
 
       { spError && <div className="text-3xl">
         Not Enough SP

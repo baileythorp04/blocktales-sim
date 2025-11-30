@@ -105,7 +105,6 @@ export const BUYABLE_CARDS: Card[] = [
   }),
 
   new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
-    //TODO maybe fix the resurrect jank problem by doing something useful here?
   }),
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
