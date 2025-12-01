@@ -148,6 +148,7 @@ export class Player extends Entity{
   items: Item[];
 
   dealtDamageThisAction: boolean = false;
+  hasAnotherAction: boolean = true;
 
   spOnHit: number = 0;
   hpOnHit: number = 0;
@@ -227,12 +228,12 @@ export class Player extends Entity{
     }
   }
 
-  public getActions(hasAnotherAction : boolean){
+  public getActions(){
     if (!this.canAct()){
       return this.sleepActions
     }
 
-      if (hasAnotherAction){
+      if (this.hasAnotherAction){
         return [DEFEND_ACTION].concat(this.actions)
       } else {
         return [PASS_ACTION].concat(this.actions)

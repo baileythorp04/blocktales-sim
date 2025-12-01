@@ -1,5 +1,6 @@
 "use client";
 import GridCell from "@/components/GridCell";
+import ItemBox from "@/components/ItemBox"
 import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
 import { BUYABLE_CARDS, Card } from "@/static/Cards";
@@ -36,7 +37,7 @@ export default function Menu() {
     }
   }
 
-  function handleRemoveItem(index: number) {
+  function handleRemoveItem(item: Item, index: number) {
     setSelectedItemList(selectedItemList.filter((item, i) => i != index))
   }
 
@@ -184,7 +185,7 @@ export default function Menu() {
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
           {BUYABLE_ITEMS.map((item, i) => (
-            <div key={i} onClick={() => {handleAddItem(item)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer`}>
+            <div key={i} onClick={() => handleAddItem(item)} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer`}>
               <div className="flex flex-row gap-2 items-center">
                 <Image
                   src={"/items/" + item.icon}
@@ -199,19 +200,7 @@ export default function Menu() {
           ))}
         </div>
 
-        <div className=" mt-4 grid grid-cols-5 grid-rows-2 border border-4 w-[340px] h-[140px]">
-          {selectedItemList.map((item, i) => (
-            <div key={i} onClick={() => {handleRemoveItem(i)}} className={`p-2 cursor-pointer`}>
-                <Image
-                  src={"/items/" + item.icon}
-                  alt={item.name + " icon"}
-                  width={50}
-                  height={50}
-                />              
-            </div>
-          ))}
-          
-        </div>
+        <ItemBox itemList={selectedItemList} onItemClick={handleRemoveItem}/>
       </div>
     </div>
   );
