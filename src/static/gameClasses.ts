@@ -149,6 +149,7 @@ export class Player extends Entity{
 
   dealtDamageThisAction: boolean = false;
   hasAnotherAction: boolean = true;
+  hasUsedMedkit: boolean = false;
 
   spOnHit: number = 0;
   hpOnHit: number = 0;
@@ -214,10 +215,22 @@ export class Player extends Entity{
 
       let resCard = this.cards.find(c => c.name == "Resurrect")
       if (resCard != undefined){
-        if (resCard.enabled  && this.sp >= 3){ //TODO make this spcost of 3 be reduced by spsaver. have ressurect card create an action which is cast here?
+        let spCost = 3
+        if (this.cards.some(c => c.name == "SP Saver")) {spCost--}
+        if (resCard.enabled  && this.sp >= spCost){ 
           resCard.enabled = false
-          this.sp -= 3
+          this.sp -= spCost
           this.hp = 5
+          return
+        }
+      }
+
+      if (!this.hasUsedMedkit){
+        if (this.items.some(item => item.name == "Medkit")){
+          let hpHeal = this.itemPlusBuff(10) 
+          this.hp = hpHeal
+          this.hasUsedMedkit = true
+          this.items.filter(item => item.name != "Medkit")
           return
         }
       }
@@ -282,6 +295,13 @@ export class Player extends Entity{
         card.doEffect(this)
       }
     })
+  }
+
+  public itemPlusBuff(n: number){
+    if (this.cards.some(card => card.name == "Item+")){
+      return Math.round(n*1.3)
+    }
+    return n
   }
 }
 

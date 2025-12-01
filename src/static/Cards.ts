@@ -11,6 +11,7 @@ export enum CardType {
   ACTIVE,
   START_OF_COMBAT,
   START_OF_TURN,
+  OTHER,
 }
 
 export class Card {
@@ -64,8 +65,7 @@ export const BUYABLE_CARDS: Card[] = [
     player.spOnPass++;
   }),
 
-  new Card("item+.png", "Item+", 3, 3, CardType.START_OF_COMBAT, (player: Player) => {
-    // TODO implement items
+  new Card("item+.png", "Item+", 3, 3, CardType.OTHER, (player: Player) => {
   }),
 
   new Card("defender.png", "Defender", 2, 3, CardType.START_OF_COMBAT, (player: Player) => {
@@ -98,7 +98,7 @@ export const BUYABLE_CARDS: Card[] = [
     player.actions = player.actions.concat(action);
   }),
 
-  new Card("resurrect.png", "Resurrect", 0, 2, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
+  new Card("resurrect.png", "Resurrect", 0, 2, CardType.OTHER, (player: Player, thisCard: Card) => {
   }),
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {

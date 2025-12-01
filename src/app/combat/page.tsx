@@ -153,6 +153,18 @@ export default function Combat() {
           ))}
         </div>
 
+
+        {/* #### ITEMS #### */}
+        {game.player.canAct() &&
+        <div className="self-center">
+          <div className="flex justify-center">
+            <ItemBox itemList={game.player.items} onItemClick={handleItemClick} />
+          </div>
+        </div>
+        }
+
+
+
         {/* #### PASSIVE CARDS #### */}
         
         {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
@@ -173,13 +185,6 @@ export default function Combat() {
                 />
             </div>
           ))}
-        </div>
-
-
-        {/* #### ITEMS #### */}
-        <div className="text-2xl self-center">Items</div>
-        <div className="flex justify-center">
-          <ItemBox itemList={game.player.items} onItemClick={handleItemClick} />
         </div>
 
 
