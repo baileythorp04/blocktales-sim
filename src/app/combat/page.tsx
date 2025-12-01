@@ -12,6 +12,7 @@ import CombatPlayer from "@/components/CombatPlayer";
 import CombatEnemy from "@/components/CombatEnemy";
 import { StatusType } from "@/static/StatusHolder";
 import { cloneDeep } from "lodash"
+import { Item } from "@/static/Items";
 
 let gameInstanceStack : Game[] = [] //includes all previous game states, not the current one
 let hasAnotherAction = true
@@ -31,7 +32,16 @@ export default function Combat() {
     setSelectedEnemyPosition(i)
   }
 
+  function handleItemClick(item: Item): void {
+    doAction(item)
+    //TODO remove item if not refunded
+  }
+
   function handleActionClick(action: Action): void {
+    doAction(action)
+  }
+
+  function doAction(action: Action): void {
     let g = cloneDeep(game)
 
 
@@ -49,7 +59,7 @@ export default function Combat() {
       g.enemies.forEach(e => e.endOfActionEffects()) //change stance
 
       /// ((( second-player-turn logic )))
-      if (g.player.hasStatus(StatusType.DEFENDING)) { hasAnotherAction = false }
+      if (g.player.hasStatus(StatusType.DEFENDING) || g.player.hasStatus(StatusType.INVISIBLE) || g.player.canAct() == false) { hasAnotherAction = false }
       if (!hasAnotherAction){
         
         /// ### enemy action ####
@@ -110,8 +120,8 @@ export default function Combat() {
       </div>
 
       <div className="mt-6 grid grid-cols-5 gap-4 items-center w-fit">
-        {game.player.getActions(hasAnotherAction).map((action) => (
-          <div key={action.id} className={`w-full cursor-pointer`} onClick={() => handleActionClick(action)}>
+        {game.player.getActions(hasAnotherAction).map((action, i) => (
+          <div key={i} className={`w-full cursor-pointer`} onClick={() => handleActionClick(action)}>
             <div className="grid grid-rows-4">
               <Image
                 className="row-span-3"
@@ -130,8 +140,8 @@ export default function Combat() {
       <div className="p-1 mt-3 border-b-2 w-115">Passive Cards</div>
 
       <div className="mt-6 grid grid-cols-5 gap-4 items-center w-fit">
-        {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card) => (
-          <div key={card.id} className={`w-full`}>
+        {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card, i) => (
+          <div key={i} className={`w-full`}>
             <Image
               className={`row-span-3 ${!card.enabled && "grayscale"}`}
               src={"/cards/" + card.icon}

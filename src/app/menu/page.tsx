@@ -7,6 +7,7 @@ import { usePlayerBuild } from "@/context/PlayerBuildContext"
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Item } from "@/static/Items";
 
 
 const MAX_BUX = 17
@@ -17,6 +18,7 @@ export default function Menu() {
   const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
   const { playerBuild, setPlayerBuild } = usePlayerBuild();
 
   function toggleSelectCard(card: Card) {
@@ -46,6 +48,7 @@ export default function Menu() {
       hp:hp,
       sp:sp,
       selectedCards:selectedCards,
+      selectedItems:selectedItems,
     })
     router.push("/combat");
   }
@@ -57,8 +60,8 @@ export default function Menu() {
         <h1 className="text-3xl font-bold mb-4">Cards</h1>
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
-          {BUYABLE_CARDS.map((card) => (
-          <div key={card.id} onClick={() => {toggleSelectCard(card)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card) && "bg-amber-100"}`}>
+          {BUYABLE_CARDS.map((card, i) => (
+          <div key={i} onClick={() => {toggleSelectCard(card)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card) && "bg-amber-100"}`}>
             <div className="flex flex-row gap-2 items-center">
               <Image
                 src={"/cards/" + card.icon}

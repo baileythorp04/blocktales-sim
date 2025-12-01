@@ -7,7 +7,6 @@ import { StatusType } from "./StatusHolder";
 let idCounter = 0;
 
 export class Action{
-  id: number;
   icon: string;
   name: string;
   spCost: number;
@@ -15,7 +14,6 @@ export class Action{
   doEffect: (player: Player, target: Enemy, enemyList: Enemy[]) => void | string;
 
   public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy, enemyList: Enemy[]) => void | string, hpCost: number = 0 ){
-    this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.spCost = spCost;

@@ -2,6 +2,7 @@ import { Action, DEFAULT_ACTIONS, DEFEND_ACTION, PASS_ACTION } from "./Actions";
 import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
+import { Item } from "./Items";
 import { PlayerBuild } from "./PlayerBuild";
 import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
@@ -79,6 +80,9 @@ export class Entity {
   }
 
   public addHp(n: number){
+    if (this.hp == this.maxHp){
+      return "refund"
+    }
     this.hp = Math.min(this.hp+n, this.maxHp)
   }
 
@@ -111,6 +115,10 @@ export class Entity {
     //on-application effects 
     if (type == StatusType.FEEL_FINE){
       this.statuses.removeAllDebuffs()
+    } else if (type == StatusType.INVISIBLE){
+      this.statuses.removeStatus(StatusType.FEEL_FINE)
+      this.tryApplyStatus(StatusType.EXHAUSTED, 2)
+
     }
     
 
@@ -122,15 +130,22 @@ export class Entity {
 
   }
 
+  public canAct() {
+    if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || this.hasStatus(StatusType.EXHAUSTED) ){
+      return false
+    }
+    return true
+  }
+
 }
 
 export class Player extends Entity{
   sp: number;
   maxSp: number;
-  normalActions: Action[];
   sleepActions: Action[];
   actions: Action[];
   cards: Card[];
+  items: Item[];
 
   dealtDamageThisAction: boolean = false;
 
@@ -142,6 +157,7 @@ export class Player extends Entity{
     super(build.hp, 0);
     this.sp = this.maxSp = build.sp;
     this.cards = build.selectedCards;
+    this.items = build.selectedItems;
 
     this.sleepActions = [new Action("sleep.png", "Sleep", 0, () => {})];
 
@@ -152,8 +168,6 @@ export class Player extends Entity{
         card.doEffect(this)
       }
     })
-    this.normalActions = this.actions
-
     
     // ### start-of-combat card effects ###
     this.cards.forEach((card: Card) => {
@@ -181,6 +195,8 @@ export class Player extends Entity{
 
   public override takeDamage(atk: Attack ) { 
     //dodging implemented here
+    if (this.hasStatus(StatusType.INVISIBLE)){ return 0 }
+
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || atk.undodgeable == true){
       return super.takeDamage(atk)
     }
@@ -212,11 +228,15 @@ export class Player extends Entity{
   }
 
   public getActions(hasAnotherAction : boolean){
-    if (hasAnotherAction){
-      return [DEFEND_ACTION].concat(this.actions)
-    } else {
-      return [PASS_ACTION].concat(this.actions)
+    if (!this.canAct()){
+      return this.sleepActions
     }
+
+      if (hasAnotherAction){
+        return [DEFEND_ACTION].concat(this.actions)
+      } else {
+        return [PASS_ACTION].concat(this.actions)
+      }
   }
 
   public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
@@ -251,15 +271,10 @@ export class Player extends Entity{
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
       this.addHp(2)
       this.addSp(2)
-      
-      this.actions = this.sleepActions
     }
-
+    
     super.startOfTurnEffects()
 
-    if (!this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
-      this.actions = this.normalActions
-    }
     //do start-of-turn card effects
     this.cards.forEach((card: Card) => {
       if (card.type == CardType.START_OF_TURN){

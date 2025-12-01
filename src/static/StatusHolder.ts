@@ -12,7 +12,9 @@ export enum StatusType {
   HALF_DAMAGE,
   GARLIC,
   DEFENDING,
-  FIRST_STRIKE
+  FIRST_STRIKE,
+  INVISIBLE,
+  EXHAUSTED
 }
 
 type statusProperties = {
@@ -34,6 +36,8 @@ export const statusMap: Map<StatusType, statusProperties> = new Map([
   [StatusType.GARLIC, {debuff:false, color:"#6abe30", icon:"garlic.png", hideIntensity:true}],
   [StatusType.DEFENDING, {debuff:false, color:"#00c8ff", icon:"defend.png", hideIntensity:true}],
   [StatusType.FIRST_STRIKE, {debuff:false, color:"#5b6ee1", icon:"first_strike.png", hideIntensity:false}],
+  [StatusType.INVISIBLE, {debuff:false, color:"#847387", icon:"invisible.png", hideIntensity:true}],
+  [StatusType.EXHAUSTED, {debuff:true, color:"#f7da47", icon:"exhausted.png", hideIntensity:true}],
 ])
 
 export function statusIsDebuff(type : StatusType) {

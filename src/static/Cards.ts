@@ -14,7 +14,6 @@ export enum CardType {
 }
 
 export class Card {
-  id: number;
   icon: string;
   name: string;
   bux: number;
@@ -26,7 +25,6 @@ export class Card {
   effect: (player: Player, card: Card) => void;
 
   public constructor(icon: string, name: string, bux: number, bp: number, type: CardType, effect: (player: Player, card: Card) => void, startEnabled: boolean = true) {
-    this.id = idCounter++;
     this.icon = icon;
     this.name = name;
     this.bux = bux;
@@ -95,11 +93,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
-      if (player.hp < player.maxHp){
-        player.addHp(5)
-      } else {
-        return "refund"
-      }
+        return player.addHp(5)
     })
     player.actions = player.actions.concat(action);
   }),
