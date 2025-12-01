@@ -7,7 +7,7 @@ import { usePlayerBuild } from "@/context/PlayerBuildContext"
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Item } from "@/static/Items";
+import { BUYABLE_ITEMS, Item } from "@/static/Items";
 
 
 const MAX_BUX = 17
@@ -18,7 +18,7 @@ export default function Menu() {
   const [usedBp, setUsedBp] = useState(0);
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+  const [selectedItemList, setSelectedItemList] = useState<Item[]>([]);
   const { playerBuild, setPlayerBuild } = usePlayerBuild();
 
   function toggleSelectCard(card: Card) {
@@ -28,6 +28,16 @@ export default function Menu() {
       setSelectedCards(selectedCards.concat(card))
     }
     
+  }
+
+  function handleAddItem(item: Item) {
+    if (selectedItemList.length < 10) {
+      setSelectedItemList(selectedItemList.concat(item))
+    }
+  }
+
+  function handleRemoveItem(index: number) {
+    setSelectedItemList(selectedItemList.filter((item, i) => i != index))
   }
 
   useEffect(() => setRemainingStats(), [selectedCards])
@@ -48,7 +58,7 @@ export default function Menu() {
       hp:hp,
       sp:sp,
       selectedCards:selectedCards,
-      selectedItems:selectedItems,
+      selectedItems:selectedItemList,
     })
     router.push("/combat");
   }
@@ -61,33 +71,33 @@ export default function Menu() {
         <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
 
           {BUYABLE_CARDS.map((card, i) => (
-          <div key={i} onClick={() => {toggleSelectCard(card)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card) && "bg-amber-100"}`}>
-            <div className="flex flex-row gap-2 items-center">
-              <Image
-                src={"/cards/" + card.icon}
-                alt={card.name + " icon"}
-                width={50}
-                height={50}
-              />
-              <div>{card.name}</div>
+            <div key={i} onClick={() => {toggleSelectCard(card)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer ${selectedCards.includes(card) && "bg-amber-100"}`}>
+              <div className="flex flex-row gap-2 items-center">
+                <Image
+                  src={"/cards/" + card.icon}
+                  alt={card.name + " icon"}
+                  width={50}
+                  height={50}
+                />
+                <div>{card.name}</div>
+              </div>
+              <div className="flex flex-row-reverse gap-2 items-center">
+                <Image
+                  src="/bp.png"
+                  alt="bp"
+                  width={40}
+                  height={40}
+                />
+                <div>{card.bp}</div>
+                {card.bux > 0 && <Image
+                  src="/bux.png"
+                  alt="bux"
+                  width={40}
+                  height={40}
+                />}
+                {card.bux > 0 && <div>{card.bux}</div> }
+              </div>
             </div>
-            <div className="flex flex-row-reverse gap-2 items-center">
-              <Image
-                src="/bp.png"
-                alt="bp"
-                width={40}
-                height={40}
-              />
-              <div>{card.bp}</div>
-              {card.bux > 0 && <Image
-                src="/bux.png"
-                alt="bux"
-                width={40}
-                height={40}
-              />}
-              {card.bux > 0 && <div>{card.bux}</div> }
-            </div>
-          </div>
           ))}
         </div>
         <div className="flex flex-row-reverse p-2 gap-2 w-[80%]">
@@ -163,8 +173,45 @@ export default function Menu() {
           : <div className={`mt-8 p-4 border bg-gray-100 text-gray-300 cursor-default`}>Go to Combat</div>
         }
       </div>
-      <div className="border border-gray-300">
-        choose items
+
+
+
+
+
+      <div className="flex flex-col items-center justify-center">
+
+        <h1 className="text-3xl font-bold mb-4">Items</h1>
+        <div className="overflow-auto h-100 w-[80%] flex flex-col items-center p-2 border border-gray-300 text-xl">
+
+          {BUYABLE_ITEMS.map((item, i) => (
+            <div key={i} onClick={() => {handleAddItem(item)}} className={`w-full grid grid-cols-2 border-b p-2 cursor-pointer`}>
+              <div className="flex flex-row gap-2 items-center">
+                <Image
+                  src={"/items/" + item.icon}
+                  alt={item.name + " icon"}
+                  width={50}
+                  height={50}
+                />
+                <div>{item.name}</div>
+              </div>
+              
+            </div>
+          ))}
+        </div>
+
+        <div className=" mt-4 grid grid-cols-5 grid-rows-2 border border-4 w-[340px] h-[140px]">
+          {selectedItemList.map((item, i) => (
+            <div key={i} onClick={() => {handleRemoveItem(i)}} className={`p-2 cursor-pointer`}>
+                <Image
+                  src={"/items/" + item.icon}
+                  alt={item.name + " icon"}
+                  width={50}
+                  height={50}
+                />              
+            </div>
+          ))}
+          
+        </div>
       </div>
     </div>
   );
