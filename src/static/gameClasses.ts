@@ -80,9 +80,6 @@ export class Entity {
   }
 
   public addHp(n: number){
-    if (this.hp == this.maxHp){
-      return "refund"
-    }
     this.hp = Math.min(this.hp+n, this.maxHp)
   }
 
@@ -253,23 +250,24 @@ export class Player extends Entity{
       }
   }
 
-  public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
-
-    if (action.spCost > this.sp) {
+  public checkActionCost(action: Action) {
+    if (action.spCost > this.sp){
       return "missing sp"
-    } else if (action.hpCost >= this.hp) {
+    } else if (action.hpCost >= this.hp){
       return "missing hp"
-    } else { 
-      this.sp -= action.spCost;
-      this.hp -= action.hpCost;
-      let result = action.doEffect(this, enemy, enemyList)
-      if (result == "refund"){
-        this.sp += action.spCost;
-        this.addSp(this.spOnPass)
-      }
-      
-      return "success"
-    }
+    } 
+    return "success"
+    
+  }
+
+  public canHeal(){
+    return this.hp < this.maxHp
+  }
+
+  public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
+    this.sp -= action.spCost;
+    this.hp -= action.hpCost;
+    action.doEffect(this, enemy, enemyList)
   }
 
   public override endOfActionEffects(): void {

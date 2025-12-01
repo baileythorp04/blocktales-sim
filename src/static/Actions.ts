@@ -11,13 +11,15 @@ export class Action{
   name: string;
   spCost: number;
   hpCost: number;
+  isHeal: boolean;
   doEffect: (player: Player, target: Enemy, enemyList: Enemy[]) => void | string;
 
-  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy, enemyList: Enemy[]) => void | string, hpCost: number = 0 ){
+  public constructor(icon: string, name: string, spCost: number, doEffect:(player: Player, target: Enemy, enemyList: Enemy[]) => void | string, isHeal: boolean = false, hpCost: number = 0 ){
     this.icon = icon;
     this.name = name;
     this.spCost = spCost;
     this.hpCost = hpCost;
+    this.isHeal = isHeal;
     this.doEffect = doEffect;
     
   }

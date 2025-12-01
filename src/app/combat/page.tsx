@@ -36,11 +36,8 @@ export default function Combat() {
     let g = cloneDeep(game)
 
     if (item.usable){
-      g.player.items.splice(i, 1)
-      doAction(g, item)
+      doAction(g, item, i)
     }
-
-    //TODO only remove item if not refunded 
   }
 
   function handleActionClick(action: Action): void {
@@ -49,19 +46,36 @@ export default function Combat() {
     doAction(g, action)
   }
 
-  function doAction(g: Game, action: Action): void {
-
-
+  function doAction(g: Game, action: Action, itemIndex: number = -1): void {
     // ### player action ###
     setSpError(false)
     setHpError(false)
+
     let enemy = g.getEnemyByPosition(selectedEnemyPosition)
-    let result = g.player.doAction(action, enemy, g.enemies)
+    let result = g.player.checkActionCost(action) 
     if (result == "missing sp") {
       setSpError(true)
-    } else if (result == "missing hp") {
+      return
+    }
+    if (result == "missing hp") {
       setHpError(true)
-    } else if (result == "success") {
+      return
+    }
+    if (result == "success") {
+      debugger
+      //refund check
+      if (action.isHeal && !g.player.canHeal()){
+        g.player.addSp(g.player.spOnPass)
+      } else {
+        g.player.doAction(action, enemy, g.enemies)
+        if (action instanceof Item){
+          g.player.items.splice(itemIndex, 1)
+        }
+      }
+
+
+
+
       g.player.endOfActionEffects() //leech heal
       g.enemies.forEach(e => e.endOfActionEffects()) //change stance
 

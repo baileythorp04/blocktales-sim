@@ -11,11 +11,9 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
-make cure/burger refunding better
+make not enough SP/HP error better
 
 log (show user+enemy actions each turn, separated by turn)
-
-make diagram of how an action works, with a line down the middle: card > action > deal damage > take damage > lose hp
 
 # trotter notes:
 defend 20% reduction works

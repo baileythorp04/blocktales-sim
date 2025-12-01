@@ -93,8 +93,10 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
-        return player.addHp(5)
-    })
+      player.addHp(5)
+    }, true //isHeal
+    )
+
     player.actions = player.actions.concat(action);
   }),
 
@@ -140,7 +142,7 @@ export const BUYABLE_CARDS: Card[] = [
     let action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
       player.addSp(5)
     },
-    10 //hpCost
+    false, 10 //isHeal, hpCost
   )
     player.actions = player.actions.concat(action);
   }), 
