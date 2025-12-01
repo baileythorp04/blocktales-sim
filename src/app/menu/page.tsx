@@ -199,8 +199,9 @@ export default function Menu() {
             </div>
           ))}
         </div>
-
-        <ItemBox itemList={selectedItemList} onItemClick={handleRemoveItem}/>
+        <div className="mt-4">
+          <ItemBox itemList={selectedItemList} onItemClick={handleRemoveItem}/>
+        </div>
       </div>
     </div>
   );

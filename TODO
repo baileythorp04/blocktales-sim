@@ -11,14 +11,9 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
+make cure/burger refunding better
+
 log (show user+enemy actions each turn, separated by turn)
-
-items
-- slateskin
-- ghost burger?
-- medkit
-- healing/sp item
-
 
 make diagram of how an action works, with a line down the middle: card > action > deal damage > take damage > lose hp
 

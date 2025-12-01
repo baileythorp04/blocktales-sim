@@ -132,7 +132,7 @@ export default function Combat() {
 
       {/* #### ACTIVE CARDS/ACTIONS #### */}
 
-      <div className="mt-2 flex flex-col w-[470px] border">
+      <div className="mt-2 flex flex-col w-[470px] border gap-2">
 
 
         <div className="flex flex-row flex-wrap gap-4 items-center">
@@ -156,7 +156,9 @@ export default function Combat() {
         {/* #### PASSIVE CARDS #### */}
         
         {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
-          <div className="text-2xl p-1 my-3 border-b-2 w-full">Passive Cards</div>
+        <div className="flex justify-center border-b-2 w-full">
+          <div className="text-2xl">Passive Cards</div>
+        </div>
         }
 
         <div className="flex flex-row flex-wrap gap-4 items-center">
@@ -175,6 +177,7 @@ export default function Combat() {
 
 
         {/* #### ITEMS #### */}
+        <div className="text-2xl self-center">Items</div>
         <div className="flex justify-center">
           <ItemBox itemList={game.player.items} onItemClick={handleItemClick} />
         </div>

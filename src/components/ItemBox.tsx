@@ -10,7 +10,7 @@ type ItemBoxProps = {
 
 export default function ItemBox({ itemList = [], onItemClick }: ItemBoxProps) {
   return (
-   <div className=" mt-4 grid grid-cols-5 grid-rows-2 border border-4 w-[340px] h-[140px]">
+   <div className="grid grid-cols-5 grid-rows-2 border border-4 w-[340px] h-[140px] bg-gray-300">
           {itemList.map((item, i) => (
             <div key={i} onClick={() => onItemClick(item, i)} className={`p-2 ${item.usable && "cursor-pointer"}`}>
                 <Image
