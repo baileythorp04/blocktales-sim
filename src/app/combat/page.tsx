@@ -65,6 +65,7 @@ export default function Combat() {
     }
     if (result == "success") {
       //refund check
+      logger.nextAction()
       if (action.isHeal && !g.player.canHeal()){
         g.player.addSp(g.player.spOnPass)
       } else {
@@ -144,6 +145,7 @@ export default function Combat() {
         )}
       </div>
 
+      {/* #### Bottom Section #### */}
       <div className="mt-2 flex flex-row">
 
 

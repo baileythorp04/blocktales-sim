@@ -1,10 +1,12 @@
 export type LogEntry = {
   id: number
   msg: string
+  new: boolean
 }
 
 const _logs: LogEntry[][] = [[]]
 const _subs = new Set<(logs: LogEntry[][]) => void>()
+
 let _nextId = 1
 let _colNo = 0
 
@@ -15,15 +17,30 @@ function notify() {
 
 export const logger = {
   log(msg: string): LogEntry {
-    const entry: LogEntry = { id: _nextId++, msg }
+    const entry: LogEntry = { id: _nextId++, msg, new: true}
     _logs[_colNo].push(entry)
     notify()
     return entry
   },
 
+  nextAction(): void {
+    _logs.forEach(logCol => {
+      logCol.forEach(log => {
+
+        if (log.new){
+          log.new = false
+        } else {
+          return
+        }
+        
+      })
+    })
+  },
+
   nextTurn(): void {
     _logs.push([])
     _colNo++;
+    notify()
   },
 
   get(): LogEntry[][] {
