@@ -140,9 +140,9 @@ export class Entity {
 
     let appliedStatus = this.statuses.applyStatus(type, duration, intensity)
     if (appliedStatus.hideIntensity){
-      logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`)
+      logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`, true)
     } else {
-      logger.log(`${this.name} was applied with ${appliedStatus.name} ${appliedStatus.intensity} for ${appliedStatus.duration} turns`)
+      logger.log(`${this.name} was applied with ${appliedStatus.name} ${appliedStatus.intensity} for ${appliedStatus.duration} turns`, true)
 
     }
   
@@ -221,14 +221,14 @@ export class Player extends Entity{
     //dodging implemented here
     if (this.hasStatus(StatusType.INVISIBLE))
     {
-      logger.log(`${this.name} phased through ${atk.name}`)
+      logger.log(`${this.name} phased through ${atk.name}`, true)
       return 0 
     }
 
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || atk.undodgeable == true){
       return super.takeDamage(atk)
     }
-    logger.log(`${this.name} dodged ${atk.name}`)
+    logger.log(`${this.name} dodged ${atk.name}`, true)
     return 0
     
   }

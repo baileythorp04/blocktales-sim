@@ -187,7 +187,7 @@ export default function Combat() {
           {/* #### PASSIVE CARDS #### */}
           
           {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
-          <div className="flex justify-center border-b-2 w-full">
+          <div className=" mt-2 flex justify-center border-b-2 w-full">
             <div className="text-2xl">Passive Cards</div>
           </div>
           }

@@ -11,6 +11,8 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
++atk and +def symbols next to player
+
 make log expand downwards when more cards are used
 make log work with undo/restart
 
