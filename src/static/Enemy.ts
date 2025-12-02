@@ -1,5 +1,6 @@
 import { Attack, AttackType, createAttack } from "./Attack";
 import { Entity } from "./gameClasses";
+import { logger } from "./logger";
 import { StatusType } from "./StatusHolder";
 
 type EnemyAction = {
@@ -8,7 +9,6 @@ type EnemyAction = {
 }
 
 export class Enemy extends Entity{
-  name: string
   haste : boolean
 
   actions: EnemyAction[]
@@ -16,8 +16,7 @@ export class Enemy extends Entity{
   stanceImmunity : AttackType | undefined = undefined
 
   public constructor(hp: number, name: string, actions: EnemyAction[], defense: number = 0, haste : boolean = false){
-    super(hp, defense)
-    this.name = name;
+    super(hp, name, defense)
     this.actions = actions;
     this.haste = haste;
   }
@@ -48,6 +47,7 @@ class Trotter extends Enemy {
 
   public override takeDamage(atk: Attack): number {
     if (atk.type == this.stanceImmunity){
+      logger.log(`${this.name} deflected ${atk.name} with his stance`)
       return 0
     }
 
@@ -59,9 +59,11 @@ class Trotter extends Enemy {
     return dmgDealt
   }
 
-  public override loseHp(n: number): void {
-    super.loseHp(n)
+  public override loseHp(n: number, target: string, source: string): void {
+    super.loseHp(n, target, source)
 
+
+    //half health buff check
     if (!this.halfHealthBuffed){
       if (this.hp <= (this.maxHp/2)){
         this.halfHealthBuffed = true
@@ -71,8 +73,12 @@ class Trotter extends Enemy {
         let summonAtk : EnemyAction = {name:"summon", action:(target : Entity, self : Enemy, enemyList : Enemy[]) => {
           if (enemyList.length >= 4){
             this.iterateAction()
+            logger.log(`${this.name} failed to summon`)
           } else {
-            enemyList.push(pirateGhost())
+            let summon = pirateGhost()
+            enemyList.push(summon)
+            logger.log(`${this.name} summoned ${summon.name}`)
+
           }
         }}
 
@@ -106,11 +112,11 @@ export function dummy(){
 export function noob(){
   return new Enemy(20, "Noob", [
     {name:"1 dmg action", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:1})
+      let atk: Attack = createAttack({dmg:1, name:"1dmghit"})
       self.dealDamage(target, atk)
     }},
     {name:"3 dmg action", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:3})
+      let atk: Attack = createAttack({dmg:3, name:"3dmghit"})
       self.dealDamage(target, atk)
     }},
     {name:"5 hp heal", action:(target : Entity, self : Enemy) => {
@@ -122,7 +128,7 @@ export function noob(){
 export function trotter(){
   
     let barrelAtk : EnemyAction = {name:"barrel", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:10})
+      let atk: Attack = createAttack({dmg:10, name:"Barrel"})
       let dmgDealt = self.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
@@ -131,17 +137,17 @@ export function trotter(){
 
     let coinAtk : EnemyAction = {name:"coin", action:(target : Entity, self : Enemy) => {
       if (Math.random() > 0.5){
-        let atk: Attack = createAttack({dmg:14})
+        let atk: Attack = createAttack({dmg:14, name:"Single Shot"})
         self.dealDamage(target, atk)
         
       } else {
-        let atk: Attack = createAttack({dmg:5})
+        let atk: Attack = createAttack({dmg:5, name:"Triple Shot 1"})
         self.dealDamage(target, atk)
 
-        let atk2: Attack = createAttack({dmg:5})
+        let atk2: Attack = createAttack({dmg:5, name:"Triple Shot 2"})
         self.dealDamage(target, atk2)
         
-        let atk3: Attack = createAttack({dmg:5})
+        let atk3: Attack = createAttack({dmg:5, name:"Triple Shot 3"})
         self.dealDamage(target, atk3)
       }
 
@@ -153,7 +159,7 @@ export function trotter(){
     }}
 
     let firebrandAtk : EnemyAction = {name:"firebrand", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:10, undodgeable:true})
+      let atk: Attack = createAttack({dmg:10, name:"Firebrand", undodgeable:true})
       let dmgDealt = self.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
@@ -167,7 +173,7 @@ export function trotter(){
 
 function pirateGhost(){
   let barrelAtk : EnemyAction = {name:"barrel", action:(target : Entity, self : Enemy) => {
-      let atk: Attack = createAttack({dmg:10})
+      let atk: Attack = createAttack({dmg:10, name:"Barrel"})
       let dmgDealt = self.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.FIRE, 5) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
@@ -176,17 +182,17 @@ function pirateGhost(){
 
   let coinAtk : EnemyAction = {name:"coin", action:(target : Entity, self : Enemy) => {
     if (Math.random() > 0.5){
-      let atk: Attack = createAttack({dmg:14})
+      let atk: Attack = createAttack({dmg:14, name:"Single Shot"})
       self.dealDamage(target, atk)
       
     } else {
-      let atk: Attack = createAttack({dmg:5})
+      let atk: Attack = createAttack({dmg:5, name:"Triple Shot 1"})
       self.dealDamage(target, atk)
 
-      let atk2: Attack = createAttack({dmg:5})
+      let atk2: Attack = createAttack({dmg:5, name:"Triple Shot 2"})
       self.dealDamage(target, atk2)
       
-      let atk3: Attack = createAttack({dmg:5})
+      let atk3: Attack = createAttack({dmg:5, name:"Triple Shot 3"})
       self.dealDamage(target, atk3)
     }
   }}

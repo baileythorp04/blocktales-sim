@@ -18,6 +18,7 @@ export enum StatusType {
 }
 
 type statusProperties = {
+  name: string,
   debuff: boolean,
   color: string,
   icon: string,
@@ -25,19 +26,19 @@ type statusProperties = {
 }
 
 export const statusMap: Map<StatusType, statusProperties> = new Map([
-  [StatusType.FIRE, {debuff:true, color:"#ff8301", icon:"fire.png", hideIntensity:false}],
-  [StatusType.DAMAGE_DOWN, {debuff:true, color:"#ac3232", icon:"damage_down.png", hideIntensity:false}],
-  [StatusType.SMALL, {debuff:true, color:"#ac3232", icon:"small.png", hideIntensity:true}],
-  [StatusType.ARMOR_PIERCING, {debuff:false, color:"#5b6ee1", icon:"armor_pierce.png", hideIntensity:true}],
-  [StatusType.FEEL_FINE, {debuff:false, color:"#f7da47", icon:"feel_fine.png", hideIntensity:true}], 
-  [StatusType.GOOD_VIBES_SLEEP, {debuff:true, color:"#847e87", icon:"sleep.png", hideIntensity:true}], 
-  [StatusType.ARMOR_UP, {debuff:false, color:"#5b6ee1", icon:"armor_up.png", hideIntensity:false}],
-  [StatusType.HALF_DAMAGE, {debuff:false, color:"#5b6ee1", icon:"half_damage.png", hideIntensity:true}],
-  [StatusType.GARLIC, {debuff:false, color:"#6abe30", icon:"garlic.png", hideIntensity:true}],
-  [StatusType.DEFENDING, {debuff:false, color:"#00c8ff", icon:"defend.png", hideIntensity:true}],
-  [StatusType.FIRST_STRIKE, {debuff:false, color:"#5b6ee1", icon:"first_strike.png", hideIntensity:false}],
-  [StatusType.INVISIBLE, {debuff:false, color:"#847387", icon:"invisible.png", hideIntensity:true}],
-  [StatusType.EXHAUSTED, {debuff:true, color:"#f7da47", icon:"exhausted.png", hideIntensity:true}],
+  [StatusType.FIRE, {name:"Fire", debuff:true, color:"#ff8301", icon:"fire.png", hideIntensity:false}],
+  [StatusType.DAMAGE_DOWN, {name:"Damage Down", debuff:true, color:"#ac3232", icon:"damage_down.png", hideIntensity:false}],
+  [StatusType.SMALL, {name:"Small", debuff:true, color:"#ac3232", icon:"small.png", hideIntensity:true}],
+  [StatusType.ARMOR_PIERCING, {name:"Armor Piercing", debuff:false, color:"#5b6ee1", icon:"armor_pierce.png", hideIntensity:true}],
+  [StatusType.FEEL_FINE, {name:"Feel Fine", debuff:false, color:"#f7da47", icon:"feel_fine.png", hideIntensity:true}], 
+  [StatusType.GOOD_VIBES_SLEEP, {name:"Good Vibes", debuff:true, color:"#847e87", icon:"sleep.png", hideIntensity:true}], 
+  [StatusType.ARMOR_UP, {name:"Armor Up", debuff:false, color:"#5b6ee1", icon:"armor_up.png", hideIntensity:false}],
+  [StatusType.HALF_DAMAGE, {name:"Half Damage", debuff:false, color:"#5b6ee1", icon:"half_damage.png", hideIntensity:true}],
+  [StatusType.GARLIC, {name:"Garlic", debuff:false, color:"#6abe30", icon:"garlic.png", hideIntensity:true}],
+  [StatusType.DEFENDING, {name:"Defending", debuff:false, color:"#00c8ff", icon:"defend.png", hideIntensity:true}],
+  [StatusType.FIRST_STRIKE, {name:"First Strike", debuff:false, color:"#5b6ee1", icon:"first_strike.png", hideIntensity:false}],
+  [StatusType.INVISIBLE, {name:"Invisible", debuff:false, color:"#847387", icon:"invisible.png", hideIntensity:true}],
+  [StatusType.EXHAUSTED, {name:"Exhausted", debuff:true, color:"#f7da47", icon:"exhausted.png", hideIntensity:true}],
 ])
 
 export function statusIsDebuff(type : StatusType) {
@@ -54,9 +55,11 @@ export class StatusHolder {
     if (existingStatus == undefined){
       let newStatus = new StatusEffect(type, duration, intensity)
       this.statusList.push(newStatus)
+      return newStatus
     } else {
       existingStatus.duration = Math.max(existingStatus.duration, duration)
       existingStatus.intensity = Math.max(existingStatus.intensity, intensity)
+      return existingStatus
     }
   }
 
@@ -94,6 +97,7 @@ export class StatusEffect {
   duration: number;
   intensity: number;
   
+  name: string = "default status name"
   debuff: boolean = false;
   color: string = "red";
   icon: string = "";
@@ -106,6 +110,7 @@ export class StatusEffect {
     
     let map = statusMap.get(type);
     if (map != undefined){
+      this.name = map.name;
       this.debuff = map.debuff;
       this.color = map.color;
       this.icon = map.icon;

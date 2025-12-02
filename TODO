@@ -13,8 +13,6 @@ true infinite first stike and feelfine/pierce
 
 make not enough SP/HP error better
 
-log (show user+enemy actions each turn, separated by turn)
-
 # trotter notes:
 defend 20% reduction works
 defend always rounds down

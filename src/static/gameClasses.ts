@@ -1,8 +1,9 @@
-import { Action, DEFAULT_ACTIONS, DEFEND_ACTION, PASS_ACTION } from "./Actions";
+import { Action, DEFAULT_ACTIONS, DEFEND_ACTION, DO_NOTHING_ACTION, PASS_ACTION } from "./Actions";
 import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { Item } from "./Items";
+import { logger } from "./logger";
 import { PlayerBuild } from "./PlayerBuild";
 import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
@@ -13,14 +14,16 @@ import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
 export class Entity {
   hp: number;
+  name: string;
   isDead: boolean = false;
   maxHp: number;
   attackBoost: number = 0;
   defense: number;
   statuses: StatusHolder = new StatusHolder();
 
-  public constructor(hp: number, defense: number){
+  public constructor(hp: number, name: string, defense: number){
     this.hp = this.maxHp = hp;
+    this.name = name;
     this.defense = defense;
   }
 
@@ -60,32 +63,48 @@ export class Entity {
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)) { atk.dmg = Math.ceil(atk.dmg * 0.5) } //apply sleep 50% reduction (ceil) (not pierced)
 
     if (atk.dmg > 0){
-      this.loseHp(atk.dmg)
+      this.loseHp(atk.dmg, this.name, atk.name)
     } else {
-      //deflected
+      logger.log(`${this.name} deflected ${atk.name}`)
     }
     return atk.dmg
   }
 
-  public loseHp(n: number){
+  public loseHp(n: number, target: string, source: string){
       this.hp -= n
+      logger.log(`${target} took ${n} damage from ${source}`)
+
       this.deathCheck()
-      //TODO log here
   }
 
   public deathCheck() {
     if (this.hp <= 0) {
+      if (this.isDead == false) {logger.log(`${this.name}'s HP reached 0 and died`)}
       this.isDead = true
     }
   }
 
   public addHp(n: number){
+    let hpBefore = this.hp
     this.hp = Math.min(this.hp+n, this.maxHp)
+    let healed = this.hp - hpBefore
+
+    if (n > 0) {
+      if (this.hp == this.maxHp){
+        if (healed < n){
+          logger.log(`${this.name} healed ${n} HP to max HP (actually healed ${healed} HP)`)
+        } else {
+          logger.log(`${this.name} healed ${n} to max HP`)
+        }
+      } else {
+        logger.log(`${this.name} healed ${n} HP`)
+      }
+    }
   }
 
   public startOfTurnEffects() {
     if (this.hasStatus(StatusType.FIRE)){
-      this.loseHp(1);
+      this.loseHp(1, this.name, "Fire Status");
     }
     this.statuses.decrementTimers()
   }
@@ -119,7 +138,13 @@ export class Entity {
     }
     
 
-    this.statuses.applyStatus(type, duration, intensity)
+    let appliedStatus = this.statuses.applyStatus(type, duration, intensity)
+    if (appliedStatus.hideIntensity){
+      logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`)
+    } else {
+      logger.log(`${this.name} was applied with ${appliedStatus.name} ${appliedStatus.intensity} for ${appliedStatus.duration} turns`)
+
+    }
   
   }
 
@@ -153,12 +178,12 @@ export class Player extends Entity{
   spOnPass: number = 1;
 
   public constructor(build: PlayerBuild){
-    super(build.hp, 0);
+    super(build.hp, "Player", 0);
     this.sp = this.maxSp = build.sp;
     this.cards = build.selectedCards;
     this.items = build.selectedItems;
 
-    this.sleepActions = [new Action("sleep.png", "Sleep", 0, () => {})];
+    this.sleepActions = [DO_NOTHING_ACTION];
 
     // ### adding player actions ###
     this.actions = DEFAULT_ACTIONS
@@ -194,17 +219,39 @@ export class Player extends Entity{
 
   public override takeDamage(atk: Attack ) { 
     //dodging implemented here
-    if (this.hasStatus(StatusType.INVISIBLE)){ return 0 }
+    if (this.hasStatus(StatusType.INVISIBLE))
+    {
+      logger.log(`${this.name} phased through ${atk.name}`)
+      return 0 
+    }
 
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || atk.undodgeable == true){
       return super.takeDamage(atk)
     }
+    logger.log(`${this.name} dodged ${atk.name}`)
     return 0
     
   }
 
   public addSp(n: number){
     this.sp = Math.min(this.sp+n, this.maxSp)
+
+    let spBefore = this.sp
+    this.sp = Math.min(this.sp+n, this.maxHp)
+    let spGained = this.sp - spBefore
+
+    if (n > 0) {
+      if (this.hp == this.maxHp){
+        if (spGained < n){
+          logger.log(`${this.name} gained ${n} SP to max SP (actually gained ${spGained} SP)`)
+        } else {
+          logger.log(`${this.name} gained ${n} to max SP`)
+
+        }
+      } else {
+        logger.log(`${this.name} gained ${n} SP`)
+      }
+    }
   }
 
   public override deathCheck() {
@@ -232,9 +279,8 @@ export class Player extends Entity{
         }
       }
 
-      //TODO first-aid kit res
+      super.deathCheck()
 
-      this.isDead = true
     }
   }
 
@@ -271,7 +317,7 @@ export class Player extends Entity{
   }
 
   public override endOfActionEffects(): void {
-    if (this.dealtDamageThisAction){
+    if (this.dealtDamageThisAction){ //leech effect
       this.addHp(this.hpOnHit)
       this.addSp(this.spOnHit)  
       this.dealtDamageThisAction = false;

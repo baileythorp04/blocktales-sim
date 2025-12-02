@@ -14,6 +14,7 @@ import { StatusType } from "@/static/StatusHolder";
 import { cloneDeep } from "lodash"
 import { Item } from "@/static/Items";
 import ItemBox from "@/components/ItemBox";
+import LogPanel from "@/components/LogPanel";
 
 let gameInstanceStack : Game[] = [] //includes all previous game states, not the current one
 
@@ -62,7 +63,6 @@ export default function Combat() {
       return
     }
     if (result == "success") {
-      debugger
       //refund check
       if (action.isHeal && !g.player.canHeal()){
         g.player.addSp(g.player.spOnPass)
@@ -143,89 +143,97 @@ export default function Combat() {
         )}
       </div>
 
-
-      {/* #### ACTIVE CARDS/ACTIONS #### */}
-
-      <div className="mt-2 flex flex-col w-[470px] border gap-2">
+      <div className="mt-2 flex flex-row">
 
 
-        <div className="flex flex-row flex-wrap gap-4 items-center">
-          {game.player.getActions().map((action, i) => (
-            <div key={i} className="cursor-pointer flex-shrink-0 w-[80px]" onClick={() => handleActionClick(action)}>
-              <div className="grid grid-rows-4">
+        {/* #### Left column #### */}
+        <div className="flex flex-col w-[470px] border gap-2"> 
+
+        {/* #### ACTIVE CARDS/ACTIONS #### */}
+
+          <div className="flex flex-row flex-wrap gap-4 items-center">
+            {game.player.getActions().map((action, i) => (
+              <div key={i} className="cursor-pointer flex-shrink-0 w-[80px]" onClick={() => handleActionClick(action)}>
+                <div className="grid grid-rows-4">
+                  <Image
+                    className="row-span-3"
+                    src={"/cards/" + action.icon}
+                    alt={action.name + " icon"}
+                    width={80}
+                    height={80}
+                    />
+                  {action.spCost > 0 && <div className="row-span-1 flex justify-center">{action.spCost} SP</div>}
+                  {action.hpCost > 0 && <div className="row-span-1 flex justify-center">{action.hpCost} HP</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+
+
+          {/* #### ITEMS #### */}
+          {game.player.canAct() &&
+          <div className="self-center">
+            <div className="flex justify-center">
+              <ItemBox itemList={game.player.items} onItemClick={handleItemClick} />
+            </div>
+          </div>
+          }
+
+
+
+          {/* #### PASSIVE CARDS #### */}
+          
+          {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
+          <div className="flex justify-center border-b-2 w-full">
+            <div className="text-2xl">Passive Cards</div>
+          </div>
+          }
+
+          <div className="flex flex-row flex-wrap gap-4 items-center">
+            {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card, i) => (
+              <div key={i} className={`w-[80px] flex-shrink-0 `}>
                 <Image
-                  className="row-span-3"
-                  src={"/cards/" + action.icon}
-                  alt={action.name + " icon"}
+                  className={`${!card.enabled && "grayscale"}`}
+                  src={"/cards/" + card.icon}
+                  alt={card.name + " icon"}
                   width={80}
                   height={80}
                   />
-                {action.spCost > 0 && <div className="row-span-1 flex justify-center">{action.spCost} SP</div>}
-                {action.hpCost > 0 && <div className="row-span-1 flex justify-center">{action.hpCost} HP</div>}
               </div>
-            </div>
-          ))}
-        </div>
-
-
-        {/* #### ITEMS #### */}
-        {game.player.canAct() &&
-        <div className="self-center">
-          <div className="flex justify-center">
-            <ItemBox itemList={game.player.items} onItemClick={handleItemClick} />
+            ))}
           </div>
-        </div>
-        }
 
 
+          {/* #### UNDO AND RESTART #### */}
 
-        {/* #### PASSIVE CARDS #### */}
-        
-        {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
-        <div className="flex justify-center border-b-2 w-full">
-          <div className="text-2xl">Passive Cards</div>
-        </div>
-        }
-
-        <div className="flex flex-row flex-wrap gap-4 items-center">
-          {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card, i) => (
-            <div key={i} className={`w-[80px] flex-shrink-0 `}>
-              <Image
-                className={`${!card.enabled && "grayscale"}`}
-                src={"/cards/" + card.icon}
-                alt={card.name + " icon"}
-                width={80}
-                height={80}
-                />
+          {gameInstanceStack.length > 0
+          ? <div className="flex justify-around my-8 w-full">
+              <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
+              <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
             </div>
-          ))}
-        </div>
+          : <div className="flex justify-around my-8 w-full">
+              <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
+              <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Restart</div>
+            </div>}
 
 
-        {/* #### UNDO AND RESTART #### */}
+          {/* #### COMMON ERRORS #### */}
 
-        {gameInstanceStack.length > 0
-        ? <div className="flex justify-around my-8 w-full">
-            <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
-            <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
-          </div>
-        : <div className="flex justify-around my-8 w-full">
-            <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
-            <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Restart</div>
-          </div>}
+          { spError && <div className="text-3xl">
+            Not Enough SP
+          </div> }
+          { hpError && <div className="text-3xl">
+            Not Enough HP
+          </div> }
+          { game.gameOver && <div className="text-3xl">
+            GAME OVER
+          </div> }
 
-
-        {/* #### COMMON ERRORS #### */}
-
-        { spError && <div className="text-3xl">
-          Not Enough SP
-        </div> }
-        { hpError && <div className="text-3xl">
-          Not Enough HP
-        </div> }
-        { game.gameOver && <div className="text-3xl">
-          GAME OVER
-        </div> }
+        </div> {/* end of left column */}
+      
+      <div> {/* right column */}
+        <LogPanel />
+      </div>
 
       </div>
 

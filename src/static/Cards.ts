@@ -111,16 +111,16 @@ export const BUYABLE_CARDS: Card[] = [
   }, false //startEnabled
   ),
 
-  new Card("linebounce.png", "Linebounce (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {
-      //TODO code in multi-targetting later (or dont)
-    })
-    player.actions = player.actions.concat(action);
-  }), 
+  // new Card("linebounce.png", "Linebounce (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
+  //   let action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {
+  //     //TODO code in multi-targetting later (or dont)
+  //   })
+  //   player.actions = player.actions.concat(action);
+  // }), 
 
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
     let action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
-      let atk: Attack = createAttack({dmg:2, type:AttackType.RANGED})
+      let atk: Attack = createAttack({dmg:2, name:"Minimize", type:AttackType.RANGED})
       let dmgDealt = player.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.SMALL, 3) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
@@ -129,14 +129,14 @@ export const BUYABLE_CARDS: Card[] = [
     player.actions = player.actions.concat(action);
   }), 
 
-  new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
-      //TODO code in multi-targetting later (or dont)
-      //TODO code in daze status effect (and immunity chance)
+  // new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
+  //   let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
+  //     //TODO code in multi-targetting later (or dont)
+  //     //TODO code in daze status effect (and immunity chance)
 
-    })
-    player.actions = player.actions.concat(action);
-  }), 
+  //   })
+  //   player.actions = player.actions.concat(action);
+  // }), 
 
   new Card("pity_sp.png", "Pity SP", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
@@ -149,7 +149,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("power_stab.png", "Power Stab", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy, enemyList: Enemy[]) => {
-      let atk: Attack = createAttack({dmg:3, type:AttackType.MELEE, piercing:PierceLevel.HALF})
+      let atk: Attack = createAttack({dmg:3, name:"Power Stab", type:AttackType.MELEE, piercing:PierceLevel.HALF})
       player.dealDamage(enemyList[0], atk)
     })
     player.actions = player.actions.concat(action);
