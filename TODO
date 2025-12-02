@@ -11,6 +11,7 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
+make log expand downwards when more cards are used
 make log work with undo/restart
 
 make not enough SP/HP error better

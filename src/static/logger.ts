@@ -24,17 +24,16 @@ export const logger = {
   },
 
   nextAction(): void {
-    _logs.forEach(logCol => {
-      logCol.forEach(log => {
-
+    debugger
+    for (let logCol of _logs.slice().reverse()) {
+      for (let log of logCol.slice().reverse()) {
         if (log.new){
           log.new = false
         } else {
           return
         }
-        
-      })
-    })
+      }
+    }
   },
 
   nextTurn(): void {
