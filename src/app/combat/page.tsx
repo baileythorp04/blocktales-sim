@@ -15,6 +15,7 @@ import { cloneDeep } from "lodash"
 import { Item } from "@/static/Items";
 import ItemBox from "@/components/ItemBox";
 import LogPanel from "@/components/LogPanel";
+import { logger } from "@/static/logger";
 
 let gameInstanceStack : Game[] = [] //includes all previous game states, not the current one
 
@@ -91,8 +92,8 @@ export default function Combat() {
           }
         })
 
-
         /// ### start-of-turn effects ####
+        logger.nextTurn()
         g.player.startOfTurnEffects()
         g.enemies.forEach((e) => {e.startOfTurnEffects()})
       }
@@ -147,7 +148,7 @@ export default function Combat() {
 
 
         {/* #### Left column #### */}
-        <div className="flex flex-col w-[470px] border gap-2"> 
+        <div className="flex flex-col w-[470px] border border-blue-300 gap-2"> 
 
         {/* #### ACTIVE CARDS/ACTIONS #### */}
 
@@ -230,10 +231,10 @@ export default function Combat() {
           </div> }
 
         </div> {/* end of left column */}
-      
-      <div> {/* right column */}
-        <LogPanel />
-      </div>
+        
+        <div className="flex-1"> {/* right column */}
+          <LogPanel />
+        </div>
 
       </div>
 
