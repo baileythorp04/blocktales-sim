@@ -5,6 +5,12 @@ export type LogEntry = {
   boring: boolean
 }
 
+export type LoggerState = {
+  logs: LogEntry[][],
+  nextId: number,
+  colNo: number
+}
+
 const _logs: LogEntry[][] = [[]]
 const _subs = new Set<(logs: LogEntry[][]) => void>()
 
@@ -55,6 +61,23 @@ export const logger = {
       filtLogs.forEach(logCol => { logCol = logCol.filter(l => false) })
       return filtLogs
     }
+  },
+
+  // snapshot / restore API for undo
+  getState() {
+    return {
+      logs: _logs.map(col => col.map(e => ({ ...e }))),
+      nextId: _nextId,
+      colNo: _colNo
+    }
+  },
+
+  setState(state: LoggerState) {
+    _logs.length = 0
+    state.logs.forEach(col => _logs.push(col.map(e => ({ ...e }))))
+    _nextId = state.nextId
+    _colNo = state.colNo
+    notify()
   },
 
   subscribe(cb: (logs: LogEntry[][]) => void) {

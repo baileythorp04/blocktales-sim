@@ -3,7 +3,7 @@ import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { Item } from "./Items";
-import { logger } from "./logger";
+import { LogEntry, logger, LoggerState } from "./logger";
 import { PlayerBuild } from "./PlayerBuild";
 import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
@@ -92,7 +92,7 @@ export class Entity {
     if (n > 0) {
       if (this.hp == this.maxHp){
         if (healed < n){
-          logger.log(`${this.name} healed ${n} HP to max HP (actually healed ${healed} HP)`)
+          logger.log(`${this.name} healed ${n} HP to max HP (actually healed ${healed} HP)`, (healed == 0))
         } else {
           logger.log(`${this.name} healed ${n} to max HP`)
         }
@@ -243,7 +243,7 @@ export class Player extends Entity{
     if (n > 0) {
       if (this.hp == this.maxHp){
         if (spGained < n){
-          logger.log(`${this.name} gained ${n} SP to max SP (actually gained ${spGained} SP)`)
+          logger.log(`${this.name} gained ${n} SP to max SP (actually gained ${spGained} SP)`, (spGained == 0))
         } else {
           logger.log(`${this.name} gained ${n} to max SP`)
 
@@ -353,6 +353,7 @@ export class Player extends Entity{
 export class Game {
   player : Player
   enemies : Enemy[]
+  loggerState : LoggerState = {logs:[[]], nextId:1, colNo:0}
   gameOver : boolean = false
 
   public constructor(player: Player, enemies : Enemy[]){

@@ -108,7 +108,10 @@ export default function Combat() {
       }
       g.enemies = g.enemies.filter(e => e.isDead == false)
       
+      //turn has happened, store old gamestate as previous turn
       gameInstanceStack.push(game)
+
+      g.loggerState = logger.getState()
       setGame(g)
     }
   }
@@ -119,6 +122,7 @@ export default function Combat() {
       console.error("no previous game state to undo to")
     } else {
       setGame(prevState)
+      logger.setState(prevState.loggerState)
     }
   }
 
@@ -127,7 +131,10 @@ export default function Combat() {
     if (initState == undefined){
       console.error("no previous game state to restart to")
     } else {
+      gameInstanceStack.push(game)
       setGame(initState)
+      logger.setState(initState.loggerState)
+
     }
   }
 

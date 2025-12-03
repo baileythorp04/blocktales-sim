@@ -12,9 +12,9 @@ true infinite first stike and feelfine/pierce
 # game features
 
 +atk and +def symbols next to player
+show 10 def on ghost pirate
 
 make log expand downwards when more cards are used
-make log work with undo/restart
 
 make not enough SP/HP error better
 
