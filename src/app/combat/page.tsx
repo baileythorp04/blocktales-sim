@@ -107,6 +107,9 @@ export default function Combat() {
         g.gameOver = true
       }
       g.enemies = g.enemies.filter(e => e.isDead == false)
+      if (g.getEnemyByPosition(selectedEnemyPosition) == undefined){
+        setSelectedEnemyPosition(g.enemies.length-1)
+      }
       
       //turn has happened, store old gamestate as previous turn
       gameInstanceStack.push(game)
@@ -142,8 +145,8 @@ export default function Combat() {
 
     // #### BATTLEFIELD #### 
 
-    <div className="container border mx-auto">
-      <div className="grid grid-cols-5 border border-red-500">
+    <div className="container border-x h-screen mx-auto flex flex-col">
+      <div className="grid grid-cols-5 flex-1">
         <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
         {game.enemies.map((enemy, i) =>
         <div key={i} onClick={() => handleEnemyClick(i)} className={`cursor-pointer ${i == selectedEnemyPosition && "bg-amber-100"}`}>
@@ -153,15 +156,16 @@ export default function Combat() {
       </div>
 
       {/* #### Bottom Section #### */}
-      <div className="mt-2 flex flex-row">
+      <div className="mt-2 flex flex-row flex-1">
 
 
         {/* #### Left column #### */}
-        <div className="flex flex-col w-[470px] border border-blue-300 gap-2"> 
+        <div className="flex flex-col flex-1 gap-2 border-r-2"> 
 
         {/* #### ACTIVE CARDS/ACTIONS #### */}
 
-          <div className="flex flex-row flex-wrap gap-4 items-center">
+          <div className="flex justify-center">
+          <div className="flex flex-row flex-wrap w-[91%] gap-x-4 items-center">
             {game.player.getActions().map((action, i) => (
               <div key={i} className="cursor-pointer flex-shrink-0 w-[80px]" onClick={() => handleActionClick(action)}>
                 <div className="grid grid-rows-4">
@@ -178,6 +182,7 @@ export default function Combat() {
               </div>
             ))}
           </div>
+          </div>
 
 
           {/* #### ITEMS #### */}
@@ -189,17 +194,22 @@ export default function Combat() {
           </div>
           }
 
+        </div> {/* end of left column */}
+        
+        
 
+        <div className="flex-1"> {/* center column */}
 
           {/* #### PASSIVE CARDS #### */}
-          
-          {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
-          <div className=" mt-2 flex justify-center border-b-2 w-full">
+          <div className="flex justify-center">
+
+          {/* {game.player.cards.some(card => card.type != CardType.ACTIVE) && 
+          <div className=" mt-2 flex justify-center w-full border">
             <div className="text-2xl">Passive Cards</div>
           </div>
-          }
+          } */}
 
-          <div className="flex flex-row flex-wrap gap-4 items-center">
+          <div className="flex flex-row flex-wrap w-[91%] gap-4 items-center">
             {game.player.cards.filter(card => card.type != CardType.ACTIVE).map((card, i) => (
               <div key={i} className={`w-[80px] flex-shrink-0 `}>
                 <Image
@@ -212,35 +222,38 @@ export default function Combat() {
               </div>
             ))}
           </div>
+          </div>
 
 
           {/* #### UNDO AND RESTART #### */}
+          <div className="py-2">
+            {gameInstanceStack.length > 0
+            ? <div className="flex justify-around my-8 w-full">
+                <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
+                <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
+              </div>
+            : <div className="flex justify-around my-8 w-full">
+                <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
+                <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Restart</div>
+              </div>
+            }
+          </div>
 
-          {gameInstanceStack.length > 0
-          ? <div className="flex justify-around my-8 w-full">
-              <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
-              <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
-            </div>
-          : <div className="flex justify-around my-8 w-full">
-              <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Undo</div>
-              <div className={`w-30 p-4 flex justify-center border bg-gray-100 text-gray-300 cursor-default`}>Restart</div>
-            </div>}
 
+             {/* #### COMMON ERRORS #### */}
+            <div className="flex justify-center">
+              { spError && <div className="text-6xl">
+                Not Enough SP
+              </div> }
+              { hpError && <div className="text-3xl">
+                Not Enough HP
+              </div> }
+              { game.gameOver && <div className="text-3xl">
+                GAME OVER
+              </div> }
+                </div>
+        </div>
 
-          {/* #### COMMON ERRORS #### */}
-
-          { spError && <div className="text-3xl">
-            Not Enough SP
-          </div> }
-          { hpError && <div className="text-3xl">
-            Not Enough HP
-          </div> }
-          { game.gameOver && <div className="text-3xl">
-            GAME OVER
-          </div> }
-
-        </div> {/* end of left column */}
-        
         <div className="flex-1"> {/* right column */}
           <LogPanel />
         </div>

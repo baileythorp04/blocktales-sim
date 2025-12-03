@@ -353,7 +353,8 @@ export class Player extends Entity{
 export class Game {
   player : Player
   enemies : Enemy[]
-  loggerState : LoggerState = {logs:[[]], nextId:1, colNo:0}
+  //loggerState : LoggerState = {logs:[[]], nextId:1, colNo:0}
+  loggerState : LoggerState = logger.getState()
   gameOver : boolean = false
 
   public constructor(player: Player, enemies : Enemy[]){
