@@ -14,9 +14,10 @@ type CombatEnemyProps = {
   statusHolder: StatusHolder,
   haste: boolean,
   stance?: AttackType,
+  armor? : number
 }; 
 
-export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusHolder, haste, stance }: CombatEnemyProps) {
+export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusHolder, haste, stance, armor=0 }: CombatEnemyProps) {
   return (
     <div className="flex flex-col items-center w-[160px] m-auto">
       <StatusIconGroup statuses={statusHolder}/>
@@ -29,6 +30,7 @@ export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusH
 
         <div className="grid grid-cols-4 grid-rows-2 flex items-center w-full">
 
+{/* doesnt account for having stance and defense at the same time */}
           <div className="col-start-1 row-start-1 row-span-2">
             {stance == AttackType.RANGED && <Image 
               src="/ball_stance.png"
@@ -40,6 +42,18 @@ export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusH
               alt="sword stance"
               width={40}
               height={40} />}
+            {armor > 0 &&
+            <div className="relative inline-block w-[40px] h-[40px]">
+              <Image 
+                src="/armor.png"
+                alt="armor icon"
+                width={40}
+                height={40} />
+              <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg drop-shadow-lg/100">
+                {armor}
+              </div>
+            </div>
+            }
           </div>
         <div className="col-start-2 col-span-2 row-start-1 flex justify-center">{name}</div>
         <div className="col-start-2 col-span-2 row-start-2 flex justify-center">hp: {hp}/{maxHp}</div>

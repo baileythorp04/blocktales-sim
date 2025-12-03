@@ -92,9 +92,9 @@ export class Entity {
     if (n > 0) {
       if (this.hp == this.maxHp){
         if (healed < n){
-          logger.log(`${this.name} healed ${n} HP to max HP (actually healed ${healed} HP)`, (healed == 0))
+          logger.log(`${this.name} healed ${n} HP and maxed HP (actually healed ${healed} HP)`, (healed == 0))
         } else {
-          logger.log(`${this.name} healed ${n} to max HP`)
+          logger.log(`${this.name} healed ${n} HP and maxed HP`)
         }
       } else {
         logger.log(`${this.name} healed ${n} HP`)
@@ -234,18 +234,16 @@ export class Player extends Entity{
   }
 
   public addSp(n: number){
-    this.sp = Math.min(this.sp+n, this.maxSp)
-
     let spBefore = this.sp
-    this.sp = Math.min(this.sp+n, this.maxHp)
+    this.sp = Math.min(this.sp+n, this.maxSp)
     let spGained = this.sp - spBefore
 
     if (n > 0) {
-      if (this.hp == this.maxHp){
+      if (this.sp == this.maxSp){
         if (spGained < n){
-          logger.log(`${this.name} gained ${n} SP to max SP (actually gained ${spGained} SP)`, (spGained == 0))
+          logger.log(`${this.name} gained ${n} SP and maxed SP (actually gained ${spGained} SP)`, (spGained == 0))
         } else {
-          logger.log(`${this.name} gained ${n} to max SP`)
+          logger.log(`${this.name} gained ${n} SP and maxed SP`)
 
         }
       } else {

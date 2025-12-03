@@ -144,13 +144,13 @@ export default function Combat() {
   return (
 
     // #### BATTLEFIELD #### 
-
-    <div className="container border-x h-screen mx-auto flex flex-col">
+    <div className="bg-gray-200">
+    <div className="bg-white container h-screen mx-auto flex flex-col">
       <div className="grid grid-cols-5 flex-1">
-        <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses}/>
+        <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses} atkBoost={game.player.attackBoost} armor={game.player.defense}/>
         {game.enemies.map((enemy, i) =>
         <div key={i} onClick={() => handleEnemyClick(i)} className={`cursor-pointer ${i == selectedEnemyPosition && "bg-amber-100"}`}>
-          <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste}/>
+          <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste} armor={enemy.defense}/>
         </div>
         )}
       </div>
@@ -245,22 +245,22 @@ export default function Combat() {
               { spError && <div className="text-6xl">
                 Not Enough SP
               </div> }
-              { hpError && <div className="text-3xl">
+              { hpError && <div className="text-6xl">
                 Not Enough HP
               </div> }
-              { game.gameOver && <div className="text-3xl">
+              { game.gameOver && <div className="text-6xl">
                 GAME OVER
               </div> }
                 </div>
         </div>
 
-        <div className="flex-1"> {/* right column */}
+        <div className="flex-1 border-l-2"> {/* right column */}
           <LogPanel />
         </div>
 
       </div>
 
     </div>
-      
+      </div>
   );
 }

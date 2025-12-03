@@ -40,13 +40,13 @@ export default function LogPanel() {
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col flex-1 h-120 w-full bg-white border p-2 text-sm">
+    <div className="flex flex-col flex-1 h-120 w-full bg-white px-2 pt-2 text-sm">
       <div className="flex justify-between items-center mb-2">
         <div className="font-bold">Log</div>
         <div className="flex flex-row gap-2">
-          <button onClick={flipBoring} className="text-xs px-2 py-1 border">{allowBoringLogs ? "Showing Boring Logs" : "Hiding Boring Logs"}</button>
-          <button onClick={flipHighlight} className="text-xs px-2 py-1 border">{highlightTurn ? "Highlighting This Turn" : "Highlighting Last Action"}</button>
-          <button onClick={flipOrder} className="text-xs px-2 py-1 border">Reverse</button>
+          <button onClick={flipBoring} className="text-xs px-2 py-1 border cursor-pointer">{allowBoringLogs ? "Showing Boring Logs" : "Hiding Boring Logs"}</button>
+          <button onClick={flipHighlight} className="text-xs px-2 py-1 border cursor-pointer">{highlightTurn ? "Highlighting This Turn" : "Highlighting Last Action"}</button>
+          <button onClick={flipOrder} className="text-xs px-2 py-1 border cursor-pointer">Reverse</button>
         </div>
       </div>
       <div ref={scrollRef} className={`flex overflow-y-scroll ${reverse ? "flex-col-reverse" : "flex-col"} `}>
