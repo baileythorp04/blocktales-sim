@@ -21,9 +21,12 @@ export class Entity {
   defense: number;
   statuses: StatusHolder = new StatusHolder();
 
-  public constructor(hp: number, name: string, defense: number){
+  icon: string;
+
+  public constructor(hp: number, name: string, icon: string,defense: number){
     this.hp = this.maxHp = hp;
     this.name = name;
+    this.icon = icon;
     this.defense = defense;
   }
 
@@ -188,7 +191,7 @@ export class Player extends Entity{
   spOnPass: number = 1;
 
   public constructor(build: PlayerBuild){
-    super(build.hp, "Player", 0);
+    super(build.hp, "Player", "player.png", 0);
     this.sp = this.maxSp = build.sp;
     this.cards = build.selectedCards;
     this.items = build.selectedItems;
@@ -286,6 +289,7 @@ export class Player extends Entity{
           this.sp -= spCost
           this.hp = 5
           logger.log(`${this.name} was saved by Resurrect and set to 5 HP`)
+          this.statuses.removeAll()
           return
         }
       }
@@ -297,7 +301,7 @@ export class Player extends Entity{
           this.hasUsedMedkit = true
           this.items = this.items.filter(item => item.name != "Medkit")
           logger.log(`${this.name} was saved by Medkit and set to 10 HP`)
-
+          this.statuses.removeAll()
           return
         }
       }
@@ -379,6 +383,8 @@ export class Game {
   //loggerState : LoggerState = {logs:[[]], nextId:1, colNo:0}
   loggerState : LoggerState = logger.getState()
   gameOver : boolean = false
+  win : boolean = false
+  
 
   public constructor(player: Player, enemies : Enemy[]){
     this.player = player;

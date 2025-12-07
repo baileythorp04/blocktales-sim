@@ -11,20 +11,17 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
-make megaphone man and 3 trotters
-correct enemy icons
-
-set win state
-
-are statuses lost on death?
-resurrect should happen at the start of turn?
-
 detect refresh. link back to menu if you refresh in combat (or kick you there automatically?). warn to refresh if you go back to menu
 make a proper non-dev release, or put it all in an exe?
 (use a menuFinished variable for menu and game.started for combat)
 
+# inaccuracies
+no rolling HP
+death/res happens instantly; an enemy's multihit will hit you after being res'd
+pirate ghost alternates coin/barrel attacks instead of being random
 
 # trotter notes:
+
 defend 20% reduction works
 defend always rounds down
 minimize -2 does not work

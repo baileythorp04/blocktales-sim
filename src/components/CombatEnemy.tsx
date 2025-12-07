@@ -7,6 +7,7 @@ import { AttackType } from "@/static/Attack";
 
 type CombatEnemyProps = {
   name: string,
+  icon: string,
   hp: number,
   maxHp: number,
   attack1: string,
@@ -17,13 +18,13 @@ type CombatEnemyProps = {
   armor? : number
 }; 
 
-export default function CombatEnemy({ name, hp, maxHp, attack1, attack2, statusHolder, haste, stance, armor=0 }: CombatEnemyProps) {
+export default function CombatEnemy({ name, icon, hp, maxHp, attack1, attack2, statusHolder, haste, stance, armor=0 }: CombatEnemyProps) {
   return (
     <div className="flex flex-col items-center w-[160px] m-auto">
       <StatusIconGroup statuses={statusHolder}/>
       
       <Image
-        src="/enemy.png"
+        src={`/${icon}`}
         alt="enemy"
         width={160}
         height={160} />

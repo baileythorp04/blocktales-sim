@@ -5,6 +5,7 @@ import { StatusEffect, StatusHolder } from "@/static/StatusHolder";
 import StatusIconGroup from "./StatusIconGroup";
 
 type CombatPlayerProps = {
+  icon: string,
   hp: number,
   maxHp: number,
   sp: number,
@@ -14,14 +15,13 @@ type CombatPlayerProps = {
   armor: number
 };
 
-export default function CombatPlayer({ hp, maxHp, sp, maxSp, statusHolder, atkBoost, armor }: CombatPlayerProps) {
-  debugger
+export default function CombatPlayer({ icon, hp, maxHp, sp, maxSp, statusHolder, atkBoost, armor }: CombatPlayerProps) {
   return (
     <div className="flex flex-col items-center">
       <StatusIconGroup statuses={statusHolder}/>
 
       <Image
-        src="/player.png"
+        src={`/${icon}`}
         alt="player"
         width={160}
         height={160} />

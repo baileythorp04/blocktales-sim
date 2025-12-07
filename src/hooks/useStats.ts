@@ -6,7 +6,7 @@ export enum Stat {
   BP,
 }
 
-const MAX_LEVEL = 7;
+const MAX_LEVEL = 5;
 
 export function useStats() {
   const [hp, setHp] = useState(10);

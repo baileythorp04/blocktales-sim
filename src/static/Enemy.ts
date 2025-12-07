@@ -15,8 +15,8 @@ export class Enemy extends Entity{
   actionCounter: number = 0
   stanceImmunity : AttackType | undefined = undefined
 
-  public constructor(hp: number, name: string, actions: EnemyAction[], defense: number = 0, haste : boolean = false){
-    super(hp, name, defense)
+  public constructor(hp: number, name: string, icon: string, actions: EnemyAction[], defense: number = 0, haste : boolean = false){
+    super(hp, name, icon, defense)
     this.actions = actions;
     this.haste = haste;
   }
@@ -104,13 +104,13 @@ class Trotter extends Enemy {
 }
 
 export function dummy(){
-  return new Enemy(10, "Dummy", [
+  return new Enemy(10, "Dummy", "enemy.png", [
     {name:"nothing", action:(target : Entity, self : Enemy) => {}},
   ])
 }
 
 export function noob(){
-  return new Enemy(20, "Noob", [
+  return new Enemy(20, "Noob", "enemy.png", [
     {name:"1 dmg action", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:1, name:"1dmghit"})
       self.dealDamage(target, atk)
@@ -125,7 +125,7 @@ export function noob(){
   ])
 }
 
-export function trotter(){
+export function trotter(n:string){
   
     let barrelAtk : EnemyAction = {name:"barrel", action:(target : Entity, self : Enemy) => {
       let atk: Attack = createAttack({dmg:10, name:"Barrel"})
@@ -168,7 +168,7 @@ export function trotter(){
     }}
 
     let atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, barrelAtk, prepAtk, barrelAtk, firebrandAtk]
-    return new Trotter(40, "Trotter", atkList, 0, true)
+    return new Trotter(40, "Trotter "+n, "trotter.png", atkList, 0, true)
 }
 
 function pirateGhost(){
@@ -198,5 +198,20 @@ function pirateGhost(){
   }}
 
   let atkList : EnemyAction[] = [coinAtk, barrelAtk] //should actually be random not alternating, but shouldn't matter much
-  return new Enemy(2, "Ghost", atkList, 10)
+  return new Enemy(2, "Ghost", "ghost.png", atkList, 10)
+}
+
+export function megaphoneMan(){
+  let smack : EnemyAction = {name:"smack", action:(target : Entity, self : Enemy) => {
+      let atk: Attack = createAttack({dmg:8, name:"Smack"})
+      self.dealDamage(target, atk)
+    }}
+
+  let motivate : EnemyAction = {name:"motivate", action:(target : Entity, self : Enemy, enemyList: Enemy[]) => {
+    enemyList.forEach(e => e.addHp(10))
+    self.tryApplyStatus(StatusType.EXHAUSTED, 3)
+  }}
+
+  let atkList : EnemyAction[] = [smack, motivate] 
+  return new Enemy(10, "Megaphone", "megaphoneman.png", atkList)
 }

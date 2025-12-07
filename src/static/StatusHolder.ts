@@ -88,6 +88,10 @@ export class StatusHolder {
   public removeAllDebuffs() {
     this.statusList = this.statusList.filter((s) => s.debuff != true)
   }
+
+  public removeAll() {
+    this.statusList = []
+  }
 }
 
 

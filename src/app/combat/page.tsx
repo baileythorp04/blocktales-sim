@@ -3,7 +3,7 @@
 import { type } from "os";
 import { useState, useEffect } from "react";
 import { Game, Player } from "@/static/gameClasses";
-import { Enemy, trotter, dummy } from "@/static/Enemy"
+import { Enemy, trotter, dummy, megaphoneMan } from "@/static/Enemy"
 import { Action } from "@/static/Actions";
 import Image from "next/image";
 import { usePlayerBuild } from "@/context/PlayerBuildContext";
@@ -23,7 +23,7 @@ export default function Combat() {
   const { playerBuild } = usePlayerBuild();
   
   const [ game, setGame ] = useState<Game>(() => {
-    const es = [trotter(), dummy(), dummy(), dummy()]
+    const es = [trotter("1"), trotter("2"), trotter("3"), megaphoneMan()]
     const player = new Player(playerBuild)
     return new Game(player, es)
   })
@@ -87,9 +87,11 @@ export default function Combat() {
         
         /// ### enemy action ####
         g.enemies.forEach((enemy) => {
-          enemy.doNextAction(g.player, g.enemies)
-          if (enemy.haste == true){
+          if (enemy.canAct()){
             enemy.doNextAction(g.player, g.enemies)
+            if (enemy.haste == true){
+              enemy.doNextAction(g.player, g.enemies)
+            }
           }
         })
 
@@ -109,6 +111,11 @@ export default function Combat() {
       g.enemies = g.enemies.filter(e => e.isDead == false)
       if (g.getEnemyByPosition(selectedEnemyPosition) == undefined){
         setSelectedEnemyPosition(g.enemies.length-1)
+      }
+
+      //### win check ### 
+      if ( g.enemies.length == 0) {
+        g.win = true
       }
       
       //turn has happened, store old gamestate as previous turn
@@ -147,10 +154,10 @@ export default function Combat() {
     <div className="bg-gray-200">
     <div className="bg-white container h-screen mx-auto flex flex-col">
       <div className="grid grid-cols-5 flex-1">
-        <CombatPlayer hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses} atkBoost={game.player.attackBoost} armor={game.player.defense}/>
+        <CombatPlayer icon={game.player.icon} hp={game.player.hp} maxHp={game.player.maxHp} sp={game.player.sp} maxSp={game.player.maxSp} statusHolder={game.player.statuses} atkBoost={game.player.attackBoost} armor={game.player.defense}/>
         {game.enemies.map((enemy, i) =>
         <div key={i} onClick={() => handleEnemyClick(i)} className={`cursor-pointer ${i == selectedEnemyPosition && "bg-amber-100"}`}>
-          <CombatEnemy name={enemy.name} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste} armor={enemy.defense}/>
+          <CombatEnemy name={enemy.name} icon={enemy.icon} hp={enemy.hp} maxHp={enemy.maxHp} attack1={enemy.getActionName(0)} attack2={enemy.getActionName(1)} statusHolder={enemy.statuses} stance={enemy.stanceImmunity} haste={enemy.haste} armor={enemy.defense}/>
         </div>
         )}
       </div>
@@ -247,7 +254,7 @@ export default function Combat() {
               : <div>
                   { spError && <div className="text-6xl">Not Enough SP</div> }
                   { hpError && <div className="text-6xl">Not Enough HP</div> }
-                  {/* { win && <div className="text-6xl">You Win!</div> } */}
+                  { game.win && <div className="text-6xl">You Win!</div> }
                 </div>
               }
             </div>
