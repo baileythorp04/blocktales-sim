@@ -84,21 +84,31 @@ export class Entity {
     }
   }
 
-  public addHp(n: number){
-    let hpBefore = this.hp
-    this.hp = Math.min(this.hp+n, this.maxHp)
-    let healed = this.hp - hpBefore
+  public addHp(n: number, source: string = ""){
+    if (n > 0) { //only log if >0 healing
 
-    if (n > 0) {
+      let hpBefore = this.hp
+      this.hp = Math.min(this.hp+n, this.maxHp)
+      let healed = this.hp - hpBefore
+
+      let logMsg = `${this.name} healed ${n} HP`
+    
+      if (source != ""){
+          logMsg += ` from ${source}`
+      }
+
       if (this.hp == this.maxHp){
         if (healed < n){
-          logger.log(`${this.name} healed ${n} HP and maxed HP (actually healed ${healed} HP)`, (healed == 0))
+          //overhealed
+          logMsg += ` and maxed HP (actually healed ${healed} HP)`
         } else {
-          logger.log(`${this.name} healed ${n} HP and maxed HP`)
+          //maxed hp
+          logMsg += " and maxed HP"
         }
-      } else {
-        logger.log(`${this.name} healed ${n} HP`)
       }
+
+      logger.log(logMsg, (healed == 0))
+
     }
   }
 
@@ -233,24 +243,36 @@ export class Player extends Entity{
     
   }
 
-  public addSp(n: number){
-    let spBefore = this.sp
-    this.sp = Math.min(this.sp+n, this.maxSp)
-    let spGained = this.sp - spBefore
+  public addSp(n: number, source: string = ""){
+    if (n > 0) { //only log if >0 gained
 
-    if (n > 0) {
+      let spBefore = this.sp
+      this.sp = Math.min(this.sp+n, this.maxSp)
+      let spGained = this.sp - spBefore
+
+      let logMsg = `${this.name} gained ${n} SP`
+    
+      if (source != ""){
+        logMsg += ` from ${source}`
+      }
+
       if (this.sp == this.maxSp){
         if (spGained < n){
-          logger.log(`${this.name} gained ${n} SP and maxed SP (actually gained ${spGained} SP)`, (spGained == 0))
+          //overhealed
+          logMsg += ` and maxed SP (actually gained ${spGained} SP)`
         } else {
-          logger.log(`${this.name} gained ${n} SP and maxed SP`)
-
+          //maxed sp
+          logMsg += " and maxed SP"
         }
-      } else {
-        logger.log(`${this.name} gained ${n} SP`)
       }
+
+      logger.log(logMsg, (spGained == 0))
+
     }
   }
+
+
+  
 
   public override deathCheck() {
     if (this.hp <= 0) {
@@ -263,6 +285,7 @@ export class Player extends Entity{
           resCard.enabled = false
           this.sp -= spCost
           this.hp = 5
+          logger.log(`${this.name} was saved by Resurrect and set to 5 HP`)
           return
         }
       }
@@ -272,7 +295,9 @@ export class Player extends Entity{
           let hpHeal = this.itemPlusBuff(10) 
           this.hp = hpHeal
           this.hasUsedMedkit = true
-          this.items.filter(item => item.name != "Medkit")
+          this.items = this.items.filter(item => item.name != "Medkit")
+          logger.log(`${this.name} was saved by Medkit and set to 10 HP`)
+
           return
         }
       }
@@ -316,8 +341,8 @@ export class Player extends Entity{
 
   public override endOfActionEffects(): void {
     if (this.dealtDamageThisAction){ //leech effect
-      this.addHp(this.hpOnHit)
-      this.addSp(this.spOnHit)  
+      this.addHp(this.hpOnHit, "HP Drain")
+      this.addSp(this.spOnHit, "SP Drain")  
       this.dealtDamageThisAction = false;
     }
   }
@@ -325,8 +350,8 @@ export class Player extends Entity{
   public override startOfTurnEffects() {
     
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP)){
-      this.addHp(2)
-      this.addSp(2)
+      this.addHp(2, "Good Vibes")
+      this.addSp(2, "Good Vibes")
     }
     
     super.startOfTurnEffects()

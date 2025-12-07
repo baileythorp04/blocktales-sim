@@ -93,7 +93,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
     let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
-      player.addHp(5)
+      player.addHp(5,"Cure")
     }, true //isHeal
     )
 
@@ -105,7 +105,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
     if (thisCard.enabled) {
-      player.addHp(1);
+      player.addHp(1,"Happy HP");
     }
     thisCard.enabled = !thisCard.enabled
   }, false //startEnabled
@@ -140,7 +140,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("pity_sp.png", "Pity SP", 0, 0, CardType.ACTIVE, (player: Player) => {
     let action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
-      player.addSp(5)
+      player.addSp(5, "Pity SP")
     },
     false, 10 //isHeal, hpCost
   )

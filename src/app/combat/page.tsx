@@ -67,7 +67,7 @@ export default function Combat() {
       //refund check
       logger.nextAction()
       if (action.isHeal && !g.player.canHeal()){
-        g.player.addSp(g.player.spOnPass)
+        g.player.addSp(g.player.spOnPass, "Passing")
       } else {
         g.player.doAction(action, enemy, g.enemies)
         if (action instanceof Item){
@@ -242,16 +242,15 @@ export default function Combat() {
 
              {/* #### COMMON ERRORS #### */}
             <div className="flex justify-center">
-              { spError && <div className="text-6xl">
-                Not Enough SP
-              </div> }
-              { hpError && <div className="text-6xl">
-                Not Enough HP
-              </div> }
-              { game.gameOver && <div className="text-6xl">
-                GAME OVER
-              </div> }
+              { game.gameOver
+              ? <div className="text-6xl">GAME OVER</div>
+              : <div>
+                  { spError && <div className="text-6xl">Not Enough SP</div> }
+                  { hpError && <div className="text-6xl">Not Enough HP</div> }
+                  {/* { win && <div className="text-6xl">You Win!</div> } */}
                 </div>
+              }
+            </div>
         </div>
 
         <div className="flex-1 border-l-2"> {/* right column */}

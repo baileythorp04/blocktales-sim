@@ -51,11 +51,11 @@ export const DEFAULT_ACTIONS: Action[] = [
 
 export const DEFEND_ACTION: Action = new Action("defend.png", "Defend", 0, (player: Player, target: Enemy ) => {
   player.tryApplyStatus(StatusType.DEFENDING, 1)
-  player.addSp(player.spOnPass);
+  player.addSp(player.spOnPass, "Defending");
 })
 
 export const PASS_ACTION: Action = new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
-  player.addSp(player.spOnPass);
+  player.addSp(player.spOnPass, "Passing");
 })
 
 export const DO_NOTHING_ACTION: Action = new Action("sleep.png", "Sleep", 0, (player: Player, target: Enemy ) => {

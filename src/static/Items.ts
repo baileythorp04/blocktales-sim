@@ -23,12 +23,12 @@ export const BUYABLE_ITEMS: Item[] = [
   ),
 
   new Item("ghost_burger.png", "Ghost Burger", (player: Player) => {
-    player.addHp(player.itemPlusBuff(6))
+    player.addHp(player.itemPlusBuff(6), "Ghost Burger")
     player.tryApplyStatus(StatusType.INVISIBLE, 1) //remove feelfine, apply 2 exhaused. immune to damage and debuffs
   }),
 
   new Item("burger.png", "Burger", (player: Player) => {
-    player.addHp(player.itemPlusBuff(5))
+    player.addHp(player.itemPlusBuff(5), "Burger")
   }, true
 ),
 
