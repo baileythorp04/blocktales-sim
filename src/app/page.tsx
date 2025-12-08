@@ -5,15 +5,12 @@ import { useState, useEffect } from "react";
 import { useStats, Stat } from "@/hooks/useStats";
 import { BUYABLE_CARDS, Card } from "@/static/Cards";
 import { usePlayerBuild } from "@/context/PlayerBuildContext"
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { BUYABLE_ITEMS, Item } from "@/static/Items";
-import { logger } from "@/static/logger";
 
 
 const MAX_BUX = 17
-let menuFinished = false
 
 export default function Menu() {
   const router = useRouter();
@@ -22,7 +19,7 @@ export default function Menu() {
   const { hp, sp, bp, remainingLevels, MAX_LEVEL, changeStat } = useStats();
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
   const [selectedItemList, setSelectedItemList] = useState<Item[]>([]);
-  const { playerBuild, setPlayerBuild } = usePlayerBuild();
+  const { setPlayerBuild } = usePlayerBuild();
 
   function toggleSelectCard(card: Card) {
     if (selectedCards.some(c => c === card)) {
@@ -43,7 +40,7 @@ export default function Menu() {
     setSelectedItemList(selectedItemList.filter((item, i) => i != index))
   }
 
-  useEffect(() => setRemainingStats(), [selectedCards])
+  useEffect(() => setRemainingStats(), [setRemainingStats, selectedCards])
 
   function setRemainingStats() {
     let bpTotal = 0
@@ -63,7 +60,6 @@ export default function Menu() {
       selectedCards:selectedCards,
       selectedItems:selectedItemList,
     })
-    menuFinished = true
     router.push("/combat");
   }
 

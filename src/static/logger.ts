@@ -39,8 +39,8 @@ export const logger = {
   },
 
   nextAction(): void {
-    for (let logCol of _logs.slice().reverse()) {
-      for (let log of logCol.slice().reverse()) {
+    for (const logCol of _logs.slice().reverse()) {
+      for (const log of logCol.slice().reverse()) {
         if (log.new){
           log.new = false
         } else {
@@ -60,12 +60,12 @@ export const logger = {
     if (allowBoring){
       return _logs.slice()
     } else {
-      let filtLogs = _logs.slice()
+      const filtLogs = _logs.slice()
       const range = Array.from({ length: filtLogs.length }, (_, i) => i);
-      for (let i of range) {
+      for (const i of range) {
         filtLogs[i] = filtLogs[i].filter(l => !l.boring)
       }
-      filtLogs.forEach(logCol => { logCol = logCol.filter(l => false) })
+      filtLogs.forEach(logCol => { logCol = logCol.filter(_ => false) })
       return filtLogs
     }
   },

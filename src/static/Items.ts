@@ -19,7 +19,7 @@ export const BUYABLE_ITEMS: Item[] = [
     player.tryApplyStatus(StatusType.HALF_DAMAGE, 5)
   }),
 
-  new Item("medkit.png", "Medkit", (player: Player) => {}, false, false //isheal, unusable
+  new Item("medkit.png", "Medkit", () => {}, false, false //isheal, unusable
   ),
 
   new Item("ghost_burger.png", "Ghost Burger", (player: Player) => {

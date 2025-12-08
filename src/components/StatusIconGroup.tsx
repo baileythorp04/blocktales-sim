@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import StatusIcon from "./StatusIcon";
 import { StatusHolder } from "@/static/StatusHolder"
 
@@ -8,7 +7,7 @@ type StatusIconGroupProps = {
 };
 let c = 0
 export default function StatusIconGroup({ statuses }: StatusIconGroupProps) {
-  let sl = statuses.statusList
+  const sl = statuses.statusList
   return (
     <div dir="rtl" className="grid grid-cols-2 grid-rows-2 mb-2 rotate-180 min-h-30">
       {sl.map(status =>

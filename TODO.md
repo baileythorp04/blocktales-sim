@@ -11,9 +11,10 @@ true infinite first stike and feelfine/pierce
 
 # game features
 
+make different health items (which?)
+
 store/restore game and log from file
 show player-only logs?
-
 
 make a proper non-dev release, or put it all in an exe?
 

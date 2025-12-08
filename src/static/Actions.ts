@@ -5,12 +5,10 @@ import { Enemy } from "./Enemy"
 import { StatusType } from "./StatusHolder";
 import { logger } from "./logger";
 
-let idCounter = 0;
-
 export class Action{
   icon: string;
   name: string;
-  spCost: number;
+  spCost: number
   hpCost: number;
   isHeal: boolean;
   doEffect: (player: Player, target: Enemy, enemyList: Enemy[]) => void | string;
@@ -32,18 +30,18 @@ export class Action{
 export const DEFAULT_ACTIONS: Action[] = [
 
   new Action("ball.png", "Ball", 0, (player: Player, target: Enemy ) => {
-    let atk: Attack = createAttack({dmg:1, name:"Ball", type:AttackType.RANGED})
+    const atk: Attack = createAttack({dmg:1, name:"Ball", type:AttackType.RANGED})
     player.dealDamage(target, atk)
 
-    let atk2: Attack = createAttack({dmg:1, name:"Ball's second hit", type:AttackType.RANGED, piercing:PierceLevel.FULL, boostable:false}) //to deal with hyperball's unique case, have a new pierce level which floors damage at 1 and doesn't get buffed
+    const atk2: Attack = createAttack({dmg:1, name:"Ball's second hit", type:AttackType.RANGED, piercing:PierceLevel.FULL, boostable:false}) //to deal with hyperball's unique case, have a new pierce level which floors damage at 1 and doesn't get buffed
     player.dealDamage(target, atk2)
   }),
   new Action("sword.png", "Sword", 0, (player: Player, target: Enemy, enemyList: Enemy[]) => {
-    let atk: Attack = createAttack({dmg:2, name:"Sword", type:AttackType.MELEE, piercing:PierceLevel.HALF})
+    const atk: Attack = createAttack({dmg:2, name:"Sword", type:AttackType.MELEE, piercing:PierceLevel.HALF})
     player.dealDamage(enemyList[0], atk)
   }),
   new Action("dynamite.png", "Dynamite", 5, (player: Player, target: Enemy ) => {
-    let atk: Attack = createAttack({dmg:5, name:"Dynamite", type:AttackType.RANGED, piercing:PierceLevel.FULL})
+    const atk: Attack = createAttack({dmg:5, name:"Dynamite", type:AttackType.RANGED, piercing:PierceLevel.FULL})
     player.dealDamage(target, atk)
   }),
 

@@ -3,7 +3,7 @@ import { Attack, PierceLevel,  } from "./Attack"
 import { Card, CardType } from "./Cards";
 import { Enemy } from "./Enemy";
 import { Item } from "./Items";
-import { LogEntry, logger, LoggerState } from "./logger";
+import { logger, LoggerState } from "./logger";
 import { PlayerBuild } from "./PlayerBuild";
 import { StatusHolder, StatusType, statusIsDebuff } from "./StatusHolder";
 
@@ -44,7 +44,7 @@ export class Entity {
     }
     atk.dmg = Math.max(atk.dmg, 1)
 
-    let dmgDealt = target.takeDamage(atk)
+    const dmgDealt = target.takeDamage(atk)
     return dmgDealt
   }
 
@@ -90,9 +90,9 @@ export class Entity {
   public addHp(n: number, source: string = ""){
     if (n > 0) { //only log if >0 healing
 
-      let hpBefore = this.hp
+      const hpBefore = this.hp
       this.hp = Math.min(this.hp+n, this.maxHp)
-      let healed = this.hp - hpBefore
+      const healed = this.hp - hpBefore
 
       let logMsg = `${this.name} healed ${n} HP`
     
@@ -128,7 +128,7 @@ export class Entity {
   }
 
   public hasStatus(type: StatusType){
-    let hasStatus = this.statuses.getStatusIntensity(type) > 0
+    const hasStatus = this.statuses.getStatusIntensity(type) > 0
     return hasStatus
   }
 
@@ -151,7 +151,7 @@ export class Entity {
     }
     
 
-    let appliedStatus = this.statuses.applyStatus(type, duration, intensity)
+    const appliedStatus = this.statuses.applyStatus(type, duration, intensity)
     if (appliedStatus.hideIntensity){
       logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`, true)
     } else {
@@ -220,7 +220,7 @@ export class Player extends Entity{
   }
 
   public override dealDamage(target: Entity, atk: Attack ) { 
-    let dmgDealt = super.dealDamage(target, atk)
+    const dmgDealt = super.dealDamage(target, atk)
 
     if (dmgDealt > 0){
       this.dealtDamageThisAction = true
@@ -249,9 +249,9 @@ export class Player extends Entity{
   public addSp(n: number, source: string = ""){
     if (n > 0) { //only log if >0 gained
 
-      let spBefore = this.sp
+      const spBefore = this.sp
       this.sp = Math.min(this.sp+n, this.maxSp)
-      let spGained = this.sp - spBefore
+      const spGained = this.sp - spBefore
 
       let logMsg = `${this.name} gained ${n} SP`
     
@@ -280,7 +280,7 @@ export class Player extends Entity{
   public override deathCheck() {
     if (this.hp <= 0) {
 
-      let resCard = this.cards.find(c => c.name == "Resurrect")
+      const resCard = this.cards.find(c => c.name == "Resurrect")
       if (resCard != undefined){
         let spCost = 3
         if (this.cards.some(c => c.name == "SP Saver")) {spCost--}
@@ -296,7 +296,7 @@ export class Player extends Entity{
 
       if (!this.hasUsedMedkit){
         if (this.items.some(item => item.name == "Medkit")){
-          let hpHeal = this.itemPlusBuff(10) 
+          const hpHeal = this.itemPlusBuff(10) 
           this.hp = hpHeal
           this.hasUsedMedkit = true
           this.items = this.items.filter(item => item.name != "Medkit")

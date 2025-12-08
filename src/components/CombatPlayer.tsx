@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Status from "./StatusIcon";
-import { StatusEffect, StatusHolder } from "@/static/StatusHolder";
+import { StatusHolder } from "@/static/StatusHolder";
 import StatusIconGroup from "./StatusIconGroup";
 
 type CombatPlayerProps = {

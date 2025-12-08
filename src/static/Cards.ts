@@ -1,11 +1,8 @@
-import { useState } from "react";
 import {Player} from "./gameClasses"
 import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
 import { StatusType } from "./StatusHolder";
 import { PierceLevel, AttackType, Attack, createAttack } from "./Attack";
-
-let idCounter = 0;
 
 export enum CardType {
   ACTIVE,
@@ -85,14 +82,14 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   new Card("good_vibes.png", "Good Vibes", 1, 2, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("good_vibes.png", "Good Vibes", 3, (player: Player, target: Enemy) => {
+    const action = new Action("good_vibes.png", "Good Vibes", 3, (player: Player, target: Enemy) => {
       player.tryApplyStatus(StatusType.GOOD_VIBES_SLEEP, 3)
     })
     player.actions = player.actions.concat(action);
   }), 
 
   new Card("cure.png", "Cure", 0, 2, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
+    const action = new Action("cure.png", "Cure", 2, (player: Player, target: Enemy) => {
       player.addHp(5,"Cure")
     }, true //isHeal
     )
@@ -112,16 +109,16 @@ export const BUYABLE_CARDS: Card[] = [
   ),
 
   // new Card("linebounce.png", "Linebounce (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
-  //   let action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {
+  //   const action = new Action("linebounce.png", "Linebounce (WIP)", 2, (player: Player, target: Enemy) => {
   //     //TODO code in multi-targetting later (or dont)
   //   })
   //   player.actions = player.actions.concat(action);
   // }), 
 
   new Card("minimize.png", "Minimize", 0, 1, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
-      let atk: Attack = createAttack({dmg:2, name:"Minimize", type:AttackType.RANGED})
-      let dmgDealt = player.dealDamage(target, atk)
+    const action = new Action("minimize.png", "Minimize", 2, (player: Player, target: Enemy) => {
+      const atk: Attack = createAttack({dmg:2, name:"Minimize", type:AttackType.RANGED})
+      const dmgDealt = player.dealDamage(target, atk)
       if (dmgDealt > 0){
         target.tryApplyStatus(StatusType.SMALL, 3) //TODO have status deflection be coded into dealDamage, not hard coded in each attack
       }
@@ -130,7 +127,7 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   // new Card("daze.png", "Daze (WIP)", 0, 1, CardType.ACTIVE, (player: Player) => {
-  //   let action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
+  //   const action = new Action("daze.png", "Daze (WIP)", 2, (player: Player, target: Enemy) => {
   //     //TODO code in multi-targetting later (or dont)
   //     //TODO code in daze status effect (and immunity chance)
 
@@ -139,7 +136,7 @@ export const BUYABLE_CARDS: Card[] = [
   // }), 
 
   new Card("pity_sp.png", "Pity SP", 0, 0, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
+    const action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
       player.addSp(5, "Pity SP")
     },
     false, 10 //isHeal, hpCost
@@ -148,8 +145,8 @@ export const BUYABLE_CARDS: Card[] = [
   }), 
 
   new Card("power_stab.png", "Power Stab", 0, 0, CardType.ACTIVE, (player: Player) => {
-    let action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy, enemyList: Enemy[]) => {
-      let atk: Attack = createAttack({dmg:3, name:"Power Stab", type:AttackType.MELEE, piercing:PierceLevel.HALF})
+    const action = new Action("power_stab.png", "Power Stab", 2, (player: Player, target: Enemy, enemyList: Enemy[]) => {
+      const atk: Attack = createAttack({dmg:3, name:"Power Stab", type:AttackType.MELEE, piercing:PierceLevel.HALF})
       player.dealDamage(enemyList[0], atk)
     })
     player.actions = player.actions.concat(action);

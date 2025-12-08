@@ -15,8 +15,8 @@ export function useStats() {
   const [remainingLevels, setRemainingLevels] = useState(MAX_LEVEL);
 
   function changeStat(stat: Stat, negative: boolean = false) {
-    let mult = negative ? -1 : 1;
-    let newRemainingLevels = remainingLevels - 1 * mult;
+    const mult = negative ? -1 : 1;
+    const newRemainingLevels = remainingLevels - 1 * mult;
     if (newRemainingLevels < 0 || newRemainingLevels > MAX_LEVEL) return;
 
     let newHp = hp;

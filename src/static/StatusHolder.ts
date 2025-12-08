@@ -50,10 +50,10 @@ export class StatusHolder {
   statusList: StatusEffect[] = []
 
   public applyStatus(type: StatusType, duration: number, intensity: number){ 
-    let existingStatus = this.statusList.find((s)=> s.type == type)
+    const existingStatus = this.statusList.find((s)=> s.type == type)
 
     if (existingStatus == undefined){
-      let newStatus = new StatusEffect(type, duration, intensity)
+      const newStatus = new StatusEffect(type, duration, intensity)
       this.statusList.push(newStatus)
       return newStatus
     } else {
@@ -64,7 +64,7 @@ export class StatusHolder {
   }
 
   public getStatusIntensity(type: StatusType){
-    let status = this.statusList.find((s) => s.type == type)
+    const status = this.statusList.find((s) => s.type == type)
     if (status == undefined){
       return 0
     } else {
@@ -112,7 +112,7 @@ export class StatusEffect {
     this.duration = duration;
     this.intensity = intensity;
     
-    let map = statusMap.get(type);
+    const map = statusMap.get(type);
     if (map != undefined){
       this.name = map.name;
       this.debuff = map.debuff;

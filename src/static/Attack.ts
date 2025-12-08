@@ -20,6 +20,6 @@ export type Attack = {
 }
 
 export function createAttack({ dmg, name, piercing = PierceLevel.NONE, type = AttackType.MELEE, undodgeable = false, boostable = true}: {dmg : number, name: string, piercing? : PierceLevel, type? : AttackType, undodgeable? : boolean, boostable? : boolean }) {
-    let atk : Attack = {dmg, name, piercing, type, undodgeable, boostable}
+    const atk : Attack = {dmg, name, piercing, type, undodgeable, boostable}
     return atk
 }

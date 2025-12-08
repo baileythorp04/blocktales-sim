@@ -1,13 +1,12 @@
 "use client";
 
-import { type } from "os";
 import { useState, useEffect } from "react";
 import { Game, Player } from "@/static/gameClasses";
-import { Enemy, trotter, dummy, megaphoneMan } from "@/static/Enemy"
+import { trotter, megaphoneMan } from "@/static/Enemy"
 import { Action } from "@/static/Actions";
 import Image from "next/image";
 import { usePlayerBuild } from "@/context/PlayerBuildContext";
-import { Card, CardType } from "@/static/Cards";
+import { CardType } from "@/static/Cards";
 import CombatPlayer from "@/components/CombatPlayer";
 import CombatEnemy from "@/components/CombatEnemy";
 import { StatusType } from "@/static/StatusHolder";
@@ -52,7 +51,7 @@ export default function Combat() {
   })
 
   function handleItemClick(item: Item, i: number): void {
-    let g = cloneDeep(game)
+    const g = cloneDeep(game)
 
     if (item.usable){
       doAction(g, item, i)
@@ -60,7 +59,7 @@ export default function Combat() {
   }
 
   function handleActionClick(action: Action): void {
-    let g = cloneDeep(game)
+    const g = cloneDeep(game)
 
     doAction(g, action)
   }
@@ -70,8 +69,8 @@ export default function Combat() {
     setSpError(false)
     setHpError(false)
 
-    let enemy = g.getEnemyByPosition(selectedEnemyPosition)
-    let result = g.player.checkActionCost(action) 
+    const enemy = g.getEnemyByPosition(selectedEnemyPosition)
+    const result = g.player.checkActionCost(action) 
     if (result == "missing sp") {
       setSpError(true)
       return
@@ -144,7 +143,7 @@ export default function Combat() {
   }
 
   function handleUndo() {
-    let prevState = gameInstanceStack.pop()
+    const prevState = gameInstanceStack.pop()
     if (prevState == undefined){
       console.error("no previous game state to undo to")
     } else {
@@ -157,7 +156,7 @@ export default function Combat() {
   }
 
   function handleRestart() {
-    let initState = gameInstanceStack[0]
+    const initState = gameInstanceStack[0]
     if (initState == undefined){
       console.error("no previous game state to restart to")
     } else {
