@@ -150,6 +150,9 @@ export default function Combat() {
     } else {
       setGame(prevState)
       logger.setState(prevState.loggerState)
+      
+      setSpError(false)
+      setHpError(false)
     }
   }
 
@@ -161,6 +164,9 @@ export default function Combat() {
       gameInstanceStack.push(game)
       setGame(initState)
       logger.setState(initState.loggerState)
+      
+      setSpError(false)
+      setHpError(false)
 
     }
   }
