@@ -12,6 +12,7 @@ true infinite first stike and feelfine/pierce
 # game features
 
 store/restore game and log from file
+show player-only logs?
 
 
 make a proper non-dev release, or put it all in an exe?

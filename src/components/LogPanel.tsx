@@ -49,14 +49,14 @@ export default function LogPanel() {
           <button onClick={flipOrder} className="text-xs px-2 py-1 border cursor-pointer">Reverse</button>
         </div>
       </div>
-      <div ref={scrollRef} className={`flex overflow-y-scroll ${reverse ? "flex-col-reverse" : "flex-col"} `}>
+      <div ref={scrollRef} className={`select-text flex overflow-y-scroll ${reverse ? "flex-col-reverse" : "flex-col"} `}>
         {logger.get(allowBoringLogs).map((logColumn, colIdx) => (
-          <div key={colIdx} className={`w-full flex ${reverse ? "flex-col-reverse" : "flex-col"} ${((colIdx < logs.length-1 && highlightTurn) || ( logColumn.every(l => !l.new)) && !highlightTurn) && "text-gray-400"}`}>
-            <div className={`text-lg border-dashed ${reverse ? "border-b mb-2 pb-2" : "border-t mt-2 pt-2 mb-1"} `}>Turn {colIdx+1}</div>
+          <div key={colIdx} className={`select-text w-full flex ${reverse ? "flex-col-reverse" : "flex-col"} ${((colIdx < logs.length-1 && highlightTurn) || ( logColumn.every(l => !l.new)) && !highlightTurn) && "text-gray-400"}`}>
+            <div className={`select-text text-lg border-dashed ${reverse ? "border-b mb-2 pb-2" : "border-t mt-2 pt-2 mb-1"} `}>Turn {colIdx+1}</div>
             {logColumn.map(l => (
               <div key={l.id} className="text-xs mb-1">
-                <span className="text-gray-300 mr-2">{l.id}</span>
-                <span className={`${!l.new && !highlightTurn && "text-gray-400" }`}>{l.msg}</span>
+                <span className="select-text text-gray-300 mr-2">{l.id}</span>
+                <span className={`select-text ${!l.new && !highlightTurn && "text-gray-400" }`}>{l.msg}</span>
               </div>
             ))}
           </div>
