@@ -5,14 +5,14 @@ import { PlayerBuild } from "@/static/PlayerBuild";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 type PlayerBuildSelectionType = {
-  playerBuild: PlayerBuild;
-  setPlayerBuild: React.Dispatch<React.SetStateAction<PlayerBuild>>;
+  playerBuild: PlayerBuild | undefined;
+  setPlayerBuild: React.Dispatch<React.SetStateAction<PlayerBuild | undefined>>;
 }
 
 const PlayerBuildContext = createContext<PlayerBuildSelectionType | undefined>(undefined);
 
 export const SelectionProvider = ({ children }: {children: ReactNode}) => {
-  const [playerBuild, setPlayerBuild] = useState<PlayerBuild>({hp:100, sp:100, selectedCards:[], selectedItems:[]});
+  const [playerBuild, setPlayerBuild] = useState<PlayerBuild | undefined>();
 
   return (
     <PlayerBuildContext.Provider value={{ playerBuild, setPlayerBuild }}>

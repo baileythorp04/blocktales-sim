@@ -30,6 +30,14 @@ export const logger = {
     return entry
   },
 
+    clear(): void {
+    _logs.splice(0)
+    _logs.push([])
+    _nextId = 1
+    _colNo = 0
+    notify()
+  },
+
   nextAction(): void {
     for (let logCol of _logs.slice().reverse()) {
       for (let log of logCol.slice().reverse()) {
@@ -49,7 +57,6 @@ export const logger = {
   },
 
   get(allowBoring : boolean = true): LogEntry[][] {
-    debugger
     if (allowBoring){
       return _logs.slice()
     } else {

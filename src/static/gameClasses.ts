@@ -190,7 +190,7 @@ export class Player extends Entity{
   hpOnHit: number = 0;
   spOnPass: number = 1;
 
-  public constructor(build: PlayerBuild){
+  public constructor(build: PlayerBuild = {hp:100, sp:100, selectedCards:[], selectedItems:[]}){
     super(build.hp, "Player", "player.png", 0);
     this.sp = this.maxSp = build.sp;
     this.cards = build.selectedCards;

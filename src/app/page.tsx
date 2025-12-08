@@ -9,9 +9,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { BUYABLE_ITEMS, Item } from "@/static/Items";
+import { logger } from "@/static/logger";
 
 
 const MAX_BUX = 17
+let menuFinished = false
 
 export default function Menu() {
   const router = useRouter();
@@ -61,6 +63,7 @@ export default function Menu() {
       selectedCards:selectedCards,
       selectedItems:selectedItemList,
     })
+    menuFinished = true
     router.push("/combat");
   }
 

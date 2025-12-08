@@ -16,23 +16,40 @@ import { Item } from "@/static/Items";
 import ItemBox from "@/components/ItemBox";
 import LogPanel from "@/components/LogPanel";
 import { logger } from "@/static/logger";
+import { useRouter } from "next/navigation";
+
 
 let gameInstanceStack : Game[] = [] //includes all previous game states, not the current one
 
 export default function Combat() {
+  const router = useRouter();
   const { playerBuild } = usePlayerBuild();
   
   const [ game, setGame ] = useState<Game>(() => {
+    logger.clear()
     const es = [trotter("1"), trotter("2"), trotter("3"), megaphoneMan()]
     const player = new Player(playerBuild)
     return new Game(player, es)
   })
+  const [ canUndo, setCanUndo ] = useState<boolean>(false)
   const [ spError, setSpError ] = useState<boolean>(false)
   const [ hpError, setHpError ] = useState<boolean>(false)
   const [ selectedEnemyPosition, setSelectedEnemyPosition ] = useState<number>(0) 
   function handleEnemyClick(i: number) {
     setSelectedEnemyPosition(i)
   }
+
+  useEffect(() => {
+    if (playerBuild == undefined){
+      router.push("/")
+    } else {
+      gameInstanceStack = []
+    }
+  }, [])
+
+  useEffect(() => {
+    setCanUndo(gameInstanceStack.length > 0)
+  })
 
   function handleItemClick(item: Item, i: number): void {
     let g = cloneDeep(game)
@@ -234,7 +251,7 @@ export default function Combat() {
 
           {/* #### UNDO AND RESTART #### */}
           <div className="py-2">
-            {gameInstanceStack.length > 0
+            {canUndo
             ? <div className="flex justify-around my-8 w-full">
                 <div onClick={() => handleUndo()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Undo</div>
                 <div onClick={() => handleRestart()} className={`w-30 p-4 flex justify-center  border bg-gray-200 border-gray-400 cursor-pointer`}>Restart</div>
