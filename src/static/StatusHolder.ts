@@ -14,7 +14,8 @@ export enum StatusType {
   DEFENDING,
   FIRST_STRIKE,
   INVISIBLE,
-  EXHAUSTED
+  EXHAUSTED,
+  ARMOR_DOWN
 }
 
 type statusProperties = {
@@ -39,6 +40,8 @@ export const statusMap: Map<StatusType, statusProperties> = new Map([
   [StatusType.FIRST_STRIKE, {name:"First Strike", debuff:false, color:"#5b6ee1", icon:"first_strike.png", hideIntensity:false}],
   [StatusType.INVISIBLE, {name:"Invisible", debuff:false, color:"#847387", icon:"invisible.png", hideIntensity:true}],
   [StatusType.EXHAUSTED, {name:"Exhausted", debuff:true, color:"#f7da47", icon:"exhausted.png", hideIntensity:true}],
+  [StatusType.ARMOR_DOWN, {name:"Armor Down", debuff:true, color:"#ac3232", icon:"armor_down.png", hideIntensity:false}],
+
 ])
 
 export function statusIsDebuff(type : StatusType) {
@@ -79,6 +82,21 @@ export class StatusHolder {
         this.removeStatus(s)
       }
     })
+  }
+
+
+  // returns how much of n is remaining after lowering it by the intensity
+  public reduceIntensity(type: StatusType, n: number) { 
+
+    const status = this.statusList.find(s => s.type == type)
+    if (status == undefined) return n
+
+    status.intensity -= n
+    if (status.intensity <= 0) this.removeStatus(status)
+
+    n = -status.intensity
+    //equivalent to: n = n - (status.intensity + n)
+    return n
   }
 
   public removeStatus(status: StatusEffect | StatusType) {

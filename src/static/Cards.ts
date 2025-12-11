@@ -135,6 +135,17 @@ export const BUYABLE_CARDS: Card[] = [
   //   player.actions = player.actions.concat(action);
   // }), 
 
+  new Card("softener.png", "Softener", 0, 1, CardType.ACTIVE, (player: Player) => {
+    const action = new Action("softener.png", "Softener", 2, (player: Player, target: Enemy) => {
+      const atk: Attack = createAttack({dmg:2, name:"Softener", type:AttackType.MELEE, piercing:PierceLevel.FULL})
+      const dmgDealt = player.dealDamage(target, atk)
+      if (dmgDealt > 0){
+        target.tryApplyStatus(StatusType.ARMOR_DOWN, 3, 1)
+      }
+    })
+    player.actions = player.actions.concat(action);
+  }), 
+
   new Card("pity_sp.png", "Pity SP", 0, 0, CardType.ACTIVE, (player: Player) => {
     const action = new Action("pity_sp.png", "Pity SP", 0, (player: Player, target: Enemy) => {
       player.addSp(5, "Pity SP")

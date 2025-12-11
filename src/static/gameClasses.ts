@@ -53,8 +53,9 @@ export class Entity {
       if (this.hasStatus(StatusType.DEFENDING)) { atk.dmg = Math.floor(atk.dmg * 0.8) } //apply defend 20% reduction (floor) (gets pierced)
     }
     //reduce dmg by defense stat, or half(floored) if half piercing, or none if full piercing
-    if (atk.piercing == PierceLevel.NONE) { atk.dmg -= this.defense }
-    else if (atk.piercing == PierceLevel.HALF) { atk.dmg -= Math.floor(this.defense * 0.5) }
+    const effectiveDefense = Math.max(0, this.defense - (this.getStatusIntensity(StatusType.ARMOR_DOWN)))
+    if (atk.piercing == PierceLevel.NONE) { atk.dmg -= effectiveDefense }
+    else if (atk.piercing == PierceLevel.HALF) { atk.dmg -= Math.floor(effectiveDefense * 0.5) }
     else if (atk.piercing == PierceLevel.FULL) { /*no dmg reduction*/ }
 
     if (atk.piercing != PierceLevel.FULL) {
@@ -144,19 +145,27 @@ export class Entity {
     //on-application effects 
     if (type == StatusType.FEEL_FINE){
       this.statuses.removeAllDebuffs()
+
     } else if (type == StatusType.INVISIBLE){
       this.statuses.removeStatus(StatusType.FEEL_FINE)
       this.tryApplyStatus(StatusType.EXHAUSTED, 2)
 
+    } else if (type == StatusType.ARMOR_DOWN){
+      intensity = this.statuses.reduceIntensity(StatusType.ARMOR_UP, intensity)
+      logger.log(`${this.name}'s Armor Down status was reduced to ${Math.max(0, -intensity)}`, true)
+
+    } else if (type == StatusType.ARMOR_UP){
+      intensity = this.statuses.reduceIntensity(StatusType.ARMOR_DOWN, intensity)
+      logger.log(`${this.name}'s Armor Up status was reduced to ${Math.max(0, -intensity)}`, true)
     }
     
-
-    const appliedStatus = this.statuses.applyStatus(type, duration, intensity)
-    if (appliedStatus.hideIntensity){
-      logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`, true)
-    } else {
-      logger.log(`${this.name} was applied with ${appliedStatus.name} ${appliedStatus.intensity} for ${appliedStatus.duration} turns`, true)
-
+    if (intensity > 0){
+      const appliedStatus = this.statuses.applyStatus(type, duration, intensity)
+      if (appliedStatus.hideIntensity){
+        logger.log(`${this.name} was applied with ${appliedStatus.name} for ${appliedStatus.duration} turns`, true)
+      } else {
+        logger.log(`${this.name} was applied with ${appliedStatus.name} ${appliedStatus.intensity} for ${appliedStatus.duration} turns`, true)   
+      }
     }
   
   }

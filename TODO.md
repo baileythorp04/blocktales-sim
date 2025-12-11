@@ -14,16 +14,16 @@ true infinite first stike and feelfine/pierce
 make different health items (which?)
 
 store/restore game and log from file
+
+change logs to be "Entity did action" and "Entity took damage", with the cause being implied
 show player-only logs?
-
-make a proper non-dev release, or put it all in an exe?
-
 
 # inaccuracies
 
 no rolling HP
 death/res happens instantly; an enemy's multihit will hit you after being res'd
 pirate ghost alternates coin/barrel attacks instead of being random
+softener just removes defUP rather than causing defDOWN
 
 # trotter notes:
 
