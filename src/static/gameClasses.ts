@@ -114,6 +114,7 @@ export class Entity {
 
   public startOfTurnEffects() {
     if (this.hasStatus(StatusType.FIRE)){
+      logger.log(`Fire proc'd on ${this.name}`)
       this.loseHp(1, this.name, "Fire Status");
     }
     this.statuses.decrementTimers()

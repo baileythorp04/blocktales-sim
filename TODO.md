@@ -2,21 +2,17 @@
 
 move a bunch of logic in combat page into Game
 
-throw you back to battle prep on combat refresh
-    (stuff breaks when you rerender combat)
+# bugs
 
-# game fixes
-
-true infinite first stike and feelfine/pierce
+going into battle with SP saver, going back, and going into combat again reduces SP of dynamite by 2
 
 # game features
 
-make different health items (which?)
-
 store/restore game and log from file
 
-change logs to be "Entity did action" and "Entity took damage", with the cause being implied
-show player-only logs?
+more log granularity?
+
+true infinite first stike and feelfine/pierce
 
 # inaccuracies
 

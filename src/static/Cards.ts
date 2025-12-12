@@ -3,6 +3,7 @@ import {Enemy} from "./Enemy"
 import {Action} from "./Actions"
 import { StatusType } from "./StatusHolder";
 import { PierceLevel, AttackType, Attack, createAttack } from "./Attack";
+import { logger } from "./logger";
 
 export enum CardType {
   ACTIVE,
@@ -102,6 +103,7 @@ export const BUYABLE_CARDS: Card[] = [
 
   new Card("happy_hp.png", "Happy HP", 0, 1, CardType.START_OF_TURN, (player: Player, thisCard: Card) => {
     if (thisCard.enabled) {
+      logger.log(`Happy HP proc'd on ${player.name}`)
       player.addHp(1,"Happy HP");
     }
     thisCard.enabled = !thisCard.enabled
