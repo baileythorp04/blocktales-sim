@@ -3,6 +3,7 @@ export type LogEntry = {
   msg: string
   new: boolean
   boring: boolean
+  important: boolean
 }
 
 export type LoggerState = {
@@ -23,8 +24,8 @@ function notify() {
 }
 
 export const logger = {
-  log(msg: string, boring: boolean = false): LogEntry {
-    const entry: LogEntry = { id: _nextId++, msg: msg, new: true, boring: boring}
+  log(msg: string, boring: boolean = false, important = false): LogEntry {
+    const entry: LogEntry = { id: _nextId++, msg: msg, new: true, boring: boring, important: important}
     _logs[_colNo].push(entry)
     notify()
     return entry
@@ -56,9 +57,20 @@ export const logger = {
     notify()
   },
 
-  get(allowBoring : boolean = true): LogEntry[][] {
+  get(allowBoring : boolean = true, onlyImportant : boolean = false): LogEntry[][] {
+    if (onlyImportant) {
+      const filtLogs = _logs.slice()
+      const range = Array.from({ length: filtLogs.length }, (_, i) => i);
+      for (const i of range) {
+        filtLogs[i] = filtLogs[i].filter(l => l.important)
+      }
+      filtLogs.forEach(logCol => { logCol = logCol.filter(_ => false) })
+      return filtLogs
+    }
+
     if (allowBoring){
       return _logs.slice()
+
     } else {
       const filtLogs = _logs.slice()
       const range = Array.from({ length: filtLogs.length }, (_, i) => i);

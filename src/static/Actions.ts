@@ -53,9 +53,7 @@ export const DEFEND_ACTION: Action = new Action("defend.png", "Defend", 0, (play
 })
 
 export const PASS_ACTION: Action = new Action("pass.png", "Pass", 0, (player: Player, target: Enemy ) => {
-  player.addSp(player.spOnPass, "Passing");
 })
 
-export const DO_NOTHING_ACTION: Action = new Action("sleep.png", "Sleep", 0, (player: Player, target: Enemy ) => {
-  logger.log(`${player.name} did nothing`)
+export const DO_NOTHING_ACTION: Action = new Action("sleep.png", "Nothing", 0, (player: Player, target: Enemy ) => {
 })

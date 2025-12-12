@@ -22,7 +22,9 @@ export class Enemy extends Entity{
   }
 
   public doNextAction(target: Entity, enemyList: Enemy[]){
-    this.actions[this.actionCounter].action(target, this, enemyList)
+    const nextAction = this.actions[this.actionCounter]
+    logger.log(`${this.name} used ${nextAction.name}`)
+    nextAction.action(target, this, enemyList)
     this.iterateAction()
   }
 
@@ -47,7 +49,7 @@ class Trotter extends Enemy {
 
   public override takeDamage(atk: Attack): number {
     if (atk.type == this.stanceImmunity){
-      logger.log(`${this.name} deflected ${atk.name} with his stance`)
+      logger.log(`${this.name} deflected the attack with his stance`)
       return 0
     }
 
@@ -77,7 +79,7 @@ class Trotter extends Enemy {
           } else {
             const summon = pirateGhost()
             enemyList.push(summon)
-            logger.log(`${this.name} summoned ${summon.name}`)
+            logger.log(`${this.name} successfully summoned ${summon.name}`)
 
           }
         }}
@@ -168,7 +170,7 @@ export function trotter(n:string){
     }}
 
     const atkList : EnemyAction[] = [coinAtk, barrelAtk, coinAtk, barrelAtk, prepAtk, barrelAtk, firebrandAtk]
-    return new Trotter(40, "Trotter "+n, "trotter.png", atkList, 0, true)
+    return new Trotter(40, "Trotter-"+n, "trotter.png", atkList, 0, true)
 }
 
 function pirateGhost(){

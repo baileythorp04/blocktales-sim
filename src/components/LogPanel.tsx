@@ -9,6 +9,7 @@ export default function LogPanel() {
   const [reverse, setReverse] = useState(true)
   const [highlightTurn, setHighlightTurn] = useState(false)
   const [allowBoringLogs, setAllowBoringLogs,] = useState(false)
+  const [onlyImportantLogs, setOnlyImportantLogs,] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { //hydration error suppression from ChatGPT
@@ -37,6 +38,10 @@ export default function LogPanel() {
     setAllowBoringLogs(!allowBoringLogs)
   }
 
+  function flipImportant() {
+    setOnlyImportantLogs(!onlyImportantLogs)
+  }
+
   if (!mounted) return null
 
   return (
@@ -44,13 +49,14 @@ export default function LogPanel() {
       <div className="flex justify-between items-center mb-2">
         <div className="font-bold">Log</div>
         <div className="flex flex-row gap-2">
+          <button onClick={flipImportant} className="text-xs px-2 py-1 border cursor-pointer">{onlyImportantLogs ? "Only Player" : "All Logs"}</button>
           <button onClick={flipBoring} className="text-xs px-2 py-1 border cursor-pointer">{allowBoringLogs ? "Showing Boring Logs" : "Hiding Boring Logs"}</button>
           <button onClick={flipHighlight} className="text-xs px-2 py-1 border cursor-pointer">{highlightTurn ? "Highlighting This Turn" : "Highlighting Last Action"}</button>
           <button onClick={flipOrder} className="text-xs px-2 py-1 border cursor-pointer">Reverse</button>
         </div>
       </div>
       <div ref={scrollRef} className={`select-text flex overflow-y-scroll ${reverse ? "flex-col-reverse" : "flex-col"} `}>
-        {logger.get(allowBoringLogs).map((logColumn, colIdx) => (
+        {logger.get(allowBoringLogs, onlyImportantLogs).map((logColumn, colIdx) => (
           <div key={colIdx} className={`select-text w-full flex ${reverse ? "flex-col-reverse" : "flex-col"} ${((colIdx < logs.length-1 && highlightTurn) || ( logColumn.every(l => !l.new)) && !highlightTurn) && "text-gray-400"}`}>
             <div className={`select-text text-lg border-dashed ${reverse ? "border-b mb-2 pb-2" : "border-t mt-2 pt-2 mb-1"} `}>Turn {colIdx+1}</div>
             {logColumn.map(l => (

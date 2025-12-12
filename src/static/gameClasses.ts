@@ -69,14 +69,14 @@ export class Entity {
     if (atk.dmg > 0){
       this.loseHp(atk.dmg, this.name, atk.name)
     } else {
-      logger.log(`${this.name} deflected ${atk.name}`)
+      logger.log(`${this.name} deflected the attack`)
     }
     return atk.dmg
   }
 
   public loseHp(n: number, target: string, source: string){
       this.hp -= n
-      logger.log(`${target} took ${n} damage from ${source}`)
+      logger.log(`${target} took ${n} damage`)
 
       this.deathCheck()
   }
@@ -96,10 +96,6 @@ export class Entity {
       const healed = this.hp - hpBefore
 
       let logMsg = `${this.name} healed ${n} HP`
-    
-      if (source != ""){
-          logMsg += ` from ${source}`
-      }
 
       if (this.hp == this.maxHp){
         if (healed < n){
@@ -243,14 +239,14 @@ export class Player extends Entity{
     //dodging implemented here
     if (this.hasStatus(StatusType.INVISIBLE))
     {
-      logger.log(`${this.name} phased through ${atk.name}`, true)
+      logger.log(`${this.name} phased through the attack`, true)
       return 0 
     }
 
     if (this.hasStatus(StatusType.GOOD_VIBES_SLEEP) || atk.undodgeable == true){
       return super.takeDamage(atk)
     }
-    logger.log(`${this.name} dodged ${atk.name}`, true)
+    logger.log(`${this.name} dodged the attack`, true)
     return 0
     
   }
@@ -263,10 +259,6 @@ export class Player extends Entity{
       const spGained = this.sp - spBefore
 
       let logMsg = `${this.name} gained ${n} SP`
-    
-      if (source != ""){
-        logMsg += ` from ${source}`
-      }
 
       if (this.sp == this.maxSp){
         if (spGained < n){
@@ -349,6 +341,7 @@ export class Player extends Entity{
   public doAction(action: Action, enemy: Enemy, enemyList: Enemy[] ){
     this.sp -= action.spCost;
     this.hp -= action.hpCost;
+    logger.log(`${this.name} used ${action.name}`, false, true)
     action.doEffect(this, enemy, enemyList)
   }
 
