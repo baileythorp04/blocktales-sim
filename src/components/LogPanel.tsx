@@ -47,7 +47,6 @@ export default function LogPanel() {
   return (
     <div className="flex flex-col flex-1 h-120 w-full bg-white px-2 pt-2 text-sm">
       <div className="flex justify-between items-center mb-2">
-        <div className="font-bold">Log</div>
         <div className="flex flex-row gap-2">
           <button onClick={flipImportant} className="text-xs px-2 py-1 border cursor-pointer">{onlyImportantLogs ? "Only Player" : "All Logs"}</button>
           <button onClick={flipBoring} className="text-xs px-2 py-1 border cursor-pointer">{allowBoringLogs ? "Showing Boring Logs" : "Hiding Boring Logs"}</button>
